@@ -1,0 +1,6 @@
+secondaryUserStore/util/EncryptionUtil.class
+secondaryUserStore/internal/ISMigrationServiceComponent.class
+secondaryUserStore/migrator/UserStorePasswordMigrator.class
+secondaryUserStore/util/Constant.class
+secondaryUserStore/util/SecondaryUserstoreCryptoUtil.class
+secondaryUserStore/internal/ISMigrationServiceDataHolder.class
