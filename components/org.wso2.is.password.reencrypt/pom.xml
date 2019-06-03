@@ -21,86 +21,80 @@
     <parent>
         <groupId>org.wso2</groupId>
         <artifactId>identity-tools</artifactId>
-        <version>1.0</version>
+        <version>1.0.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.is.password</groupId>
-    <artifactId>org.wso2.is.password.migrate</artifactId>
-    <version>1.0</version>
+    <artifactId>org.wso2.is.password.reencrypt</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <dependencies>
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>6.9.4</version>
-        </dependency>
-        <dependency>
             <groupId>com.alibaba.jstorm</groupId>
             <artifactId>jstorm-core</artifactId>
-            <version>2.2.1</version>
+            <version>${jstorm-core.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.6.2</version>
+            <version>${gson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.ws.commons.axiom.wso2</groupId>
             <artifactId>axiom</artifactId>
-            <version>1.2.11.wso2v13</version>
+            <version>${axiom.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.core</artifactId>
-            <version>4.4.40</version>
+            <version>${org.wso2.carbon.core.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl104-over-slf4j</artifactId>
-            <version>1.5.0</version>
+            <version>${jcl104-over-slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.framework</groupId>
             <artifactId>org.wso2.carbon.identity.claim.metadata.mgt</artifactId>
-            <version>5.12.387</version>
+            <version>${org.wso2.carbon.identity.claim.metadata.mgt.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.is</groupId>
             <artifactId>org.wso2.carbon.is.migrate.client</artifactId>
-            <version>5.4.0-m3</version>
+            <version>${org.wso2.carbon.is.migrate.client.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.framework</groupId>
             <artifactId>org.wso2.carbon.identity.core</artifactId>
-            <version>5.12.387</version>
+            <version>${org.wso2.carbon.identity.core.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.consent.mgt</groupId>
             <artifactId>org.wso2.carbon.consent.mgt.core</artifactId>
-            <version>2.0.19</version>
+            <version>${org.wso2.carbon.consent.mgt.core.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.utils</artifactId>
-            <version>4.4.40</version>
+            <version>${org.wso2.carbon.utils.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.eclipse.osgi</groupId>
             <artifactId>org.eclipse.osgi.services</artifactId>
-            <version>3.5.100.v20160504-1419</version>
+            <version>${org.eclipse.osgi.services.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.eclipse.osgi</groupId>
             <artifactId>org.eclipse.osgi</artifactId>
-            <version>3.10.101.v20150820-1432</version>
+            <version>${org.eclipse.osgi.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
-            <version>1.2.4</version>
+            <version>${org.apache.felix.scr.ds-annotations.version}</version>
         </dependency>
     </dependencies>
 
@@ -109,14 +103,13 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.3.7</version>
+                <version>${maven-bundle-plugin.version}</version>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <!--<Bundle-Activator>org.wso2.is.password.migrate.org.wso2.is.password.secondaryUserStore.util.internal.Activator</Bundle-Activator>-->
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <Private-package>org.wso2.is.password.migrate.internal</Private-package>
+                        <Private-package>org.wso2.is.password.reencrypt.internal</Private-package>
                         <Import-Package>
                             org.osgi.framework; version="${osgi.framework.imp.pkg.version.range}",
                             org.osgi.service.component; version="${osgi.service.component.imp.pkg.version.range}",
@@ -131,8 +124,8 @@
                             org.wso2.carbon.user.api, org.wso2.carbon.user.core.*, org.wso2.carbon.utils.dbcreator
                         </Import-Package>
                         <Export-Package>
-                            org.wso2.is.password.secondaryUserStore.*,
-                            !org.wso2.is.password.secondaryUserStore.internal
+                            org.wso2.is.password.reencrypt.secondaryUserStore.*,
+                            !org.wso2.is.password.reencrypt.secondaryUserStore.internal
                         </Export-Package>
                     </instructions>
                 </configuration>
@@ -154,11 +147,28 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>7</source>
-                    <target>7</target>
+                    <source>8</source>
+                    <target>8</target>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <properties>
+        <jstorm-core.version>2.2.1</jstorm-core.version>
+        <gson.version>2.6.2</gson.version>
+        <org.wso2.carbon.core.version>4.4.40</org.wso2.carbon.core.version>
+        <jcl104-over-slf4j.version>1.5.0</jcl104-over-slf4j.version>
+        <org.wso2.carbon.identity.claim.metadata.mgt.version>5.12.387
+        </org.wso2.carbon.identity.claim.metadata.mgt.version>
+        <org.wso2.carbon.is.migrate.client.version>5.4.0-m3</org.wso2.carbon.is.migrate.client.version>
+        <org.wso2.carbon.identity.core.version>5.12.387</org.wso2.carbon.identity.core.version>
+        <org.wso2.carbon.consent.mgt.core.version>2.0.19</org.wso2.carbon.consent.mgt.core.version>
+        <org.wso2.carbon.utils.version>4.4.40</org.wso2.carbon.utils.version>
+        <org.eclipse.osgi.services.version>3.5.100.v20160504-1419</org.eclipse.osgi.services.version>
+        <org.eclipse.osgi.version>3.10.101.v20150820-1432</org.eclipse.osgi.version>
+        <org.apache.felix.scr.ds-annotations.version>1.2.4</org.apache.felix.scr.ds-annotations.version>
+        <maven-bundle-plugin.version>2.3.7</maven-bundle-plugin.version>
+    </properties>
 
 </project>

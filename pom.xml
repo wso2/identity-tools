@@ -29,14 +29,14 @@
 
     <groupId>org.wso2</groupId>
     <artifactId>identity-tools</artifactId>
-    <version>1.0</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>WSO2 Identity Tools</name>
     <description>Unified Identity tools of WSO2 IS</description>
     <url>http://wso2.org</url>
 
     <modules>
-        <module>components/org.wso2.is.password.migrate</module>
+        <module>components/org.wso2.is.password.reencrypt</module>
     </modules>
 
     <dependencyManagement>
@@ -255,7 +255,7 @@
         <carbon.kernel.version>4.4.35</carbon.kernel.version>
         <version.commons.logging>1.1.1</version.commons.logging>
         <axiom.impl.version>1.2.12</axiom.impl.version>
-        <axiom.version>1.2.11-wso2v6</axiom.version>
+        <axiom.version>1.2.11.wso2v13</axiom.version>
         <identity.governance.version>1.1.46</identity.governance.version>
         <commons-codec.version>1.4.0.wso2v1</commons-codec.version>
         <json.version>3.0.0.wso2v1</json.version>

@@ -31,16 +31,16 @@ import secondaryUserStore.migrator.UserStorePasswordMigrator;
 import static secondaryUserStore.util.Constant.JVM_PROPERTY_MIGRATE_PASSWORD;
 
 @Component(
-        name = "org.wso2.is.password.migrate",
+        name = "org.wso2.is.password.reencrypt",
         immediate = true
 )
-public class ISMigrationServiceComponent {
+public class ISReEncryptionServiceComponent {
 
-    private static final Log log = LogFactory.getLog(ISMigrationServiceComponent.class);
+    private static final Log log = LogFactory.getLog(ISReEncryptionServiceComponent.class);
 
     /**
      * Method to activate bundle.
-     * -DpassMigrate
+     * start with -DreEncryptSecondaryUserStorePassword to start the reEncryption
      * @param context OSGi component context.
      */
     @Activate
@@ -85,12 +85,12 @@ public class ISMigrationServiceComponent {
     )
     protected void setServerConfigurationService(ServerConfigurationService serverConfigurationService) {
 
-        ISMigrationServiceDataHolder.setServerConfigurationService(serverConfigurationService);
+        ISReEncryptionServiceDataHolder.setServerConfigurationService(serverConfigurationService);
     }
 
     protected void unsetServerConfigurationService(ServerConfigurationService serverConfigurationService) {
 
-        ISMigrationServiceDataHolder.setServerConfigurationService(null);
+        ISReEncryptionServiceDataHolder.setServerConfigurationService(null);
     }
 
 }

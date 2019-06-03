@@ -26,7 +26,7 @@ import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.core.RegistryResources.SecurityManagement;
 import org.wso2.carbon.core.util.CipherHolder;
 import org.wso2.carbon.core.util.CryptoException;
-import secondaryUserStore.internal.ISMigrationServiceDataHolder;
+import secondaryUserStore.internal.ISReEncryptionServiceDataHolder;
 
 import java.io.FileInputStream;
 import java.nio.charset.Charset;
@@ -65,7 +65,7 @@ public class SecondaryUserstoreCryptoUtil {
 
     private SecondaryUserstoreCryptoUtil() {
 
-        ServerConfigurationService serverConfigService = ISMigrationServiceDataHolder.getServerConfigurationService();
+        ServerConfigurationService serverConfigService = ISReEncryptionServiceDataHolder.getServerConfigurationService();
         this.primaryKeyStoreAlias =
                 serverConfigService.getFirstProperty(SecurityManagement.SERVER_PRIMARY_KEYSTORE_KEY_ALIAS);
         this.primaryKeyStoreKeyPass =
