@@ -27,13 +27,20 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.wso2</groupId>
+    <groupId>org.wso2.carbon.identity.tools</groupId>
     <artifactId>identity-tools</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>WSO2 Identity Tools</name>
     <description>Unified Identity tools of WSO2 IS</description>
     <url>http://wso2.org</url>
+
+    <scm>
+        <url>https://github.com/wso2/identity-tools.git</url>
+        <developerConnection>scm:git:https://github.com/wso2/identity-tools.git</developerConnection>
+        <connection>scm:git:https://github.com/wso2/identity-tools.git</connection>
+        <tag>HEAD</tag>
+    </scm>
 
     <modules>
         <module>components/org.wso2.is.password.reencrypt</module>
