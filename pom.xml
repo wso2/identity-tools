@@ -42,6 +42,7 @@
 
     <modules>
         <module>components/org.wso2.is.password.reencrypt</module>
+        <module>components/org.wso2.config.diff.creater</module>
     </modules>
 
     <dependencyManagement>

@@ -1,0 +1,50 @@
+FileName | fileType | Tag(xpath or property) | tomlConfig | dataType | description | defaultValue | PossibleValues | Config Status
+axis2.xml | xml | /axisconfig[1]/parameter[16]/text()[1] |  |  |  |  |  | Version Change
+axis2.xml | xml | /axisconfig[1]/parameter[15]/text()[1] |  |  |  |  |  | Version Change
+axis2.xml | xml | /axisconfig[1]/clustering[1]/parameter[3]/text()[1] | clustering.domain | String | The clustering domain/group. Nodes in the same group will belong to the same multicast          domain. There will not be interference between nodes in different groups. | wso2.carbon.domain |  | Templated
+axis2.xml | xml | /axisconfig[1]/clustering[1]/parameter[7]/text()[1] | clustering.local_member_host | String | The host name or IP address of this member | 127.0.0.1 |  | Templated
+axis2.xml | xml | /axisconfig[1]/clustering[1]/parameter[8]/text()[1] | clustering.local_member_port | String | The host port of the member | 4000 |  | Templated
+registry.xml | xml | /wso2registry[1]/dbConfig[2]/dataSource[1]/text()[1] |  -  | - |  |  | | Not templated
+registry.xml | xml | /wso2registry[1]/remoteInstance[1]/id[1]/text()[1] |  |  |  |  |  | Not Needed
+registry.xml | xml | /wso2registry[1]/remoteInstance[1]/dbConfig[1]/text()[1] |  |  |  |  |  | Not needed
+registry.xml | xml | /wso2registry[1]/remoteInstance[1]/cacheId[1]/text()[1] | governance_data.cache_id= | String | This is the cache_id, which is a unique value.  |  |  | Templated
+carbon.xml | xml | /Server[1]/Version[1]/text()[1] |  |  |  | 5.9.0 |  | Version Change
+carbon.xml | xml | /Server[1]/HostName[1]/text()[1] | server.hostname | String | The host name of the identity server can be configured through this property. Default value will be localhost. | localhost |  | Templated
+carbon.xml | xml | /Server[1]/MgtHostName[1]/text()[1] | server.hostname |  |  | localhost |  | Deprecated
+carbon.xml | xml | /Server[1]/Ports[1]/Offset[1]/text()[1] | server.offset | int | If you need to change the port of the identity server, you need to add an offset. Default this will be 0 and the port which mapped to it is 9443 | 0 |  | Templated
+carbon.xml | xml | /Server[1]/EnableEmailUserName[1]/text()[1] | tenant_mgt.enable_email_domain | boolean | To enable email as username, make this to true. Default value will be false. |  |  | Templated
+carbon.xml | xml | /Server[1]/Security[1]/KeyStore[1]/Location[1]/text()[1] | keystore.primary.file_name | String | The Primary Keystore file location. | ${carbon.home}/repository/resources/security/wso2carbon.jks |  | Templated
+carbon.xml | xml | /Server[1]/Security[1]/KeyStore[1]/KeyAlias[1]/text()[1] | keystore.primary.alias | String | The Private Key alias of the primary keystore. | wso2carbon |  | Templated
+carbon.xml | xml | /Server[1]/Security[1]/TrustStore[1]/Location[1]/text()[1] | truststore.file_name | String | The client trustore file location. | ${carbon.home}/repository/resources/security/client-truststore.jks |  | Templated
+identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/DataSource[1]/Name[1]/text()[1] | identity.data_source | String | The jndi value of the Identity DataSource | jdbc/WSO2IdentityDB |  | Templated
+identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/SessionDataPersist[1]/PoolSize[1]/text()[1] | session_data.persistence.persistence_pool_size | int | ‘PoolSize’ equals to 0 means that it is disabled and then the authentication flow is blocked until this particular data persistence task is completed. To execute the persistence task in asynchronously, set the value to >0 value. Based on the pool size, the system creates the task parallel to execute the persistence task that was in the queue. | 0 |  | Templated
+identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/SessionDataPersist[1]/SessionDataCleanUp[1]/CleanUpPeriod[1]/text()[1] | session_data.cleanup.clean_expired_session_data_every | int | This is the time period (in minutes) that the cleanup task would run. The default value is 1 day. This is used for both session data cleanup and operation data cleanup through the same task. | 1440 |  | Templated
+identity.xml | xml | /Server[1]/OpenID[1]/OpenIDSkipUserConsent[1]/text()[1] |  |  |  | FALSE |  | Not templated
+identity.xml | xml | /Server[1]/OAuth[1]/AppInfoCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/AuthorizationGrantCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/SessionDataCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/ClaimCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/ShowDisplayNameInConsentPage[1]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/TimestampSkew[1]/text()[1] | oauth.timestamp_skew | int | The time stamp skew is used to manage small time gaps in the system clocks of different servers |  |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/EnableOAuthCache[1]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/IdentityOAuthTokenGenerator[1]/text()[1] | oauth.extensions.token_generator| String  | OAuth Token Generator class. |  |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[3]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[4]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[5]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[6]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[7]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[8]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[9]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[10]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[11]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[12]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[13]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[14]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[15]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[16]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[17]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[18]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/SSOService[1]/PersistanceCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/SSOService[1]/SessionIndexCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
+entitlement.properties | properties | PDP.Balana.Config.Enable | identity.entitlement.policy_point.pdp.balana_config_enabled | boolean |  |  |  | Templated
+
