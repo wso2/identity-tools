@@ -17,10 +17,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-        <groupId>org.wso2.carbon.identity.tools</groupId>
-        <artifactId>identity-tools</artifactId>
-        <version>1.0.2-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <groupId>org.wso2</groupId>
+        <artifactId>wso2</artifactId>
+        <version>1</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -167,6 +166,21 @@
         <org.eclipse.osgi.version>3.10.101.v20150820-1432</org.eclipse.osgi.version>
         <org.apache.felix.scr.ds-annotations.version>1.2.4</org.apache.felix.scr.ds-annotations.version>
         <maven-bundle-plugin.version>2.3.7</maven-bundle-plugin.version>
+        <carbon.identity.framework.version>5.12.153</carbon.identity.framework.version>
+        <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
+        <axiom.wso2.version>1.2.11.wso2v10</axiom.wso2.version>
+        <carbon.kernel.version>4.4.35</carbon.kernel.version>
+        <version.commons.logging>1.1.1</version.commons.logging>
+        <axiom.impl.version>1.2.12</axiom.impl.version>
+        <axiom.version>1.2.11.wso2v13</axiom.version>
+        <identity.governance.version>1.1.46</identity.governance.version>
+        <commons-codec.version>1.4.0.wso2v1</commons-codec.version>
+        <json.version>3.0.0.wso2v1</json.version>
+        <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
+        <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
+        <snakeyaml.version.range>[1.16.0, 1.17.0)</snakeyaml.version.range>
+        <commons-lang.wso2.osgi.version.range>[2.6.0,3.0.0)</commons-lang.wso2.osgi.version.range>
+
     </properties>
 
 </project>
