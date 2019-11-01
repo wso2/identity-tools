@@ -33,8 +33,8 @@ public class MigrationConstants {
     public static final String OUTPUT_FOLDER = "output";
     public static final String UN_TEMPLATE_FILE_FOLDER = "unTemplatedFiles";
     public static final String NEW_LINE = "\n";
-    public static final String CATALOG_URL = "https://raw.githubusercontent.com/GDRDABARERA/toml-config-migrator/" +
-            "master/Catalog.csv";
+    public static final String CATALOG_URL = "https://raw.githubusercontent.com/wso2/identity-tools/components/" +
+            "resources/Catalog.csv";
     public static final String OUTPUT_CATALOG_CSV = "outputCatalog.csv";
     public static final String KEY_VALUE_CSV = "keyValue.csv";
 

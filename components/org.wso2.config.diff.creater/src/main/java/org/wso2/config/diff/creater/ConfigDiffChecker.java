@@ -86,7 +86,7 @@ class ConfigDiffChecker {
      * @param existingTags            map of existing knowledge.
      * @param outputCSVFile           output csv file.
      * @param keyValueFile            output key-value file.
-     * @throws IOException            IOException
+     * @throws IOException IOException
      */
     private void checkPropertyDiff(Map<String, File> defaultPropertiesFiles,
                                    Map<String, File> migratedPropertiesFiles, Map<String, File> j2TemplateFiles,
@@ -117,10 +117,10 @@ class ConfigDiffChecker {
     /**
      * Find the difference of property files.
      *
-     * @param defaultFile default file to compare with.
+     * @param defaultFile  default file to compare with.
      * @param migratedFile migrated file used to compare.
-     * @return  A set of difference.
-     * @throws IOException  IOException.
+     * @return A set of difference.
+     * @throws IOException IOException.
      */
     private Set<Map.Entry<String, String>> findDiffPropertiesFiles(File defaultFile, File migratedFile)
             throws IOException {
@@ -156,8 +156,9 @@ class ConfigDiffChecker {
      * @param changedPropertySet property difference.
      * @throws IOException IOException.
      */
-    private void writePropertiesDiffToCSV(File migratedFile, Map<String, String> existingTags, Path outputCSVFilePath
-            , Path keyValueFilePath, Set<Map.Entry<String, String>> changedPropertySet) throws IOException {
+    private void writePropertiesDiffToCSV(File migratedFile, Map<String, String> existingTags, Path outputCSVFilePath,
+                                          Path keyValueFilePath, Set<Map.Entry<String, String>> changedPropertySet)
+            throws IOException {
 
         for (Map.Entry<String, String> property : changedPropertySet) {
 
@@ -179,8 +180,9 @@ class ConfigDiffChecker {
             } else {
                 csvEntry = existingTags.get(property.getKey()).concat(MigrationConstants.NEW_LINE);
 
-                keyValueData = property.getKey().concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(property
-                        .getValue()).concat(MigrationConstants.NEW_LINE);
+                keyValueData =
+                        property.getKey().concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(property.getValue())
+                                .concat(MigrationConstants.NEW_LINE);
             }
 
             Files.write(outputCSVFilePath, csvEntry.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
@@ -205,7 +207,8 @@ class ConfigDiffChecker {
 
                 // Copying the changed un-template files to a different folder.
                 log.warn(entry.getValue().getPath() + " is not templated with toml. \n");
-                File outFile = new File(MigrationConstants.UN_TEMPLATE_FILE_FOLDER + MigrationConstants
+                File outFile =
+                        new File(MigrationConstants.UN_TEMPLATE_FILE_FOLDER + MigrationConstants
                                 .FILE_SEPARATOR + entry.getKey());
                 FileUtils.copyFile(entry.getValue(), outFile);
             }
@@ -222,10 +225,10 @@ class ConfigDiffChecker {
     /**
      * Compare xml files using xmlUnit library.
      *
-     * @param defaultFile default xml file to compare with.
+     * @param defaultFile  default xml file to compare with.
      * @param migratedFile migrated xml file to compare.
      * @return DetailedDiff of xml difference.
-     * @throws IOException IOException.
+     * @throws IOException  IOException.
      * @throws SAXException SAXException.
      */
     private DetailedDiff compareXMLFiles(File defaultFile, File migratedFile) throws IOException, SAXException {
@@ -270,44 +273,51 @@ class ConfigDiffChecker {
             String defaultValue = "";
             String changedValue;
 
-            if (isMigratedXPathAvailableInDiff(diff)) {
-                if (isXpathInExistingTags(existingXMLTags, diff)) {
-                    if (isMigratedXpathEqualsDefaultXpath(diff)) {
-
-                        csvKey = diff.getControlNodeDetail().getXpathLocation();
-                        defaultValue = diff.getControlNodeDetail().getValue();
-                    } else {
-
-                        if (StringUtils.isNotBlank(diff.getTestNodeDetail().getXpathLocation())) {
-
-                            csvKey = diff.getTestNodeDetail().getXpathLocation();
-                            defaultValue = " ";
-                        }
-                    }
-                    changedValue = diff.getTestNodeDetail().getValue();
-
-                    csvEntry = migratedFile.getName().concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(fileType)
-                            .concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(csvKey).concat("| | | |")
-                            .concat(defaultValue).concat("| |").concat(MigrationConstants.NEW_LINE);
-
-                    existingXMLTags.put(csvKey, csvEntry);
-
-                    keyVal = csvKey.concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(changedValue)
-                                    .concat(MigrationConstants.NEW_LINE);
-
-                    log.info("Add this entry to the remote catalog : " + csvEntry + MigrationConstants.NEW_LINE);
-                } else {
-                    csvEntry = existingXMLTags.get(diff.getTestNodeDetail().getXpathLocation()).concat(
-                            MigrationConstants.NEW_LINE);
-                    // Writing to keyValue csv.
-                    keyVal = diff.getTestNodeDetail().getXpathLocation().concat(MigrationConstants
-                                    .CSV_SEPARATOR_APPENDER).concat(diff.getTestNodeDetail().getValue())
-                                    .concat(MigrationConstants.NEW_LINE);
-                }
-                Files.write(outputPath, csvEntry.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
-                Files.write(keyValPath, keyVal.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+            if (!isMigratedXPathAvailableInDiff(diff)) {
+                continue;
             }
+
+            if (isXpathInExistingTags(existingXMLTags, diff)) {
+                if (isMigratedXpathEqualsDefaultXpath(diff)) {
+
+                    csvKey = diff.getControlNodeDetail().getXpathLocation();
+                    defaultValue = diff.getControlNodeDetail().getValue();
+                } else {
+
+                    if (StringUtils.isNotBlank(diff.getTestNodeDetail().getXpathLocation())) {
+
+                        csvKey = diff.getTestNodeDetail().getXpathLocation();
+                        defaultValue = " ";
+                    }
+                }
+                changedValue = diff.getTestNodeDetail().getValue();
+
+                csvEntry =
+                        migratedFile.getName().concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(fileType)
+                                .concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(csvKey).concat("| | | |")
+                                .concat(defaultValue).concat("| |").concat(MigrationConstants.NEW_LINE);
+
+                existingXMLTags.put(csvKey, csvEntry);
+
+                keyVal =
+                        csvKey.concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(changedValue)
+                                .concat(MigrationConstants.NEW_LINE);
+
+                log.info("Add this entry to the remote catalog : " + csvEntry + MigrationConstants.NEW_LINE);
+            } else {
+                csvEntry =
+                        existingXMLTags.get(diff.getTestNodeDetail().getXpathLocation())
+                                .concat(MigrationConstants.NEW_LINE);
+                // Writing to keyValue csv.
+                keyVal =
+                        diff.getTestNodeDetail().getXpathLocation().concat(MigrationConstants
+                                .CSV_SEPARATOR_APPENDER).concat(diff.getTestNodeDetail().getValue())
+                                .concat(MigrationConstants.NEW_LINE);
+            }
+            Files.write(outputPath, csvEntry.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+            Files.write(keyValPath, keyVal.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
         }
+
     }
 
     private boolean isMigratedXpathEqualsDefaultXpath(Difference diff) {
@@ -323,7 +333,7 @@ class ConfigDiffChecker {
     private boolean isMigratedXPathAvailableInDiff(Difference diff) {
 
         String[] xpathValues = {"@class", "text()"};
-        return diff.getTestNodeDetail().getXpathLocation() != null && Arrays.stream(xpathValues)
-                .anyMatch(diff.getTestNodeDetail().getXpathLocation()::contains);
+        return diff.getTestNodeDetail().getXpathLocation() != null && Arrays.stream(xpathValues).anyMatch(diff
+                .getTestNodeDetail().getXpathLocation()::contains);
     }
 }
