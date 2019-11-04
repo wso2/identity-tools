@@ -84,6 +84,7 @@ public class ConfigLoader {
                 MigrationConstants.PROPERTY_FILE_EXTENSION);
         migratedPropertiesFiles = getFilesInPath(Paths.get(migratedProductHomePath.concat(MigrationConstants
                         .CONF_PATH)), MigrationConstants.PROPERTY_FILE_EXTENSION);
+
         j2TemplateFiles = getFilesInPath(Paths.get(defaultProductHomePath.concat(MigrationConstants
                 .TEMPLATE_CONF_PATH)), MigrationConstants.J2_FILE_EXTENSION);
         log.info("All files are successfully filtered by the extension.");

@@ -35,6 +35,7 @@ import java.util.Map;
 public class TomlGeneratorTool {
 
     private static final Log log = LogFactory.getLog(TomlGeneratorTool.class);
+
     public static void main(String[] args) throws IOException, ConfigMigrateException {
 
         String outputCSVFilePath = args[0];

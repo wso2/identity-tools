@@ -115,7 +115,6 @@ public class TomlGenerator {
 
                 generatedTomlKeyValueMap.put(tomlEntry.getKey(), tomlEntry.getValue());
             } else {
-
                 for (Map.Entry<String, String> propertyEntry : ((Map<String, String>) tomlEntry.getValue())
                         .entrySet()) {
 
@@ -191,8 +190,6 @@ public class TomlGenerator {
 
                 case MigrationConstants.KEY_VALUES:
                     readFileAndPutToMap(reader, keys, 1);
-                    break;
-                default:
                     break;
             }
 

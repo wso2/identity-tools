@@ -50,7 +50,5 @@ public class DiffCheckerTool {
 
         ConfigDiffChecker diffChecker = new ConfigDiffChecker();
         diffChecker.findConfigDiff(configLoader, outputGenerator);
-
-
     }
 }

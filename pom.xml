@@ -22,7 +22,6 @@
         <version>5</version>
     </parent>
 
-
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.wso2.carbon.identity.tools</groupId>
@@ -45,8 +44,6 @@
         <module>components/org.wso2.config.diff.creater</module>
         <module>components/org.wso2.is.toml.generator</module>
     </modules>
-
-
 
     <pluginRepositories>
         <pluginRepository>

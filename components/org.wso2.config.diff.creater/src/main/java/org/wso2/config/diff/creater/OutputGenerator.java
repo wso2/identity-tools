@@ -155,11 +155,6 @@ public class OutputGenerator {
         this.outputKeyValues = outputKeyValues;
     }
 
-    public File getOutputDirectory() {
-
-        return outputDirectory;
-    }
-
     private void setOutputDirectory(File outputDirectory) {
 
         this.outputDirectory = outputDirectory;
