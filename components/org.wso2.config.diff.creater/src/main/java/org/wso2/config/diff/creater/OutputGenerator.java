@@ -43,8 +43,7 @@ public class OutputGenerator {
     private File outputKeyValues = new File(MigrationConstants.OUTPUT_FOLDER.concat(MigrationConstants.FILE_SEPARATOR)
             .concat(MigrationConstants.KEY_VALUE_CSV));
     private File outputDirectory = new File(MigrationConstants.OUTPUT_FOLDER);
-    private File unTemplatedFileDirectory = new File(MigrationConstants.OUTPUT_FOLDER.concat(MigrationConstants
-            .FILE_SEPARATOR).concat(MigrationConstants.UN_TEMPLATE_FILE_FOLDER));
+    private File unTemplatedFileDirectory = new File(MigrationConstants.UN_TEMPLATE_FILE_FOLDER);
 
     /**
      * Create all the output csv files and directory.

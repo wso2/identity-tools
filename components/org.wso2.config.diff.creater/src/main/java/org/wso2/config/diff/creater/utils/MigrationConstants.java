@@ -31,7 +31,7 @@ public class MigrationConstants {
     public static final String CATALOG = "catalog";
     public static final String KEY_VALUES = "keyValues";
     public static final String OUTPUT_FOLDER = "output";
-    public static final String UN_TEMPLATE_FILE_FOLDER = "unTemplatedFiles";
+    public static final String UN_TEMPLATE_FILE_FOLDER = "output/unTemplatedFiles";
     public static final String NEW_LINE = "\n";
     public static final String CATALOG_URL = "https://raw.githubusercontent.com/wso2/identity-tools/components/" +
             "resources/Catalog.csv";
