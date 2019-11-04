@@ -17,7 +17,7 @@
  *
  */
 
-package org.wso2.config.diff.creater.utils;
+package org.wso2.configuration.diff.creater.utils;
 
 /**
  * Constant class used in config migration.
@@ -37,7 +37,6 @@ public class MigrationConstants {
             "resources/Catalog.csv";
     public static final String OUTPUT_CATALOG_CSV = "outputCatalog.csv";
     public static final String KEY_VALUE_CSV = "keyValue.csv";
-
     public static final String XML_FILE_EXTENSION = ".xml";
     public static final String PROPERTY_FILE_EXTENSION = ".properties";
     public static final String J2_FILE_EXTENSION = ".j2";

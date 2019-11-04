@@ -17,7 +17,7 @@
  *
  */
 
-package org.wso2.config.diff.creater.exception;
+package org.wso2.configuration.diff.creater.exception;
 
 /**
  * Exception class for config migrator.

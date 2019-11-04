@@ -19,6 +19,9 @@
 
 package org.wso2.toml.generator.util;
 
+/**
+ * Constant class used in toml generator.
+ */
 public class TomlGeneratorConstants {
 
     public static final String UPDATED_DEPLOYMENT_TOML = "updatedDeployment.toml";

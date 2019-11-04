@@ -28,7 +28,6 @@
             <artifactId>commons-io</artifactId>
             <version>${commons.io}</version>
         </dependency>
-
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
@@ -49,7 +48,6 @@
             <artifactId>commons-codec</artifactId>
             <version>${version.commons.codec}</version>
         </dependency>
-
         <dependency>
             <groupId>org.xmlunit</groupId>
             <artifactId>xmlunit-core</artifactId>
@@ -78,12 +76,6 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
         </dependency>
-        <dependency>
-            <groupId>au.com.bytecode</groupId>
-            <artifactId>opencsv</artifactId>
-            <version>2.4</version>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -91,14 +83,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>${mvn.assembly.plugin}</version>
                 <configuration>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>org.wso2.config.diff.creater.DiffCheckerTool</mainClass>
+                            <mainClass>org.wso2.configuration.diff.creater.DiffCheckerTool</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -125,6 +117,7 @@
     <properties>
         <maven.spotbugsplugin.version>3.1.10</maven.spotbugsplugin.version>
         <maven.checkstyle.plugin.version>3.0.0</maven.checkstyle.plugin.version>
+        <mvn.assembly.plugin>3.1.1</mvn.assembly.plugin>
         <version.checkstyle>7.8.2</version.checkstyle>
         <version.jinjava>2.4.14</version.jinjava>
         <version.cava-toml>0.5.0</version.cava-toml>
@@ -139,6 +132,7 @@
         <xml.unit.verions>2.6.2</xml.unit.verions>
         <xmlunit.version>1.5</xmlunit.version>
         <junit.version>4.12</junit.version>
+
     </properties>
 
 </project>

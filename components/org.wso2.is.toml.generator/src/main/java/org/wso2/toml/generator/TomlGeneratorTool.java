@@ -21,7 +21,7 @@ package org.wso2.toml.generator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.config.diff.creater.exception.ConfigMigrateException;
+import org.wso2.configuration.diff.creater.exception.ConfigMigrateException;
 import org.wso2.toml.generator.util.TomlGenerator;
 
 import java.io.File;
@@ -30,7 +30,7 @@ import java.util.Map;
 
 
 /**
- * New config model generator class.
+ * Main class for the toml file generation tool.
  */
 public class TomlGeneratorTool {
 

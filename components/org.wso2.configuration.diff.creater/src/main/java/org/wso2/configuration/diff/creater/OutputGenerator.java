@@ -17,13 +17,13 @@
  *
  */
 
-package org.wso2.config.diff.creater;
+package org.wso2.configuration.diff.creater;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.config.diff.creater.exception.ConfigMigrateException;
-import org.wso2.config.diff.creater.utils.MigrationConstants;
+import org.wso2.configuration.diff.creater.exception.ConfigMigrateException;
+import org.wso2.configuration.diff.creater.utils.MigrationConstants;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,6 +88,7 @@ public class OutputGenerator {
 
     /**
      * Create new file after removing the existing one.
+     *
      * @param file file
      * @throws IOException Exception is thrown if file is not deleted and created.
      */
@@ -107,6 +108,7 @@ public class OutputGenerator {
 
     /**
      * Update the created file using the title row of the output file.
+     *
      * @param file filename.
      * @param type file type.
      * @throws IOException

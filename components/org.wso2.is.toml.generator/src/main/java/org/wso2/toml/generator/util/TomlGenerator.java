@@ -23,8 +23,8 @@ import com.moandjiezana.toml.TomlWriter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.config.diff.creater.exception.ConfigMigrateException;
-import org.wso2.config.diff.creater.utils.MigrationConstants;
+import org.wso2.configuration.diff.creater.exception.ConfigMigrateException;
+import org.wso2.configuration.diff.creater.utils.MigrationConstants;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -190,6 +190,9 @@ public class TomlGenerator {
 
                 case MigrationConstants.KEY_VALUES:
                     readFileAndPutToMap(reader, keys, 1);
+                    break;
+
+                default:
                     break;
             }
 

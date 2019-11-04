@@ -17,14 +17,14 @@
  *
  */
 
-package org.wso2.config.diff.creater;
+package org.wso2.configuration.diff.creater;
 
-import org.wso2.config.diff.creater.exception.ConfigMigrateException;
+import org.wso2.configuration.diff.creater.exception.ConfigMigrateException;
 import org.xml.sax.SAXException;
 import java.io.IOException;
 
 /**
- * The main class for running the tool.
+ * The main class for diff finding tool.
  */
 public class DiffCheckerTool {
 
@@ -48,7 +48,7 @@ public class DiffCheckerTool {
         OutputGenerator outputGenerator = new OutputGenerator();
         outputGenerator.createOutputFiles();
 
-        ConfigDiffChecker diffChecker = new ConfigDiffChecker();
+        ConfigurationDiffChecker diffChecker = new ConfigurationDiffChecker();
         diffChecker.findConfigDiff(configLoader, outputGenerator);
     }
 }

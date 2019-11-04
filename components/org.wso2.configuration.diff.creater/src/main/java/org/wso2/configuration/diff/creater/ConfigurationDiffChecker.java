@@ -17,7 +17,7 @@
  *
  */
 
-package org.wso2.config.diff.creater;
+package org.wso2.configuration.diff.creater;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,8 +29,8 @@ import org.custommonkey.xmlunit.Difference;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
 
-import org.wso2.config.diff.creater.exception.ConfigMigrateException;
-import org.wso2.config.diff.creater.utils.MigrationConstants;
+import org.wso2.configuration.diff.creater.exception.ConfigMigrateException;
+import org.wso2.configuration.diff.creater.utils.MigrationConstants;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -52,20 +52,24 @@ import java.util.Set;
 /**
  * Main Class for migration configs.
  */
-class ConfigDiffChecker {
+public class ConfigurationDiffChecker {
 
-    private static final Log log = LogFactory.getLog(ConfigDiffChecker.class);
+    private static final Log log = LogFactory.getLog(ConfigurationDiffChecker.class);
 
     /**
-     * Find diff of XML and Properties files and write to output CSV files.
+     * Find diff  between two XML and Properties files and write to output CSV files.
      *
-     * @param configLoader    ConfigLoader which has separated file maps.
-     * @param outputGenerator OutputGenerator class.
+     * @param configLoader    ConfigLoader which loads all the files in conf folder and filter them.
+     * @param outputGenerator OutputGenerator which writes output to the CSV files.
      * @throws ConfigMigrateException  ConfigMigrateException
      */
-    public void findConfigDiff(ConfigLoader configLoader, OutputGenerator outputGenerator) throws ConfigMigrateException {
+    public void findConfigDiff(ConfigLoader configLoader, OutputGenerator outputGenerator) throws
+            ConfigMigrateException {
 
         Map<String, String> existingTags;
+        if (configLoader == null) {
+            throw new ConfigMigrateException("Error occurred when loading files.");
+        }
         try {
             existingTags = configLoader.readFromCSV(new URL(MigrationConstants.CATALOG_URL));
         } catch (IOException e) {
@@ -82,11 +86,11 @@ class ConfigDiffChecker {
     }
 
     /**
-     * Check whether property files are in templates or not, if true find diff.
+     * Check whether property files are templated or not, if true find diff.
      *
      * @param defaultPropertiesFiles  default property files map.
      * @param migratedPropertiesFiles migrated property files map.
-     * @param j2TemplateFiles         template property files .
+     * @param j2TemplateFiles         template property files.
      * @param existingTags            map of existing knowledge.
      * @param outputCSVFile           output csv file.
      * @param keyValueFile            output key-value file.
@@ -97,6 +101,9 @@ class ConfigDiffChecker {
                                    Map<String, String> existingTags, File outputCSVFile, File keyValueFile)
             throws ConfigMigrateException {
 
+        if (migratedPropertiesFiles == null) {
+            throw new ConfigMigrateException("There are no property files to be migrated. ");
+        }
         for (Map.Entry<String, File> entry : migratedPropertiesFiles.entrySet()) {
 
             try {
@@ -105,13 +112,14 @@ class ConfigDiffChecker {
                             findDiffPropertiesFiles(defaultPropertiesFiles.get(entry.getKey()),
                                     migratedPropertiesFiles.get(entry.getKey()));
                     writePropertiesDiffToCSV(migratedPropertiesFiles.get(entry.getKey()), existingTags,
-                            Paths.get(outputCSVFile.getPath()), Paths.get(keyValueFile.getPath()), changedPropertyDiffSet);
+                            Paths.get(outputCSVFile.getPath()), Paths.get(keyValueFile.getPath()),
+                            changedPropertyDiffSet);
                 } else {
                     log.warn(entry.getValue().getPath() + " is not templated with toml. \n");
-                    File outFile =
+                    File unTemplateFile =
                             new File(MigrationConstants.UN_TEMPLATE_FILE_FOLDER + MigrationConstants
                                     .FILE_SEPARATOR + entry.getKey());
-                    FileUtils.copyFile(entry.getValue(), outFile);
+                    FileUtils.copyFile(entry.getValue(), unTemplateFile);
                 }
             } catch (IOException e) {
                 throw new ConfigMigrateException("Error occurred when writing diff to the csv.", e);
@@ -134,15 +142,15 @@ class ConfigDiffChecker {
         Properties defaultProperties = new Properties();
         Properties migratedProperties = new Properties();
         try (FileInputStream defaultInputStream = new FileInputStream(defaultFile);
-             FileInputStream changedInputStream = new FileInputStream(migratedFile)) {
+             FileInputStream migratedInputStream = new FileInputStream(migratedFile)) {
             defaultProperties.load(defaultInputStream);
-            migratedProperties.load(changedInputStream);
-            Map<String, String> defaultMap = new HashMap<String, String>((Map) defaultProperties);
-            Map<String, String> migratedMap = new HashMap<String, String>((Map) migratedProperties);
+            migratedProperties.load(migratedInputStream);
+            Map<String, String> defaultMap = new HashMap<>((Map) defaultProperties);
+            Map<String, String> migratedMap = new HashMap<>((Map) migratedProperties);
 
             Set<Map.Entry<String, String>> defaultPropertySet = defaultMap.entrySet();
             Set<Map.Entry<String, String>> migratedPropertySet = migratedMap.entrySet();
-            // Leaves only entries in changedPropertySet that are only in changedPropertySet, not in defaultPropertySet.
+            // The migrated properties which are not available in the default properties.
             migratedPropertySet.removeAll(defaultPropertySet);
 
             return migratedPropertySet;
@@ -188,7 +196,7 @@ class ConfigDiffChecker {
             try {
                 Files.write(outputCSVFilePath, csvEntry.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
                 Files.write(keyValueFilePath, keyValueData.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
-            } catch(IOException e) {
+            } catch (IOException e) {
                 throw new ConfigMigrateException("Error occured when writing data to CSV files.", e);
             }
 
@@ -226,7 +234,7 @@ class ConfigDiffChecker {
     private boolean isFileTemplated(Map<String, File> defaultXMLFiles, Map<String, File> j2files, Map.Entry<String,
             File> entry) {
 
-        String j2filename = entry.getKey() + ".j2";
+        String j2filename = entry.getKey() + MigrationConstants.J2_FILE_EXTENSION;
         return defaultXMLFiles.get(entry.getKey()) != null && j2files.get(j2filename) != null;
     }
 
