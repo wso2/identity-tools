@@ -109,22 +109,20 @@ public class TomlGenerator {
     private Map<String, Object> concatTomlMaps(Map<String, Object> existingTomlMap,
                                                Map<String, Object> generatedTomlKeyValueMap) {
 
-        for (Map.Entry<String, Object> tomlEntry : existingTomlMap.entrySet()) {
+        for (Map.Entry<String, Object> tomlEntry : generatedTomlKeyValueMap.entrySet()) {
 
-            if (generatedTomlKeyValueMap.get(tomlEntry.getKey()) == null) {
-
-                generatedTomlKeyValueMap.put(tomlEntry.getKey(), tomlEntry.getValue());
+            if (existingTomlMap.get(tomlEntry.getKey()) == null) {
+                existingTomlMap.put(tomlEntry.getKey(), tomlEntry.getValue());
             } else {
                 for (Map.Entry<String, String> propertyEntry : ((Map<String, String>) tomlEntry.getValue())
                         .entrySet()) {
-
-                    ((Map<String, String>) generatedTomlKeyValueMap.get(tomlEntry.getKey())).
-                            computeIfAbsent(propertyEntry.getKey(), k -> propertyEntry.getValue());
+                    ((Map<String, String>) existingTomlMap.get(tomlEntry.getKey())).put(propertyEntry.getKey(),
+                            propertyEntry.getValue());
                 }
             }
         }
 
-        return generatedTomlKeyValueMap;
+        return existingTomlMap;
     }
 
     private boolean isFilesExists(File outputCSVFile, File keyValueCSVFile, File deploymentTomlFile) {
@@ -166,13 +164,20 @@ public class TomlGenerator {
     private void addKeyToOutputMap(Map<String, String> keyValueMap, Map<String, Object> outputMap, String key,
                                    String value) {
 
-        Map<String, String> propertyMap = new HashMap<>();
         int lastIndexOf = value.lastIndexOf(".");
         if (lastIndexOf > 0) {
-            String property = value.substring(0, lastIndexOf);
-            String tomlMainKey = value.substring(lastIndexOf + 1);
-            propertyMap.put(property, keyValueMap.get(key));
-            outputMap.put(tomlMainKey, propertyMap);
+            String tomlMainKey = value.substring(0, lastIndexOf);
+            String property = value.substring(lastIndexOf + 1);
+            if (outputMap.get(tomlMainKey) == null) {
+                Map<String, String> propertyMap = new HashMap<>();
+                propertyMap.put(property, keyValueMap.get(key));
+                outputMap.put(tomlMainKey, propertyMap);
+            } else {
+                Map<String, String> propertyMap = (Map<String, String>) outputMap.get(tomlMainKey);
+                propertyMap.put(property, keyValueMap.get(key));
+                outputMap.replace(tomlMainKey, propertyMap);
+            }
+
         }
     }
 

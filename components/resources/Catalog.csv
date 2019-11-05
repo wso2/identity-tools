@@ -1,6 +1,6 @@
 FileName | fileType | Tag(xpath or property) | tomlConfig | dataType | description | defaultValue | PossibleValues | Config Status
-axis2.xml | xml | /axisconfig[1]/parameter[16]/text()[1] |  |  |  |  |  | Version Change
-axis2.xml | xml | /axisconfig[1]/parameter[15]/text()[1] |  |  |  |  |  | Version Change
+axis2.xml | xml | /axisconfig[1]/parameter[16]/text()[1] |  |  |  |  |  | Not Needed
+axis2.xml | xml | /axisconfig[1]/parameter[15]/text()[1] |  |  |  |  |  | Not Needed
 axis2.xml | xml | /axisconfig[1]/clustering[1]/parameter[3]/text()[1] | clustering.domain | String | The clustering domain/group. Nodes in the same group will belong to the same multicast          domain. There will not be interference between nodes in different groups. | wso2.carbon.domain |  | Templated
 axis2.xml | xml | /axisconfig[1]/clustering[1]/parameter[7]/text()[1] | clustering.local_member_host | String | The host name or IP address of this member | 127.0.0.1 |  | Templated
 axis2.xml | xml | /axisconfig[1]/clustering[1]/parameter[8]/text()[1] | clustering.local_member_port | String | The host port of the member | 4000 |  | Templated
@@ -8,7 +8,7 @@ registry.xml | xml | /wso2registry[1]/dbConfig[2]/dataSource[1]/text()[1] |  -  
 registry.xml | xml | /wso2registry[1]/remoteInstance[1]/id[1]/text()[1] |  |  |  |  |  | Not Needed
 registry.xml | xml | /wso2registry[1]/remoteInstance[1]/dbConfig[1]/text()[1] |  |  |  |  |  | Not needed
 registry.xml | xml | /wso2registry[1]/remoteInstance[1]/cacheId[1]/text()[1] | governance_data.cache_id= | String | This is the cache_id, which is a unique value.  |  |  | Templated
-carbon.xml | xml | /Server[1]/Version[1]/text()[1] |  |  |  | 5.9.0 |  | Version Change
+carbon.xml | xml | /Server[1]/Version[1]/text()[1] |  |  |  | 5.9.0 |  | Not Needed
 carbon.xml | xml | /Server[1]/HostName[1]/text()[1] | server.hostname | String | The host name of the identity server can be configured through this property. Default value will be localhost. | localhost |  | Templated
 carbon.xml | xml | /Server[1]/MgtHostName[1]/text()[1] | server.hostname |  |  | localhost |  | Deprecated
 carbon.xml | xml | /Server[1]/Ports[1]/Offset[1]/text()[1] | server.offset | int | If you need to change the port of the identity server, you need to add an offset. Default this will be 0 and the port which mapped to it is 9443 | 0 |  | Templated
