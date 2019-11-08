@@ -41,8 +41,9 @@
 
     <modules>
         <module>components/org.wso2.is.password.reencrypt</module>
-        <module>components/org.wso2.configuration.diff.creater</module>
-        <module>components/org.wso2.is.toml.generator</module>
+        <module>components/org.wso2.is.configuration.migrater</module>
+        <module>components/org.wso2.is.configuration.diff.creator</module>
+        <module>components/org.wso2.is.configuration.toml.generator</module>
     </modules>
 
     <pluginRepositories>
