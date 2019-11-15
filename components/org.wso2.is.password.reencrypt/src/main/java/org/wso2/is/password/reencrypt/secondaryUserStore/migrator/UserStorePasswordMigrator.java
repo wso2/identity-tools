@@ -24,7 +24,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.util.CryptoException;
 import org.wso2.carbon.identity.core.migrate.MigrationClientException;
-import org.wso2.carbon.identity.core.util.IdentityIOStreamUtils;
 import org.wso2.is.password.reencrypt.secondaryUserStore.util.Constant;
 import org.wso2.is.password.reencrypt.secondaryUserStore.util.EncryptionUtil;
 
@@ -32,6 +31,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -126,13 +126,11 @@ public class UserStorePasswordMigrator {
         return files != null ? files : new File[0];
     }
 
-    private void updatePassword(String filePath) throws FileNotFoundException, CryptoException {
+    private void updatePassword(String filePath) throws IOException, CryptoException {
 
         XMLStreamReader parser = null;
-        FileInputStream stream = null;
-        try {
+        try (FileInputStream stream = new FileInputStream(filePath)) {
             log.info("Migrating password in: " + filePath);
-            stream = new FileInputStream(filePath);
             parser = XMLInputFactory.newInstance().createXMLStreamReader(stream);
             StAXOMBuilder builder = new StAXOMBuilder(parser);
             OMElement documentElement = builder.getDocumentElement();
@@ -161,9 +159,6 @@ public class UserStorePasswordMigrator {
             try {
                 if (parser != null) {
                     parser.close();
-                }
-                if (stream != null) {
-                    IdentityIOStreamUtils.closeInputStream(stream);
                 }
             } catch (XMLStreamException ex) {
                 log.error("Error while closing XML stream", ex);

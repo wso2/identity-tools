@@ -47,7 +47,7 @@ import static org.wso2.is.password.reencrypt.secondaryUserStore.util.Constant.HE
  */
 public class SecondaryUserstoreCryptoUtil {
 
-    private static Log log = LogFactory.getLog(SecondaryUserstoreCryptoUtil.class);
+    private static final Log log = LogFactory.getLog(SecondaryUserstoreCryptoUtil.class);
     private static SecondaryUserstoreCryptoUtil instance = new SecondaryUserstoreCryptoUtil();
     private String primaryKeyStoreAlias;
     private String primaryKeyStoreKeyPass;
@@ -136,7 +136,7 @@ public class SecondaryUserstoreCryptoUtil {
 
             keyStoreCipher.init(Cipher.ENCRYPT_MODE, certs[0].getPublicKey());
             if (isCipherTransformEnabled && plainTextBytes.length == 0) {
-                encryptedKey = "".getBytes();
+                encryptedKey = new byte[0];
             } else {
                 encryptedKey = keyStoreCipher.doFinal(plainTextBytes);
             }
@@ -158,7 +158,7 @@ public class SecondaryUserstoreCryptoUtil {
      * @throws CryptoException On error during encryption
      */
     public byte[] encrypt(byte[] plainTextBytes) throws CryptoException {
-        //encrypt with transformation configured in carbon.properties as self contained ciphertext
+        // Encrypt with transformation configured in carbon.properties as self contained ciphertext.
         return encrypt(plainTextBytes, System.getProperty(CIPHER_TRANSFORMATION_SYSTEM_PROPERTY), true);
     }
 
@@ -201,7 +201,7 @@ public class SecondaryUserstoreCryptoUtil {
             if (cipherTransformation != null) {
                 CipherHolder cipherHolder = cipherTextToCipherHolder(cipherTextBytes);
                 if (cipherHolder != null) {
-                    // cipher with meta data.
+                    // Cipher with meta data.
                     if (log.isDebugEnabled()) {
                         log.debug("Cipher transformation for decryption with key store: "
                                 + cipherHolder.getTransformation());
@@ -220,7 +220,7 @@ public class SecondaryUserstoreCryptoUtil {
             keyStoreCipher.init(Cipher.DECRYPT_MODE, privateKey);
 
             if (cipherTextBytes.length == 0) {
-                decryptedValue = "".getBytes();
+                decryptedValue = new byte[0];
             } else {
                 decryptedValue = keyStoreCipher.doFinal(cipherTextBytes);
             }
@@ -305,7 +305,7 @@ public class SecondaryUserstoreCryptoUtil {
         messageDigest.update(certificate.getEncoded());
         byte[] digestByteArray = messageDigest.digest();
 
-        // convert digest in form of byte array to hex format
+        // Convert digest in form of byte array to hex format.
         StringBuffer strBuffer = new StringBuffer();
 
         for (int i = 0; i < digestByteArray.length; i++) {
