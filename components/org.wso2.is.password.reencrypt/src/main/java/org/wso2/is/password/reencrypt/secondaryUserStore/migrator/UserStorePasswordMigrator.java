@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package secondaryUserStore.migrator;
+package org.wso2.is.password.reencrypt.secondaryUserStore.migrator;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
@@ -25,8 +25,8 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.util.CryptoException;
 import org.wso2.carbon.identity.core.migrate.MigrationClientException;
 import org.wso2.carbon.identity.core.util.IdentityIOStreamUtils;
-import secondaryUserStore.util.Constant;
-import secondaryUserStore.util.EncryptionUtil;
+import org.wso2.is.password.reencrypt.secondaryUserStore.util.Constant;
+import org.wso2.is.password.reencrypt.secondaryUserStore.util.EncryptionUtil;
 
 import java.io.File;
 import java.io.FileInputStream;

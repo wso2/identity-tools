@@ -106,7 +106,7 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <Private-package>org.wso2.is.password.reencrypt.internal</Private-package>
+                        <Private-package>org.wso2.is.password.reencrypt.secondaryUserStore.internal</Private-package>
                         <Import-Package>
                             org.osgi.framework; version="${osgi.framework.imp.pkg.version.range}",
                             org.osgi.service.component; version="${osgi.service.component.imp.pkg.version.range}",

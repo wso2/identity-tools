@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package secondaryUserStore.internal;
+package org.wso2.is.password.reencrypt.secondaryUserStore.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,9 +26,8 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.carbon.base.api.ServerConfigurationService;
-import secondaryUserStore.migrator.UserStorePasswordMigrator;
-
-import static secondaryUserStore.util.Constant.JVM_PROPERTY_MIGRATE_PASSWORD;
+import org.wso2.is.password.reencrypt.secondaryUserStore.util.Constant;
+import org.wso2.is.password.reencrypt.secondaryUserStore.migrator.UserStorePasswordMigrator;
 
 @Component(
         name = "org.wso2.is.password.reencrypt",
@@ -47,7 +46,7 @@ public class ISReEncryptionServiceComponent {
     protected void activate(ComponentContext context) {
 
         try {
-            String migration = System.getProperty(JVM_PROPERTY_MIGRATE_PASSWORD);
+            String migration = System.getProperty(Constant.JVM_PROPERTY_MIGRATE_PASSWORD);
             log.info("secondary userstore password re-encryption component activated");
 
             if (migration != null) {
@@ -85,12 +84,12 @@ public class ISReEncryptionServiceComponent {
     )
     protected void setServerConfigurationService(ServerConfigurationService serverConfigurationService) {
 
-        ISReEncryptionServiceDataHolder.setServerConfigurationService(serverConfigurationService);
+        ISReEncryptionServiceDataHolder.getInstance().setServerConfigurationService(serverConfigurationService);
     }
 
     protected void unsetServerConfigurationService(ServerConfigurationService serverConfigurationService) {
 
-        ISReEncryptionServiceDataHolder.setServerConfigurationService(null);
+        ISReEncryptionServiceDataHolder.getInstance().setServerConfigurationService(null);
     }
 
 }
