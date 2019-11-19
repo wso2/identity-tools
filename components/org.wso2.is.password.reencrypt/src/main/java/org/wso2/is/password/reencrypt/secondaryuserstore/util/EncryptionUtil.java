@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.is.password.reencrypt.secondaryUserStore.util;
+package org.wso2.is.password.reencrypt.secondaryuserstore.util;
 
 import org.apache.commons.lang.StringUtils;
 import org.wso2.carbon.core.util.CryptoException;

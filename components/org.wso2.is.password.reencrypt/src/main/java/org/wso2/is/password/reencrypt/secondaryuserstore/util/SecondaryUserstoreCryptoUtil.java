@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.is.password.reencrypt.secondaryUserStore.util;
+package org.wso2.is.password.reencrypt.secondaryuserstore.util;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -26,7 +26,7 @@ import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.core.RegistryResources.SecurityManagement;
 import org.wso2.carbon.core.util.CipherHolder;
 import org.wso2.carbon.core.util.CryptoException;
-import org.wso2.is.password.reencrypt.secondaryUserStore.internal.ISReEncryptionServiceDataHolder;
+import org.wso2.is.password.reencrypt.secondaryuserstore.internal.ISReEncryptionServiceDataHolder;
 
 import java.io.FileInputStream;
 import java.nio.charset.Charset;
@@ -38,8 +38,8 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import javax.crypto.Cipher;
 
-import static org.wso2.is.password.reencrypt.secondaryUserStore.util.Constant.CIPHER_TRANSFORMATION_SYSTEM_PROPERTY;
-import static org.wso2.is.password.reencrypt.secondaryUserStore.util.Constant.HEX_CHARACTERS;
+import static org.wso2.is.password.reencrypt.secondaryuserstore.util.Constant.CIPHER_TRANSFORMATION_SYSTEM_PROPERTY;
+import static org.wso2.is.password.reencrypt.secondaryuserstore.util.Constant.HEX_CHARACTERS;
 
 /**
  * The utility class to encrypt/decrypt passwords to be stored in the

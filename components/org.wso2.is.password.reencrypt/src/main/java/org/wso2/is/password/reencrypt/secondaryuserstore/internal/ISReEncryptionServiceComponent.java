@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.is.password.reencrypt.secondaryUserStore.internal;
+package org.wso2.is.password.reencrypt.secondaryuserstore.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,8 +26,8 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.carbon.base.api.ServerConfigurationService;
-import org.wso2.is.password.reencrypt.secondaryUserStore.util.Constant;
-import org.wso2.is.password.reencrypt.secondaryUserStore.migrator.UserStorePasswordMigrator;
+import org.wso2.is.password.reencrypt.secondaryuserstore.util.Constant;
+import org.wso2.is.password.reencrypt.secondaryuserstore.migrator.UserStorePasswordMigrator;
 
 @Component(
         name = "org.wso2.is.password.reencrypt",

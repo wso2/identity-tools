@@ -106,7 +106,7 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <Private-package>org.wso2.is.password.reencrypt.secondaryUserStore.internal</Private-package>
+                        <Private-package>org.wso2.is.password.reencrypt.secondaryuserstore.internal</Private-package>
                         <Import-Package>
                             org.osgi.framework; version="${osgi.framework.imp.pkg.version.range}",
                             org.osgi.service.component; version="${osgi.service.component.imp.pkg.version.range}",
@@ -121,8 +121,8 @@
                             org.wso2.carbon.user.api, org.wso2.carbon.user.core.*, org.wso2.carbon.utils.dbcreator
                         </Import-Package>
                         <Export-Package>
-                            org.wso2.is.password.reencrypt.secondaryUserStore.*,
-                            !org.wso2.is.password.reencrypt.secondaryUserStore.internal
+                            org.wso2.is.password.reencrypt.secondaryuserstore.*,
+                            !org.wso2.is.password.reencrypt.secondaryuserstore.internal
                         </Export-Package>
                     </instructions>
                 </configuration>
