@@ -34,6 +34,8 @@ public class MigrationConstants {
     public static final String CATALOG_URL = "https://raw.githubusercontent.com/GDRDABARERA/toml-config-migrator" +
             "/master/Catalog.csv";
     public static final String OUTPUT_CATALOG_CSV = "outputCatalog.csv";
+    public static final String CATALOG_FIRST_ENTRY = "FileName | fileType | Tag(xpath or property) | tomlConfig |" +
+            " dataType | description | defaultValue | PossibleValues | Config Status";
     public static final String DEPLOYMENT_TOML_FILE = "deployment.toml";
     public static final String XML_FILE_EXTENSION = ".xml";
     public static final String PROPERTY_FILE_EXTENSION = ".properties";

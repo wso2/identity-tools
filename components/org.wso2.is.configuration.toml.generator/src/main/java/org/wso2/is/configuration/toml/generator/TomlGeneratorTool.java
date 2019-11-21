@@ -19,8 +19,8 @@
 
 package org.wso2.is.configuration.toml.generator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.wso2.is.configuration.diff.creater.exception.ConfigMigrateException;
 import org.wso2.is.configuration.toml.generator.util.TomlGenerator;
 import java.io.File;
@@ -32,15 +32,19 @@ import java.util.Map;
  */
 public class TomlGeneratorTool {
 
-    private static final Log log = LogFactory.getLog(TomlGeneratorTool.class);
+    private static final Logger log = LogManager.getLogger(TomlGeneratorTool.class);
 
-    public void generateTomlFile(Map<String, String> keyValuesMapFromDiff, File deploymentTomlFile, File log)
+    public void generateTomlFile(Map<String, String> keyValuesMapFromDiff, File deploymentTomlFile, File logFile)
             throws ConfigMigrateException {
 
         TomlGenerator tomlGenerator = new TomlGenerator();
+
         Map<String, Object> tomlKeyValueMap = tomlGenerator.generateTomlKeyValueMap(keyValuesMapFromDiff,
-                deploymentTomlFile, log);
-        TomlGenerator.writeToTOMLFile(tomlKeyValueMap);
+                deploymentTomlFile, logFile);
+        log.info("Successfully generated toml map!!");
+
+        tomlGenerator.writeToTOMLFile(tomlKeyValueMap);
+        log.info("A new deployment toml file is successfully written!!");
 
     }
 }

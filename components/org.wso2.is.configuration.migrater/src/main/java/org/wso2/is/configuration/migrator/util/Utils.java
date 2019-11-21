@@ -43,22 +43,22 @@ public class Utils {
 
     /**
      * Write the information to the catalog file.
-     * @param keyCatalogValuesMap
-     * @param outputCSV
+     * @param keyCatalogValuesMap Map of catalog keys and values.
+     * @param outputCSV The output csv file.
      */
     public static void writeToFile(Map<String, String> keyCatalogValuesMap, File outputCSV)
             throws ConfigMigrateException {
 
         if (keyCatalogValuesMap != null) {
-
-            for (Map.Entry<String, String> catalogEntry : keyCatalogValuesMap.entrySet()) {
-                try {
+            try {
+                Files.write(Paths.get(outputCSV.getPath()), MigrationConstants.CATALOG_FIRST_ENTRY.concat(
+                        MigrationConstants.NEW_LINE).getBytes(StandardCharsets.UTF_8), StandardOpenOption.WRITE);
+                for (Map.Entry<String, String> catalogEntry : keyCatalogValuesMap.entrySet()) {
                     Files.write(Paths.get(outputCSV.getPath()), catalogEntry.getValue().concat(MigrationConstants
                             .NEW_LINE).getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
-                } catch (IOException e) {
-                    throw new ConfigMigrateException("Error occurred when writing catalog file.", e);
                 }
-
+            } catch (IOException e) {
+                throw new ConfigMigrateException("Error occurred when writing catalog file.", e);
             }
         }
     }

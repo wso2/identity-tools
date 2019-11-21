@@ -117,6 +117,7 @@ public class ConfigLoader {
         Map<String, String> keys = new HashMap<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(csvRemoteURL.openStream(),
                 StandardCharsets.UTF_8))) {
+            reader.readLine();
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(Pattern.quote(MigrationConstants.CSV_SEPARATOR_APPENDER));
                 if (isNewLine(parts)) {

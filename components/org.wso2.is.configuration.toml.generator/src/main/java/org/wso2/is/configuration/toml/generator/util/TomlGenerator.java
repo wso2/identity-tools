@@ -22,8 +22,8 @@ package org.wso2.is.configuration.toml.generator.util;
 import com.moandjiezana.toml.Toml;
 import com.moandjiezana.toml.TomlWriter;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.wso2.is.configuration.diff.creater.exception.ConfigMigrateException;
 import org.wso2.is.configuration.diff.creater.utils.MigrationConstants;
 
@@ -45,17 +45,17 @@ import java.util.regex.Pattern;
  */
 public class TomlGenerator {
 
-    private static final Log log = LogFactory.getLog(TomlGenerator.class);
+    private static final Logger log = LogManager.getLogger(TomlGenerator.class);
 
     /**
      * Write the configuration map to a file.
      *
      * @param tomlKeyValueMap map of configuration.
      */
-    public static void writeToTOMLFile(Map<String, Object> tomlKeyValueMap) {
+    public void writeToTOMLFile(Map<String, Object> tomlKeyValueMap) {
         TomlWriter writer = new TomlWriter();
         try {
-            File outputDeploymentFile = getFile();
+            File outputDeploymentFile = getOutputTomlFile();
             if (outputDeploymentFile.createNewFile()) {
                 writer.write(tomlKeyValueMap, outputDeploymentFile);
             }
@@ -64,7 +64,7 @@ public class TomlGenerator {
         }
     }
 
-    private static File getFile() {
+    private File getOutputTomlFile() {
         File outputDeploymentFile = new File(TomlGeneratorConstants.UPDATED_DEPLOYMENT_TOML);
         if (outputDeploymentFile.exists()) {
             if (!outputDeploymentFile.delete()) {
@@ -171,6 +171,7 @@ public class TomlGenerator {
             throws IOException {
 
         String line;
+        reader.readLine();
         while ((line = reader.readLine()) != null) {
             String[] parts = line.split(Pattern.quote(MigrationConstants.CSV_SEPARATOR_APPENDER));
             if (parts.length > 3) {
