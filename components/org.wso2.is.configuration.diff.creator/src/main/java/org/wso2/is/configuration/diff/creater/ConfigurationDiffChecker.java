@@ -177,7 +177,7 @@ public class ConfigurationDiffChecker {
             if (existingTags.get(property.getKey()) == null) {
                 csvEntry = migratedFile.getName().concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(
                         MigrationConstants.PROPERTIES_FILE_TYPE).concat(MigrationConstants.CSV_SEPARATOR_APPENDER)
-                        .concat(property.getKey()).concat("| | | | | |").concat(MigrationConstants.NEW_LINE);
+                        .concat(property.getKey()).concat("| | | | | |");
                 existingTags.put(property.getKey(), csvEntry);
                 log.info("Add this entry to the remote catalog : " + csvEntry + MigrationConstants.NEW_LINE);
                 keyValues.put(property.getKey(), property.getValue());
@@ -291,7 +291,7 @@ public class ConfigurationDiffChecker {
                         migratedFile.getName().concat(MigrationConstants.CSV_SEPARATOR_APPENDER)
                                 .concat(MigrationConstants.XML_FILE_TYPE)
                                 .concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(csvKey).concat("| | | |")
-                                .concat(defaultValue).concat("| |").concat(MigrationConstants.NEW_LINE);
+                                .concat(defaultValue).concat("| |");
 
                 existingXMLTags.put(csvKey, csvEntry);
                 keyValues.put(csvKey, changedValue);

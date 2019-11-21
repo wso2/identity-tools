@@ -1,50 +1,138 @@
 FileName | fileType | Tag(xpath or property) | tomlConfig | dataType | description | defaultValue | PossibleValues | Config Status
-axis2.xml | xml | /axisconfig[1]/parameter[16]/text()[1] |  |  |  |  |  | Not Needed
-axis2.xml | xml | /axisconfig[1]/parameter[15]/text()[1] |  |  |  |  |  | Not Needed
-axis2.xml | xml | /axisconfig[1]/clustering[1]/parameter[3]/text()[1] | clustering.domain | String | The clustering domain/group. Nodes in the same group will belong to the same multicast          domain. There will not be interference between nodes in different groups. | wso2.carbon.domain |  | Templated
-axis2.xml | xml | /axisconfig[1]/clustering[1]/parameter[7]/text()[1] | clustering.local_member_host | String | The host name or IP address of this member | 127.0.0.1 |  | Templated
-axis2.xml | xml | /axisconfig[1]/clustering[1]/parameter[8]/text()[1] | clustering.local_member_port | String | The host port of the member | 4000 |  | Templated
-registry.xml | xml | /wso2registry[1]/dbConfig[2]/dataSource[1]/text()[1] |  -  | - |  |  | | Not templated
 registry.xml | xml | /wso2registry[1]/remoteInstance[1]/id[1]/text()[1] |  |  |  |  |  | Not Needed
-registry.xml | xml | /wso2registry[1]/remoteInstance[1]/dbConfig[1]/text()[1] |  |  |  |  |  | Not needed
-registry.xml | xml | /wso2registry[1]/remoteInstance[1]/cacheId[1]/text()[1] | governance_data.cache_id= | String | This is the cache_id, which is a unique value.  |  |  | Templated
-carbon.xml | xml | /Server[1]/Version[1]/text()[1] |  |  |  | 5.9.0 |  | Not Needed
-carbon.xml | xml | /Server[1]/HostName[1]/text()[1] | server.hostname | String | The host name of the identity server can be configured through this property. Default value will be localhost. | localhost |  | Templated
-carbon.xml | xml | /Server[1]/MgtHostName[1]/text()[1] | server.hostname |  |  | localhost |  | Deprecated
-carbon.xml | xml | /Server[1]/Ports[1]/Offset[1]/text()[1] | server.offset | int | If you need to change the port of the identity server, you need to add an offset. Default this will be 0 and the port which mapped to it is 9443 | 0 |  | Templated
-carbon.xml | xml | /Server[1]/EnableEmailUserName[1]/text()[1] | tenant_mgt.enable_email_domain | boolean | To enable email as username, make this to true. Default value will be false. |  |  | Templated
-carbon.xml | xml | /Server[1]/Security[1]/KeyStore[1]/Location[1]/text()[1] | keystore.primary.file_name | String | The Primary Keystore file location. | ${carbon.home}/repository/resources/security/wso2carbon.jks |  | Templated
-carbon.xml | xml | /Server[1]/Security[1]/KeyStore[1]/KeyAlias[1]/text()[1] | keystore.primary.alias | String | The Private Key alias of the primary keystore. | wso2carbon |  | Templated
-carbon.xml | xml | /Server[1]/Security[1]/TrustStore[1]/Location[1]/text()[1] | truststore.file_name | String | The client trustore file location. | ${carbon.home}/repository/resources/security/client-truststore.jks |  | Templated
-identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/DataSource[1]/Name[1]/text()[1] | identity.data_source | String | The jndi value of the Identity DataSource | jdbc/WSO2IdentityDB |  | Templated
-identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/SessionDataPersist[1]/PoolSize[1]/text()[1] | session_data.persistence.persistence_pool_size | int | ‘PoolSize’ equals to 0 means that it is disabled and then the authentication flow is blocked until this particular data persistence task is completed. To execute the persistence task in asynchronously, set the value to >0 value. Based on the pool size, the system creates the task parallel to execute the persistence task that was in the queue. | 0 |  | Templated
-identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/SessionDataPersist[1]/SessionDataCleanUp[1]/CleanUpPeriod[1]/text()[1] | session_data.cleanup.clean_expired_session_data_every | int | This is the time period (in minutes) that the cleanup task would run. The default value is 1 day. This is used for both session data cleanup and operation data cleanup through the same task. | 1440 |  | Templated
-identity.xml | xml | /Server[1]/OpenID[1]/OpenIDSkipUserConsent[1]/text()[1] |  |  |  | FALSE |  | Not templated
-identity.xml | xml | /Server[1]/OAuth[1]/AppInfoCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
-identity.xml | xml | /Server[1]/OAuth[1]/AuthorizationGrantCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
-identity.xml | xml | /Server[1]/OAuth[1]/SessionDataCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
-identity.xml | xml | /Server[1]/OAuth[1]/ClaimCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
-identity.xml | xml | /Server[1]/OAuth[1]/ShowDisplayNameInConsentPage[1]/text()[1] |  |  |  |  |  | Removed
-identity.xml | xml | /Server[1]/OAuth[1]/TimestampSkew[1]/text()[1] | oauth.timestamp_skew | int | The time stamp skew is used to manage small time gaps in the system clocks of different servers |  |  | Templated
-identity.xml | xml | /Server[1]/OAuth[1]/EnableOAuthCache[1]/text()[1] |  |  |  |  |  | Removed
-identity.xml | xml | /Server[1]/OAuth[1]/IdentityOAuthTokenGenerator[1]/text()[1] | oauth.extensions.token_generator| String  | OAuth Token Generator class. |  |  | Templated
-identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[3]/text()[1] |  |  |  |  |  | Removed
-identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[4]/text()[1] |  |  |  |  |  | Removed
-identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[5]/text()[1] |  |  |  |  |  | Removed
-identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[6]/text()[1] |  |  |  |  |  | Removed
-identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[7]/text()[1] |  |  |  |  |  | Removed
-identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[8]/text()[1] |  |  |  |  |  | Removed
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[3]/jndiConfig[1]/name[1]/text()[1] |  | String  | jndi name of the Identity DB | jdbc/WSO2IdentityDB |  | Not templated
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[2]/jndiConfig[1]/name[1]/text()[1] |  | String  | jndi name of the shared DB | jdbc/SHARED_DB |  | Not Templated
+identity.xml | xml | /Server[1]/OAuth[1]/OAuth1AuthorizeUrl[1]/text()[1] | oauth.endpoints.oauth1_authorize_url | String  | WSO2 Identity Server OAuth1 authorize URL | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth/authorize-url |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/OAuth2ErrorPage[1]/text()[1] | oauth.endpoints.oauth2_error_page | String  | WSO2 Identity Server OAuth2 Error page | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/oauth2_error.do |  | Templated
+axis2.xml | xml | /axisconfig[1]/transportSender[4]/parameter[7]/text()[1] |  |  |  |  |  | Add Manually
+registry.xml | xml | /wso2registry[1]/remoteInstance[1]/cacheId[1]/text()[1] | governance_data.cache_id | String | This is the cache_id, which is a unique value. |  |  | Templated
+axis2.xml | xml | /axisconfig[1]/transportSender[4]/parameter[4]/text()[1] |  |  |  |  |  | Add Manually
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[3]/text()[1] |  |  |  |  |  | Add Manually
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[19]/text()[1] |  |  |  |  |  | Add Manually
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[29]/text()[1] |  |  |  |  |  | Add Manually
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[6]/text()[1] |  |  |  | ou=Users,dc=wso2,dc=org |  | Add Manually
 identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[9]/text()[1] |  |  |  |  |  | Removed
-identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[10]/text()[1] |  |  |  |  |  | Removed
-identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[11]/text()[1] |  |  |  |  |  | Removed
-identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[12]/text()[1] |  |  |  |  |  | Removed
-identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[13]/text()[1] |  |  |  |  |  | Removed
-identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[14]/text()[1] |  |  |  |  |  | Removed
-identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[15]/text()[1] |  |  |  |  |  | Removed
-identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[16]/text()[1] |  |  |  |  |  | Removed
-identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[17]/text()[1] |  |  |  |  |  | Removed
-identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[18]/text()[1] |  |  |  |  |  | Removed
-identity.xml | xml | /Server[1]/SSOService[1]/PersistanceCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/OAuth2ConsentPage[1]/text()[1] | oauth.endpoints.oauth2_consent_page | String | OAuth consent page URL | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/oauth2_consent.do |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/OIDCLogoutConsentPage[1]/text()[1] | oauth.endpoints.oidc_logout_consent_page | String | OAuth OIDC consent page during logout flow. | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/oauth2_logout_consent.do |  | Templated
 identity.xml | xml | /Server[1]/SSOService[1]/SessionIndexCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
-entitlement.properties | properties | PDP.Balana.Config.Enable | identity.entitlement.policy_point.pdp.balana_config_enabled | boolean |  |  |  | Templated
-
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[30]/text()[1] |  |  |  |  |  | Add Manually
+identity.xml | xml | /Server[1]/OAuth[1]/UserAccessTokenDefaultValidityPeriod[1]/text()[1] | oauth.token_validation.user_access_token_validity | int | User Access token validity period in seconds | 3600 |  | Templated
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[20]/text()[1] |  |  |  |  |  | Add Manually
+carbon.xml | xml | /Server[1]/Security[1]/XSSPreventionConfig[1]/Rule[1]/text()[1] |  |  |  |  |  | Not Templated
+carbon.xml | xml | /Server[1]/Security[1]/XSSPreventionConfig[1]/Patterns[1]/Pattern[1]/text()[1] |  |  |  |  |  | Not Templated
+web.xml | xml | /web-app[1]/session-config[1]/session-timeout[1]/text()[1] | tomcat.global.session_timeout | int | Tomcat session timeout in minutes | 15 |  | Templated
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/Configuration[1]/Property[2]/text()[1] |  |  |  |  |  | Add Manually
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[2]/definition[1]/configuration[1]/validationQuery[1]/text()[1] | database.shared_db.pool_options.validationQuery | String  | Shared datasource validation querry |  |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[12]/text()[1] |  |  |  |  |  | Removed
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[3]/name[1]/text()[1] |  |  | Identity database name | WSO2_IDENTITY_DB |  | Not Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[6]/text()[1] |  |  |  |  |  | Removed
+entitlement.properties | properties | PDP.Balana.Config.Enable | identity.entitlement.policy_point.pdp.balana_config_enabled | boolean | Balana policy decision point is enabled or not. |  |  | Templated
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[16]/text()[1] |  |  |  |  |  | Add Manually
+identity.xml | xml | /Server[1]/OAuth[1]/OAuth2TokenEPUrl[1]/text()[1] | oauth.endpoints.oauth2_token_url | String  | WSO2 Identity server Oauth2 token end point. | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/token |  | Templated
+carbon.xml | xml | /Server[1]/Version[1]/text()[1] |  |  |  | 5.9.0 |  | Version Change
+carbon.xml | xml | /Server[1]/Ports[1]/Offset[1]/text()[1] | server.offset | int | If you need to change the port of the identity server, you need to add an offset. Default this will be 0 and the port which mapped to it is 9443 | 0 |  | Templated
+web.xml | xml | /web-app[1]/filter-mapping[4]/url-pattern[1]/text()[1] |  |  |  | /* |  | Add Manually
+identity.xml | xml | /Server[1]/OAuth[1]/OAuth2UserInfoEPUrl[1]/text()[1] | oauth.endpoints.oauth2_user_info_url | String | OAuth2 User Infor endpoint URL | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/userinfo |  | Templated
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[26]/text()[1] |  |  |  |  |  | Add Manually
+registry.xml | xml | /wso2registry[1]/remoteInstance[1]/dbConfig[1]/text()[1] |  |  |  |  |  | Not needed
+identity.xml | xml | /Server[1]/OAuth[1]/OIDCCheckSessionEPUrl[1]/text()[1] | oauth.endpoints.oidc_check_session_url | String | OpenID Connect check session URL | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/oidc/checksession |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/OIDCConsentPage[1]/text()[1] | oauth.endpoints.oidc_consent_page | String | OpenID Connect consent page | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/oauth2_consent.do |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[13]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/Security[1]/TrustManagerType[1]/text()[1] | key_mgt.trust_manager_type | String | Keystore manager Type | SunX509 |  | Templated
+axis2.xml | xml | /axisconfig[1]/clustering[1]/parameter[8]/text()[1] | clustering.local_member_port | String | The host port of the member | 4000 |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/EnableOAuthCache[1]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/SSOService[1]/PersistanceCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/OIDCLogoutPage[1]/text()[1] | oauth.endpoints.oidc_logout_page | String | OpenID Connect logout page | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/oauth2_logout.do |  | Templated
+axis2.xml | xml | /axisconfig[1]/transportSender[4]/parameter[6]/text()[1] |  |  |  |  |  | Add Manually
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[18]/text()[1] |  |  |  |  |  | Add Manually
+web.xml | xml | /web-app[1]/filter-mapping[4]/filter-name[1]/text()[1] |  |  |  | CSRFGuard |  | Add Manually
+carbon.xml | xml | /Server[1]/Security[1]/KeyStore[1]/KeyAlias[1]/text()[1] | keystore.primary.alias | String | The Private Key alias of the primary keystore. | wso2carbon |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[5]/text()[1] |  |  |  |  |  | Removed
+carbon.xml | xml | /Server[1]/HostName[1]/text()[1] | server.hostname | String | The host name of the identity server can be configured through this property. Default value will be localhost. | localhost |  | Templated
+carbon.xml | xml | /Server[1]/Security[1]/TrustStore[1]/Location[1]/text()[1] | truststore.file_name | String | The client trustore file location. | ${carbon.home}/repository/resources/security/client-truststore.jks |  | Templated
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[28]/text()[1] |  |  |  |  |  | Add Manually
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[15]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/SessionDataPersist[1]/SessionDataCleanUp[1]/CleanUpPeriod[1]/text()[1] | session_data.cleanup.clean_expired_session_data_every | int | This is the time period (in minutes) that the cleanup task would run. The default value is 1 day. This is used for both session data cleanup and operation data cleanup through the same task. | 1440 |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[18]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[4]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/AccessTokenDefaultValidityPeriod[1]/text()[1] | oauth.token_validation.app_access_token_validity | int | The OAuth access token validity period | 3600 |  | Templated
+identity.xml | xml | /Server[1]/SAML[1]/ServiceProvider[1]/Claim[1]/Name[1]/text()[1] |  |  |  |  |  | Add Manually
+identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/SessionDataPersist[1]/PoolSize[1]/text()[1] | session_data.persistence.persistence_pool_size | int | ‘PoolSize’ equals to 0 means that it is disabled and then the authentication flow is blocked until this particular data persistence task is completed. To execute the persistence task in asynchronously, set the value to >0 value. Based on the pool size, the system creates the task parallel to execute the persistence task that was in the queue. | 0 |  | Templated
+axis2.xml | xml | /axisconfig[1]/clustering[1]/parameter[7]/text()[1] | clustering.local_member_host | String | The host name or IP address of this member | 127.0.0.1 |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/OIDCLogoutEPUrl[1]/text()[1] | oauth.endpoints.oidc_logout_url | String | OpenID connect logout endpoint URL | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/oidc/logout |  | Templated
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/Configuration[1]/AdminUser[1]/Password[1]/text()[1] | super_admin.password | String | The Supper Admin password of the Identity Server that is defined at the first start up | admin |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[16]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/OAuth2AuthzEPUrl[1]/text()[1] | oauth.endpoints.oauth2_authz_url | String | OAuth2 authorize end point of WSO2 Identity Server | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/authorize |  | Templated
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[3]/definition[1]/configuration[1]/username[1]/text()[1] | database.identity_db.username | String | The Identity database connection user name | wso2carbon |  | Templated
+carbon.xml | xml | /Server[1]/MgtHostName[1]/text()[1] | server.hostname | String | The management hostname of the Identity Server | localhost |  | Deprecated
+identity.xml | xml | /Server[1]/OAuth[1]/AuthorizationGrantCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[3]/text()[1] |  |  |  |  |  | Removed
+carbon.xml | xml | /Server[1]/Security[1]/XSSPreventionConfig[1]/Enabled[1]/text()[1] |  |  |  |  |  | Not Templated
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[3]/definition[1]/configuration[1]/driverClassName[1]/text()[1] | database.identity_db.driver | String | Identity Database connection driver class | org.h2.Driver |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/ClaimCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[17]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/IdentityOAuthTokenGenerator[1]/text()[1] | oauth.extensions.token_generator | String | OAuth Token Generator class. |  |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[14]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/AppInfoCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[21]/text()[1] |  |  |  | [a-zA-Z0-9._\- | //]{3,30}$ | Add Manually
+identity.xml | xml | /Server[1]/OAuth[1]/TimestampSkew[1]/text()[1] | oauth.timestamp_skew | int | The time stamp skew is used to manage small time gaps in the system clocks of different servers |  |  | Templated
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[14]/text()[1] |  |  |  |  |  | Add Manually
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[24]/text()[1] |  |  |  |  |  | Add Manually
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[11]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/DataSource[1]/Name[1]/text()[1] | identity.data_source | String | The jndi value of the Identity DataSource | jdbc/WSO2IdentityDB |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[7]/text()[1] |  |  |  |  |  | Removed
+axis2.xml | xml | /axisconfig[1]/transportSender[4]/parameter[5]/text()[1] |  |  |  |  |  | Add Manually
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[17]/text()[1] |  |  |  |  |  | Add Manually
+identity.xml | xml | /Server[1]/OAuth[1]/OAuth1RequestTokenUrl[1]/text()[1] | oauth.endpoints.oauth1_request_token_url | String | OAuth1 token request URL in WSO2 Identity Server | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth/request-token |  | Templated
+axis2.xml | xml | /axisconfig[1]/clustering[1]/parameter[3]/text()[1] | clustering.domain | String | The clustering domain/group. Nodes in the same group will belong to the same multicast          domain. There will not be interference between nodes in different groups. | wso2.carbon.domain |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/SessionDataCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[2]/name[1]/text()[1] |  | String | Shared datasource name | WSO2_SHARED_DB |  | Not Templated
+identity.xml | xml | /Server[1]/OAuth[1]/OAuth1AccessTokenUrl[1]/text()[1] | oauth.endpoints.oauth1_access_token_url | String | OAuth1 access token URL in WSO2 Identity Server | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth/access-token |  | Templated
+carbon.xml | xml | /Server[1]/EnableEmailUserName[1]/text()[1] | tenant_mgt.enable_email_domain | boolean | To enable email as username, make this to true. Default value will be false. |  |  | Templated
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[2]/definition[1]/configuration[1]/password[1]/text()[1] | database.shared_db.password | String | Shared datasource connection password | wso2carbon |  | Templated
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[27]/text()[1] |  |  |  |  |  | Add Manually
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[8]/text()[1] |  |  |  | uid |  | Add Manually
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[3]/definition[1]/configuration[1]/password[1]/text()[1] | database.identity_db.password | String | Identity Datasource connection password | wso2carbon |  | Templated
+registry.xml | xml | /wso2registry[1]/dbConfig[2]/dataSource[1]/text()[1] |  | - |  |  |  | Not Templated
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[3]/definition[1]/configuration[1]/maxActive[1]/text()[1] | database.identity_db.pool_options.maxActive | Int | Identity datasource connection Max Active property | 50 |  | Templated
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[2]/definition[1]/configuration[1]/url[1]/text()[1] | database.shared_db.url | String | Shared datasource connection URL | jdbc:h2:./repository/database/WSO2SHARED_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000 |  | Templated
+identity.xml | xml | /Server[1]/Security[1]/KeyStoresDir[1]/text()[1] | key_mgt.keystore_dir | String | Key Store directory location | ${carbon.home}/conf/keystores |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/ShowDisplayNameInConsentPage[1]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/SessionDataPersist[1]/Enable[1]/text()[1] | session_data.persistence.enable_persistence | String  | Enable Session data persistance in WSO2 Identity Server | TRUE |  | Templated
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[7]/text()[1] |  |  |  | identityPerson |  | Add Manually
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[2]/definition[1]/configuration[1]/maxActive[1]/text()[1] | database.shared_db.pool_options.maxActive | String  | Shared datasource connection Max acctive property. | 50 |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/TokenPersistenceProcessor[1]/text()[1] | oauth.extensions.token_persistence_processor | String | The class which is responsible for token persistance process | org.wso2.carbon.identity.oauth.tokenprocessor.PlainTextPersistenceProcessor |  | Templated
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[2]/description[1]/text()[1] |  | String | Shared datasource description  | Shared Database for user and registry data |  | Templated
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[12]/text()[1] |  |  |  |  |  | Add Manually
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[15]/text()[1] |  |  |  |  |  | Add Manually
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[10]/text()[1] |  |  |  |  |  | Removed
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[25]/text()[1] |  |  |  |  |  | Add Manually
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[1]/text()[1] |  |  |  | org.wso2.carbon.user.core.tenant.CommonHybridLDAPTenantManager |  | Add Manually
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[8]/text()[1] |  |  |  |  |  | Removed
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[3]/description[1]/text()[1] |  | String | Identity datasource description | The datasource used for identity data |  | Not Templated
+axis2.xml | xml | /axisconfig[1]/transportSender[4]/parameter[3]/text()[1] |  |  |  |  |  | Add Manually
+axis2.xml | xml | /axisconfig[1]/parameter[16]/text()[1] |  |  |  |  |  | Version Change
+carbon.xml | xml | /Server[1]/Security[1]/KeyStore[1]/Location[1]/text()[1] | keystore.primary.file_name | String | The Primary Keystore file location. | ${carbon.home}/repository/resources/security/wso2carbon.jks |  | Templated
+identity.xml | xml | /Server[1]/OpenID[1]/OpenIDSkipUserConsent[1]/text()[1] |  |  |  | FALSE |  | Not templated
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/Configuration[1]/AdminUser[1]/UserName[1]/text()[1] | super_admin.username | String | The Supper Admin username. We need to configure this during first startup. | admin |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RefreshTokenValidityPeriod[1]/text()[1] | oauth.token_validation.refresh_token_validity | int | Default Refresh token validity period | 3600 |  | Templated
+identity.xml | xml | /Server[1]/Security[1]/KeyManagerType[1]/text()[1] | key_mgt.key_manager_type | String | Type of the keystore | SunX509 |  | Templated
+application-authentication.xml | xml | /ApplicationAuthentication[1]/Extensions[1]/RequestCoordinator[1]/text()[1] | authentication.framework.extensions.request_coordinator | String | The Default request Co-ordinator class for authentication framework of WSO2 Identity Server | org.wso2.carbon.identity.application.authentication.framework.handler.request.impl.DefaultRequestCoordinator |  | Templated
+registry.xml | xml | /wso2registry[1]/remoteInstance[1]/enableCache[1]/text()[1] | governance_data.enable_cache | boolean | Whether cache is enabled for governance registry or not. |  |  | Templated
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/@class | authorization_manager.class | String | Userstore Manager class that used as PRIMARY userstore for the system. | org.wso2.carbon.user.core.ldap.ReadWriteLDAPUserStoreManager |  | Add Manually
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[2]/definition[1]/configuration[1]/driverClassName[1]/text()[1] | database.shared_db.driver | String | Shared datasource connection driver class name | org.h2.Driver |  | Templated
+identity.xml | xml | /Server[1]/TimeConfig[1]/RememberMeTimeout[1]/text()[1] | session.timeout.remember_me_session_timeout | String | The time out for remember me option. | 20160m |  | Templated
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[3]/definition[1]/configuration[1]/url[1]/text()[1] | database.identity_db.url | String  | Identity Data source connnection URL | jdbc:h2:./repository/database/WSO2IDENTITY_DB;DB_CLOSE_ON_EXIT=FALSE |  | Templated
+axis2.xml | xml | /axisconfig[1]/parameter[15]/text()[1] |  |  |  |  |  | Version Change
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[2]/definition[1]/configuration[1]/username[1]/text()[1] | database.shared_db.username | String | Shared datasource connection username | wso2carbon |  | Templated
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[23]/text()[1] |  |  |  |  |  | Add Manually
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[5]/text()[1] |  |  |  |  |  | Add Manually
+axis2.xml | xml | /axisconfig[1]/transportSender[4]/parameter[2]/text()[1] |  |  |  |  |  | Add Manually
+identity.xml | xml | /Server[1]/OAuth[1]/AuthorizationCodeDefaultValidityPeriod[1]/text()[1] | oauth.token_validation.authorization_code_validity | int | The default authorization code expiry time in seconds. | 300 |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RenewRefreshTokenForRefreshGrant[1]/text()[1] | oauth.token_renewal.renew_refresh_token | boolean | Enable renew refresh tokens, in each access token generation. | TRUE |  | Templated
+web.xml | xml | /web-app[1]/session-config[1]/cookie-config[1]/secure[1]/text()[1] |  |  |  |  |  | Add Manually
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[13]/text()[1] |  |  |  |  |  | Add Manually
+identity.xml | xml | /Server[1]/TimeConfig[1]/SessionIdleTimeout[1]/text()[1] | session.timeout.idle_session_timeout | int | The IDP session idle timeout of WSO2 Identity Server in minutes | 15 |  | Templated
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[22]/text()[1] |  |  |  | ^[\S]{3,30}$ |  | Add Manually
+axis2.xml | xml | /axisconfig[1]/transportSender[4]/parameter[1]/text()[1] |  |  |  |  |  | Add Manually
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[32]/text()[1] |  |  |  |  |  | Add Manually
