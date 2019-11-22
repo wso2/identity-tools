@@ -25,4 +25,6 @@ package org.wso2.is.configuration.toml.generator.util;
 public class TomlGeneratorConstants {
 
     public static final String UPDATED_DEPLOYMENT_TOML = "updatedDeployment.toml";
+    public static final int TOML_COLUMN_INDEX = 4;
+    public static final int XML_TAG_COLUMN_INDEX = 3;
 }

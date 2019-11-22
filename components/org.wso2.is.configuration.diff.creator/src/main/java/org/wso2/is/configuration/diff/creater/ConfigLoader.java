@@ -50,7 +50,6 @@ public class ConfigLoader {
     private Map<String, File> defaultPropertiesFiles = new HashMap<>();
     private Map<String, File> migratedPropertiesFiles = new HashMap<>();
     private Map<String, File> j2TemplateFiles = new HashMap<>();
-
     private static final int TAG_KEY_COLUMN_NO_INDEX = 2;
 
     private static final Logger log = LogManager.getLogger(ConfigLoader.class);
@@ -59,7 +58,7 @@ public class ConfigLoader {
      * Validate whether file path is blank and exists.
      *
      * @param migratedISHomePath Migrated IS home path.
-     * @param defaultISHomePath Default IS home path.
+     * @param defaultISHomePath  Default IS home path.
      * @throws ConfigMigrateException
      */
     public void validate(String migratedISHomePath, String defaultISHomePath) throws ConfigMigrateException {
@@ -77,7 +76,7 @@ public class ConfigLoader {
      * Filter files by the extension and add to maps.
      *
      * @param migratedProductHomePath migrated IS home path.
-     * @param defaultProductHomePath default IS home path.
+     * @param defaultProductHomePath  default IS home path.
      * @throws ConfigMigrateException ConfigMigrateException.
      */
     public void filterFiles(String migratedProductHomePath, String defaultProductHomePath)
@@ -90,7 +89,7 @@ public class ConfigLoader {
                     MigrationConstants.XML_FILE_EXTENSION);
 
             defaultPropertiesFiles = getFilesInPath(Paths.get(defaultProductHomePath.concat(MigrationConstants
-                            .CONF_PATH)), MigrationConstants.PROPERTY_FILE_EXTENSION);
+                    .CONF_PATH)), MigrationConstants.PROPERTY_FILE_EXTENSION);
             migratedPropertiesFiles = getFilesInPath(Paths.get(migratedProductHomePath.concat(MigrationConstants
                     .CONF_PATH)), MigrationConstants.PROPERTY_FILE_EXTENSION);
 
@@ -99,9 +98,8 @@ public class ConfigLoader {
             log.info("Files have been filtered successfully!");
 
         } catch (IOException e) {
-            throw  new ConfigMigrateException("Error occurred when filtering files by extension type.", e);
+            throw new ConfigMigrateException("Error occurred when filtering files by extension type.", e);
         }
-
     }
 
     /**
@@ -111,7 +109,7 @@ public class ConfigLoader {
      * @return Map of key and entry.
      * @throws IOException IOException.
      */
-     public Map<String, String> readFromCSV(URL csvRemoteURL) throws IOException {
+    public Map<String, String> readFromCSV(URL csvRemoteURL) throws IOException {
 
         String line;
         Map<String, String> keys = new HashMap<>();
@@ -137,7 +135,7 @@ public class ConfigLoader {
      * Traverse through the files in the folder and group files using the file extension.
      *
      * @param defaultPath   Path to the config folder.
-     * @param fileExtension extension type to be separated.
+     * @param fileExtension File extension type to be separated.
      * @return Map of file name and File.
      * @throws IOException IOException
      */
@@ -167,7 +165,6 @@ public class ConfigLoader {
 
         return defaultPropertiesFiles;
     }
-
 
     public Map<String, File> getMigratedPropertiesFiles() {
 

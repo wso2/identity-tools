@@ -43,8 +43,9 @@ public class Utils {
 
     /**
      * Write the information to the catalog file.
+     *
      * @param keyCatalogValuesMap Map of catalog keys and values.
-     * @param outputCSV The output csv file.
+     * @param outputCSV           The output csv file.
      */
     public static void writeToFile(Map<String, String> keyCatalogValuesMap, File outputCSV)
             throws ConfigMigrateException {

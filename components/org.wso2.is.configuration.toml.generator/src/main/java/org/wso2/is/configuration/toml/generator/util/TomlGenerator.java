@@ -48,11 +48,43 @@ public class TomlGenerator {
     private static final Logger log = LogManager.getLogger(TomlGenerator.class);
 
     /**
+     * Generate tomlKey and value map needed.
+     *
+     * @param keyValuesMapFromDiff XML/property key value map.
+     * @param deploymentTomlFile   Existing deployment.toml file.
+     * @param log                  Log file.
+     * @return Map of toml key and object.
+     * @throws ConfigMigrateException ConfigMigrateException
+     */
+    public Map<String, Object> generateTomlKeyValueMap(Map<String, String> keyValuesMapFromDiff,
+                                                       File deploymentTomlFile,
+                                                       File log) throws ConfigMigrateException {
+
+        Map<String, Object> tomlKeyValueMap;
+        Toml toml = new Toml();
+        if (isFilesExists(deploymentTomlFile)) {
+            Map<String, Object> generatedTomlKeyValueMap;
+            try {
+                generatedTomlKeyValueMap = generateTomlKeyMapFromData(keyValuesMapFromDiff, log);
+            } catch (IOException e) {
+                throw new ConfigMigrateException("Error occurred when generating deployment.toml file.", e);
+            }
+            Map<String, Object> existingTomlMap = toml.read(deploymentTomlFile).toMap();
+            tomlKeyValueMap = concatTomlMaps(existingTomlMap, generatedTomlKeyValueMap);
+        } else {
+            throw new ConfigMigrateException("Please enter correct output CSV file path, key value CSV file path and" +
+                    " deployment.tml path and try again.");
+        }
+        return tomlKeyValueMap;
+    }
+
+    /**
      * Write the configuration map to a file.
      *
      * @param tomlKeyValueMap map of configuration.
      */
     public void writeToTOMLFile(Map<String, Object> tomlKeyValueMap) {
+
         TomlWriter writer = new TomlWriter();
         try {
             File outputDeploymentFile = getOutputTomlFile();
@@ -65,11 +97,10 @@ public class TomlGenerator {
     }
 
     private File getOutputTomlFile() {
+
         File outputDeploymentFile = new File(TomlGeneratorConstants.UPDATED_DEPLOYMENT_TOML);
-        if (outputDeploymentFile.exists()) {
-            if (!outputDeploymentFile.delete()) {
-                log.error("The output Toml file can not be deleted!.");
-            }
+        if (outputDeploymentFile.exists() && !outputDeploymentFile.delete()) {
+            log.error("The output Toml file can not be deleted!.");
         }
         return outputDeploymentFile;
     }
@@ -77,7 +108,7 @@ public class TomlGenerator {
     /**
      * Concat and get the common configurations to one map.
      *
-     * @param existingTomlMap existing toml map of IS.
+     * @param existingTomlMap          existing toml map of IS.
      * @param generatedTomlKeyValueMap generated toml map from custom changes.
      * @return filtered map of required configurations to add to toml file.
      */
@@ -85,7 +116,6 @@ public class TomlGenerator {
                                                Map<String, Object> generatedTomlKeyValueMap) {
 
         for (Map.Entry<String, Object> tomlEntry : generatedTomlKeyValueMap.entrySet()) {
-
             if (existingTomlMap.get(tomlEntry.getKey()) == null) {
                 existingTomlMap.put(tomlEntry.getKey(), tomlEntry.getValue());
             } else {
@@ -96,19 +126,20 @@ public class TomlGenerator {
                 }
             }
         }
-
         return existingTomlMap;
     }
 
     private boolean isFilesExists(File deploymentTomlFile) {
 
-        return  deploymentTomlFile.exists();
+        return deploymentTomlFile.exists();
     }
 
     /**
-     * Generate toml key Map from knowledge.
-     * @param keyValueMap
-     * @return
+     * Generate a map of Toml key and value to write the toml file.
+     *
+     * @param keyValueMap Map of key-values.
+     * @param log         Log file.
+     * @return Map of toml key and value
      * @throws IOException
      */
     private Map<String, Object> generateTomlKeyMapFromData(Map<String, String> keyValueMap, File log)
@@ -122,11 +153,11 @@ public class TomlGenerator {
             String tomlKey = keyTomlMap.get(key);
             if (StringUtils.isBlank(tomlKey)) {
                 Files.write(Paths.get(log.getPath()), ("A missing toml config found for key : " + key
-                        + " and changed value : " + keyValueMap.get(key)).getBytes(StandardCharsets.UTF_8),
+                                + " and changed value : " + keyValueMap.get(key)).getBytes(StandardCharsets.UTF_8),
                         StandardOpenOption.APPEND);
                 continue;
             }
-            addKeyToOutputMap(keyValueMap,  key, tomlKey, outputMap);
+            addKeyToOutputMap(keyValueMap, key, tomlKey, outputMap);
         }
         return outputMap;
     }
@@ -147,7 +178,6 @@ public class TomlGenerator {
                 propertyMap.put(property, keyValueMap.get(key));
                 outputMap.replace(tomlMainKey, propertyMap);
             }
-
         }
     }
 
@@ -174,35 +204,10 @@ public class TomlGenerator {
         reader.readLine();
         while ((line = reader.readLine()) != null) {
             String[] parts = line.split(Pattern.quote(MigrationConstants.CSV_SEPARATOR_APPENDER));
-            if (parts.length > 3) {
-                keys.put(parts[3 - 1].trim(), parts[3].trim());
+            if (parts.length > (TomlGeneratorConstants.TOML_COLUMN_INDEX - 1)) {
+                keys.put(parts[TomlGeneratorConstants.XML_TAG_COLUMN_INDEX - 1].trim(),
+                        parts[TomlGeneratorConstants.TOML_COLUMN_INDEX - 1].trim());
             }
         }
     }
-
-    public Map<String, Object> generateTomlKeyValueMap(Map<String, String> keyValuesMapFromDiff,
-                                                       File deploymentTomlFile,
-                                                       File log) throws ConfigMigrateException {
-
-        Map<String, Object> tomlKeyValueMap;
-        Toml toml = new Toml();
-        if (isFilesExists(deploymentTomlFile)) {
-
-            Map<String, Object> generatedTomlKeyValueMap;
-            try {
-                generatedTomlKeyValueMap = generateTomlKeyMapFromData(keyValuesMapFromDiff, log);
-            } catch (IOException e) {
-                throw new ConfigMigrateException("Error occurred when generating deployment.toml file.", e);
-            }
-            Map<String, Object> existingTomlMap = toml.read(deploymentTomlFile).toMap();
-            tomlKeyValueMap = concatTomlMaps(existingTomlMap, generatedTomlKeyValueMap);
-
-        } else {
-            throw new ConfigMigrateException("Please enter correct output CSV file path, key value CSV file path and" +
-                    " deployment.tml path and try again.");
-        }
-
-        return tomlKeyValueMap;
-    }
-
 }

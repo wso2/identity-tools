@@ -23,6 +23,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.wso2.is.configuration.diff.creater.exception.ConfigMigrateException;
 import org.wso2.is.configuration.toml.generator.util.TomlGenerator;
+
 import java.io.File;
 import java.util.Map;
 
@@ -34,6 +35,14 @@ public class TomlGeneratorTool {
 
     private static final Logger log = LogManager.getLogger(TomlGeneratorTool.class);
 
+    /**
+     * Generate toml file method.
+     *
+     * @param keyValuesMapFromDiff Map created from the diff of files.
+     * @param deploymentTomlFile   Existing deployment toml file.
+     * @param logFile              Log output file.
+     * @throws ConfigMigrateException ConfigMigrateException.
+     */
     public void generateTomlFile(Map<String, String> keyValuesMapFromDiff, File deploymentTomlFile, File logFile)
             throws ConfigMigrateException {
 
@@ -45,6 +54,5 @@ public class TomlGeneratorTool {
 
         tomlGenerator.writeToTOMLFile(tomlKeyValueMap);
         log.info("A new deployment toml file is successfully written!!");
-
     }
 }

@@ -29,8 +29,8 @@ public class DiffCheckerTool {
     /**
      * Create diff from the configurations.
      *
-     * @param migratedISHomePath  migrated IS Home Path.
-     * @param defaultISHomePath default IS Home Path.
+     * @param migratedISHomePath migrated IS Home Path.
+     * @param defaultISHomePath  default IS Home Path.
      * @throws ConfigMigrateException ConfigMigrateException.
      */
     public OutputGenerator createDiff(String migratedISHomePath, String defaultISHomePath)

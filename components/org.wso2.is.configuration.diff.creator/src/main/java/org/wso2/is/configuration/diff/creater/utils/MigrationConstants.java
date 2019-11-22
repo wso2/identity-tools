@@ -42,7 +42,6 @@ public class MigrationConstants {
     public static final String PROPERTY_FILE_EXTENSION = ".properties";
     public static final String J2_FILE_EXTENSION = ".j2";
     public static final String LOG_FILE = "output/log.txt";
-
     public static final String XML_FILE_TYPE = "xml";
     public static final String PROPERTIES_FILE_TYPE = "properties";
 }

@@ -29,16 +29,15 @@ echo " =========================================================================
 echo " "
 while :
 do
-        echo "Please enter older IS home path that need to be migrated :"
+        echo "Please enter the older IS home path that needs to be migrated :"
         read MIGRATE_IS_HOME_PATH
         if [ "$MIGRATE_IS_HOME_PATH" = " " ]
         then
-        echo "You have not entered a IS home path that need to be migrated"
+        echo "You have not entered a IS home path that needs to be migrated"
         echo "Please try again."
         continue
         else
         break
-
         fi
 done
 
@@ -53,10 +52,8 @@ do
         continue
         else
         break
-
         fi
 done
-
 
 echo "Please enter the tool type for Diff Catalog generation enter 'D', for deployment.toml
       generation enter 'T' "
@@ -65,8 +62,8 @@ case $TOOL_INPUT in
       [Dd]*)
         echo "Running the diff generation tool to get the diff to catalog.csv file...."
         java -jar ../config-migrater.jar D $MIGRATE_IS_HOME_PATH $DEFAULT_IS_HOME_PATH
+        exit;;
 
-        ;;
 
       [Tt]*)
          echo "Running the tool to generate toml file......"

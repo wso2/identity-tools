@@ -60,7 +60,5 @@ public class ConfigurationMigrate {
             default:
                 break;
         }
-
     }
-
 }

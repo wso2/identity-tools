@@ -44,25 +44,6 @@ public class OutputGenerator {
     private Map<String, String> keyValuesMap = new HashMap<>();
     private Map<String, String> keyCatalogValuesMap = new HashMap<>();
 
-
-    public Map<String, String> getKeyValuesMap() {
-        return keyValuesMap;
-    }
-
-    public void setKeyValuesMap(Map<String, String> keyValuesMap) {
-        this.keyValuesMap = keyValuesMap;
-    }
-
-    public Map<String, String> getKeyCatalogValuesMap() {
-
-        return keyCatalogValuesMap;
-    }
-
-    public void setKeyCatalogValuesMap(Map<String, String> keyCatalogValuesMap) {
-
-        this.keyCatalogValuesMap = keyCatalogValuesMap;
-    }
-
     /**
      * Create all the output csv files and directory.
      *
@@ -83,8 +64,6 @@ public class OutputGenerator {
             throw new ConfigMigrateException("Error occurred when creating output files.");
         }
     }
-
-
 
     /**
      * Create a directory to put un-template customized config files in the migrated setup.
@@ -112,18 +91,15 @@ public class OutputGenerator {
      */
     private void createFile(File file) throws IOException {
 
-        if (file.exists()) {
-            if (!file.delete()) {
-                log.error("The output file, " + file.getName() + " is not deleted.");
-                throw new IOException("The output file, " + file.getName() + " is not deleted.");
-            }
+        if (file.exists() && !file.delete()) {
+            log.error("The output file, " + file.getName() + " is not deleted.");
+            throw new IOException("The output file, " + file.getName() + " is not deleted.");
         }
         if (!file.createNewFile()) {
             log.error("The output file, " + file.getName() + " is not created.");
             throw new IOException("The output file, " + file.getName() + " is not created.");
         }
     }
-
 
     public File getOutputCSV() {
 
@@ -141,10 +117,32 @@ public class OutputGenerator {
     }
 
     public File getLogFile() {
+
         return logFile;
     }
 
     public void setLogFile(File logFile) {
+
         this.logFile = logFile;
+    }
+
+    public Map<String, String> getKeyValuesMap() {
+
+        return keyValuesMap;
+    }
+
+    public void setKeyValuesMap(Map<String, String> keyValuesMap) {
+
+        this.keyValuesMap = keyValuesMap;
+    }
+
+    public Map<String, String> getKeyCatalogValuesMap() {
+
+        return keyCatalogValuesMap;
+    }
+
+    public void setKeyCatalogValuesMap(Map<String, String> keyCatalogValuesMap) {
+
+        this.keyCatalogValuesMap = keyCatalogValuesMap;
     }
 }

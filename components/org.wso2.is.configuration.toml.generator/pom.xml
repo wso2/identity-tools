@@ -31,7 +31,6 @@
     </parent>
 
     <artifactId>org.wso2.is.configuration.toml.generator</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>WSO2 - Toml Generator</name>
@@ -39,22 +38,6 @@
 
 
     <dependencies>
-        <dependency>
-            <groupId>commons-io.wso2</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${orbit.version.commons.io}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>${common.logging.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-lang.wso2</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>${orbit.version.commons.lang}</version>
-        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -86,23 +69,8 @@
     </build>
 
     <properties>
-        <maven.spotbugsplugin.version>3.1.10</maven.spotbugsplugin.version>
-        <mvn.assembly.plugin>3.1.1</mvn.assembly.plugin>
-        <maven.checkstyle.plugin.version>3.0.0</maven.checkstyle.plugin.version>
-        <version.checkstyle>7.8.2</version.checkstyle>
-        <version.jinjava>2.4.14</version.jinjava>
-        <toml4j.version>0.7.2</toml4j.version>
-
-        <version.com.google.code.gson>2.8.5</version.com.google.code.gson>
-        <testng.verson>6.10</testng.verson>
-        <orbit.version.commons.io>2.4.0.wso2v1</orbit.version.commons.io>
         <commons.lang3.version>3.9</commons.lang3.version>
-        <common.logging.version>1.2</common.logging.version>
-        <orbit.version.commons.lang>2.6.0.wso2v1</orbit.version.commons.lang>
-        <version.commons.codec>1.12</version.commons.codec>
-        <xml.unit.verions>2.6.2</xml.unit.verions>
-        <xmlunit.version>1.5</xmlunit.version>
-        <junit.version>4.12</junit.version>
+        <toml4j.version>0.7.2</toml4j.version>
     </properties>
-    
+
 </project>

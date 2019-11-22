@@ -60,7 +60,7 @@ public class ConfigurationDiffChecker {
      *
      * @param configLoader    ConfigLoader which loads all the files in conf folder and filter them.
      * @param outputGenerator OutputGenerator which writes output to the CSV files.
-     * @throws ConfigMigrateException  ConfigMigrateException
+     * @throws ConfigMigrateException ConfigMigrateException
      */
     public void findConfigDiff(ConfigLoader configLoader, OutputGenerator outputGenerator)
             throws ConfigMigrateException {
@@ -75,18 +75,19 @@ public class ConfigurationDiffChecker {
         } catch (IOException e) {
             throw new ConfigMigrateException("Malformed URL :" + MigrationConstants.CATALOG_URL, e);
         }
-
         checkXMLDiff(configLoader.getDefaultXMLFiles(), configLoader.getMigratedXMLFiles(),
                 configLoader.getJ2TemplateFiles(), existingTags, keyValueMap, outputGenerator.getLogFile());
 
         checkPropertyDiff(configLoader.getDefaultPropertiesFiles(), configLoader.getMigratedPropertiesFiles(),
                 configLoader.getJ2TemplateFiles(), existingTags, keyValueMap, outputGenerator.getLogFile());
+
         outputGenerator.setKeyCatalogValuesMap(existingTags);
         outputGenerator.setKeyValuesMap(keyValueMap);
     }
 
     /**
      * Check whether property files are templated or not, if true find diff.
+     *
      * @param defaultPropertiesFiles
      * @param migratedPropertiesFiles
      * @param j2TemplateFiles
@@ -103,7 +104,6 @@ public class ConfigurationDiffChecker {
             throw new ConfigMigrateException("There are no property files to be migrated. ");
         }
         for (Map.Entry<String, File> entry : migratedPropertiesFiles.entrySet()) {
-
             try {
                 if (isFileTemplated(defaultPropertiesFiles, j2TemplateFiles, entry)) {
                     Set<Map.Entry<String, String>> changedPropertyDiffSet =
@@ -125,7 +125,6 @@ public class ConfigurationDiffChecker {
             }
         }
     }
-
 
     /**
      * Find the difference of property files.
@@ -151,7 +150,6 @@ public class ConfigurationDiffChecker {
             Set<Map.Entry<String, String>> migratedPropertySet = migratedMap.entrySet();
             // The migrated properties which are not available in the default properties.
             migratedPropertySet.removeAll(defaultPropertySet);
-
             return migratedPropertySet;
         } catch (IOException e) {
             throw new ConfigMigrateException("The configurations can not be loaded properly. Please try again. ", e);
@@ -164,7 +162,7 @@ public class ConfigurationDiffChecker {
      * @param migratedFile       migrated file.
      * @param changedPropertySet property difference.
      * @param existingTags       existing tags in the knowledge base.
-     * @param keyValues   key-value map.
+     * @param keyValues          key-value map.
      */
     private void getPropertyDiffToMaps(File migratedFile,
                                        Set<Map.Entry<String, String>> changedPropertySet,
@@ -173,7 +171,6 @@ public class ConfigurationDiffChecker {
 
         for (Map.Entry<String, String> property : changedPropertySet) {
             String csvEntry;
-
             if (existingTags.get(property.getKey()) == null) {
                 csvEntry = migratedFile.getName().concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(
                         MigrationConstants.PROPERTIES_FILE_TYPE).concat(MigrationConstants.CSV_SEPARATOR_APPENDER)
@@ -184,17 +181,14 @@ public class ConfigurationDiffChecker {
             } else {
                 keyValues.put(property.getKey(), property.getValue());
             }
-
         }
     }
-
 
     private void checkXMLDiff(Map<String, File> defaultXMLFiles, Map<String, File> migratedXMLFiles, Map<String,
             File> j2files, Map<String, String> existingTags, Map<String, String> keyValueMap, File logs) throws
             ConfigMigrateException {
 
         for (Map.Entry<String, File> entry : migratedXMLFiles.entrySet()) {
-
             try {
                 if (isFileTemplated(defaultXMLFiles, j2files, entry)) {
 
@@ -223,8 +217,8 @@ public class ConfigurationDiffChecker {
      * templated or not.
      *
      * @param defaultXMLFiles Map of default config file list.
-     * @param j2files Map of j2 file list.
-     * @param entry Map entry of migrated config file list.
+     * @param j2files         Map of j2 file list.
+     * @param entry           Map entry of migrated config file list.
      * @return true or false, if exists.
      */
     private boolean isFileTemplated(Map<String, File> defaultXMLFiles, Map<String, File> j2files, Map.Entry<String,
@@ -276,15 +270,11 @@ public class ConfigurationDiffChecker {
 
             if (isXpathInExistingTags(existingXMLTags, diff)) {
                 if (isMigratedXpathEqualsDefaultXpath(diff)) {
-
                     csvKey = diff.getControlNodeDetail().getXpathLocation();
                     defaultValue = diff.getControlNodeDetail().getValue();
-                } else {
-                    if (StringUtils.isNotBlank(diff.getTestNodeDetail().getXpathLocation())) {
-
-                        csvKey = diff.getTestNodeDetail().getXpathLocation();
-                        defaultValue = " ";
-                    }
+                } else if (StringUtils.isNotBlank(diff.getTestNodeDetail().getXpathLocation())) {
+                    csvKey = diff.getTestNodeDetail().getXpathLocation();
+                    defaultValue = " ";
                 }
                 changedValue = diff.getTestNodeDetail().getValue();
                 csvEntry =
@@ -292,14 +282,12 @@ public class ConfigurationDiffChecker {
                                 .concat(MigrationConstants.XML_FILE_TYPE)
                                 .concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(csvKey).concat("| | | |")
                                 .concat(defaultValue).concat("| |");
-
                 existingXMLTags.put(csvKey, csvEntry);
                 keyValues.put(csvKey, changedValue);
             } else {
                 keyValues.put(diff.getTestNodeDetail().getXpathLocation(), diff.getTestNodeDetail().getValue());
             }
         }
-
     }
 
     private boolean isMigratedXpathEqualsDefaultXpath(Difference diff) {
