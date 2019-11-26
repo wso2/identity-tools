@@ -25,9 +25,9 @@
 
     <parent>
         <groupId>org.wso2.carbon.identity.tools</groupId>
-        <artifactId>identity-tools</artifactId>
+        <artifactId>config-model-migrator</artifactId>
         <version>1.0.2-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>org.wso2.configuration.migrater</artifactId>
@@ -36,13 +36,11 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.tools</groupId>
             <artifactId>org.wso2.is.configuration.diff.creater</artifactId>
-            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.tools</groupId>
             <artifactId>org.wso2.is.configuration.toml.generator</artifactId>
-            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

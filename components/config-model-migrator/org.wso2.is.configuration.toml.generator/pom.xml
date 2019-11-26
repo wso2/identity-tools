@@ -25,9 +25,9 @@
 
     <parent>
         <groupId>org.wso2.carbon.identity.tools</groupId>
-        <artifactId>identity-tools</artifactId>
+        <artifactId>config-model-migrator</artifactId>
         <version>1.0.2-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>org.wso2.is.configuration.toml.generator</artifactId>
@@ -36,22 +36,26 @@
     <name>WSO2 - Toml Generator</name>
     <description>Toml Generation engine.</description>
 
-
     <dependencies>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>${commons.lang3.version}</version>
         </dependency>
         <dependency>
             <groupId>com.moandjiezana.toml</groupId>
             <artifactId>toml4j</artifactId>
-            <version>${toml4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.tools</groupId>
             <artifactId>org.wso2.is.configuration.diff.creater</artifactId>
-            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
         </dependency>
     </dependencies>
 
@@ -67,10 +71,5 @@
             </plugin>
         </plugins>
     </build>
-
-    <properties>
-        <commons.lang3.version>3.9</commons.lang3.version>
-        <toml4j.version>0.7.2</toml4j.version>
-    </properties>
 
 </project>
