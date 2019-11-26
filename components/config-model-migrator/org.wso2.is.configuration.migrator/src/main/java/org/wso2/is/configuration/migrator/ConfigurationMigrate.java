@@ -19,6 +19,8 @@
 
 package org.wso2.is.configuration.migrator;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.wso2.is.configuration.diff.creater.DiffCheckerTool;
 import org.wso2.is.configuration.diff.creater.OutputGenerator;
 import org.wso2.is.configuration.diff.creater.exception.ConfigMigrateException;
@@ -30,6 +32,8 @@ import org.wso2.is.configuration.toml.generator.TomlGeneratorTool;
  */
 public class ConfigurationMigrate {
 
+    private static final Logger log = LogManager.getLogger(ConfigurationMigrate.class);
+
     /**
      * The main method which runs when running the shell-script.
      *
@@ -38,27 +42,31 @@ public class ConfigurationMigrate {
      */
     public static void main(String args[]) throws ConfigMigrateException {
 
-        String option = args[0];
-        String migrateISHomePath = args[1];
-        String defaultISHomePath = args[2];
+        String migrateISHomePath;
+        String defaultISHomePath;
+        if (args.length == 2) {
+            migrateISHomePath = args[0];
+            defaultISHomePath = args[1];
+        } else {
+            log.error("Please provide migrated IS-Home path and the default IS-Home path.");
+            throw new ConfigMigrateException("Please provide migrated IS-Home path and the default IS-Home path.");
+        }
         DiffCheckerTool diffCheckTool = new DiffCheckerTool();
         TomlGeneratorTool tomlGenTool = new TomlGeneratorTool();
+
         OutputGenerator outGen;
-
-        switch (option) {
-            case "D" :
-                outGen = diffCheckTool.createDiff(migrateISHomePath, defaultISHomePath);
-                Utils.writeToFile(outGen.getKeyCatalogValuesMap(), outGen.getOutputCSV());
-                break;
-
-            case "T" :
-                outGen = diffCheckTool.createDiff(migrateISHomePath, defaultISHomePath);
-                tomlGenTool.generateTomlFile(outGen.getKeyValuesMap(), Utils.getTomlFile(defaultISHomePath),
-                        outGen.getLogFile());
-                break;
-
-            default:
-                break;
+        outGen = diffCheckTool.createDiff(migrateISHomePath, defaultISHomePath);
+        if (outGen.isGenerateToml()) {
+            tomlGenTool.generateTomlFile(outGen.getKeyValuesMap(), Utils.getTomlFile(defaultISHomePath),
+                    outGen.getLogFile());
+            log.info("New config migration is successfully completed!!!");
+            log.info("=================== END of the Tool =============================================");
+        } else {
+            Utils.writeToFile(outGen.getKeyCatalogValuesMap(), outGen.getOutputCSV());
+            log.error("We have figured out some configs which does not have toml configurations. \n ");
+            log.info("Please update the 'output/OutputCatalog.csv' file with toml configurations and commit" +
+                    " it to the Github and re-run the tool. \n");
+            log.info("=================== Complete and Try again to generate toml ================================");
         }
     }
 }

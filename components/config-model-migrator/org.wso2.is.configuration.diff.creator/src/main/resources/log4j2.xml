@@ -20,7 +20,7 @@
 
 <Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
     <Properties>
-        <Property name="basePath">../output/logs</Property>
+        <Property name="basePath">output/logs</Property>
     </Properties>
     <Appenders>
         <!-- File Appender -->

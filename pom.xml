@@ -41,9 +41,10 @@
 
     <modules>
         <module>components/org.wso2.is.password.reencrypt</module>
-        <module>components/org.wso2.is.configuration.migrater</module>
-        <module>components/org.wso2.is.configuration.diff.creator</module>
-        <module>components/org.wso2.is.configuration.toml.generator</module>
+        <!-- Modules for new config model migration tool.     -->
+        <module>components/config-model-migrator/org.wso2.is.configuration.migrator</module>
+        <module>components/config-model-migrator/org.wso2.is.configuration.diff.creator</module>
+        <module>components/config-model-migrator/org.wso2.is.configuration.toml.generator</module>
     </modules>
 
     <pluginRepositories>

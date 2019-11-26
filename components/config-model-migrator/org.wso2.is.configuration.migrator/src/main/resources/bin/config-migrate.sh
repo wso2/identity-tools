@@ -55,22 +55,7 @@ do
         fi
 done
 
-echo "Please enter the tool type for Diff Catalog generation enter 'D', for deployment.toml
-      generation enter 'T' "
-read TOOL_INPUT
-case $TOOL_INPUT in
-      [Dd]*)
-        echo "Running the diff generation tool to get the diff to catalog.csv file...."
-        java -jar ../config-migrater.jar D $MIGRATE_IS_HOME_PATH $DEFAULT_IS_HOME_PATH
-        exit;;
-
-
-      [Tt]*)
-         echo "Running the tool to generate toml file......"
-         java -jar ../config-migrater.jar T $MIGRATE_IS_HOME_PATH $DEFAULT_IS_HOME_PATH
-         exit;;
-
-      *)
-         echo "Please Type C or T"
-         ;;
-esac
+echo "Started running the tool ....................... "
+java -jar ../config-migrater.jar $MIGRATE_IS_HOME_PATH $DEFAULT_IS_HOME_PATH
+echo "Completed executing the tool ................... "
+exit

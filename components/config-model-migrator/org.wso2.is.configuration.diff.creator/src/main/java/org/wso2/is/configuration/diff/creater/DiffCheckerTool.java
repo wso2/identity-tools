@@ -19,12 +19,16 @@
 
 package org.wso2.is.configuration.diff.creater;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.wso2.is.configuration.diff.creater.exception.ConfigMigrateException;
 
 /**
  * The main class for diff finding tool.
  */
 public class DiffCheckerTool {
+
+    private static final Logger log = LogManager.getLogger(DiffCheckerTool.class);
 
     /**
      * Create diff from the configurations.
@@ -38,6 +42,7 @@ public class DiffCheckerTool {
 
         ConfigLoader configLoader = new ConfigLoader();
         configLoader.validate(migratedISHomePath, defaultISHomePath);
+        log.info("The migrated IS-Home path and default IS-Home path are successfully validated.");
         configLoader.filterFiles(migratedISHomePath, defaultISHomePath);
 
         OutputGenerator outputGenerator = new OutputGenerator();

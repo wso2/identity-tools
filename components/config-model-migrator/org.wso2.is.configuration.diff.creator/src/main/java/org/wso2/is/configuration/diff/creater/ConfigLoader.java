@@ -35,6 +35,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -67,9 +68,11 @@ public class ConfigLoader {
             throw new ConfigMigrateException("Please enter migrated IS home path and default IS home path as inputs.");
         }
         if (!new File(migratedISHomePath).exists() && !new File(defaultISHomePath).exists()) {
+            // TODO: 2019-11-25 validate file path log error
+            // TODO: 2019-11-25 file wise versa inputs
             throw new ConfigMigrateException("The given IS home paths are not valid. Please try again!");
         }
-        log.info("Inputs are successfully validated.");
+//        log.info("Inputs are successfully validated.");
     }
 
     /**
@@ -112,7 +115,7 @@ public class ConfigLoader {
     public Map<String, String> readFromCSV(URL csvRemoteURL) throws IOException {
 
         String line;
-        Map<String, String> keys = new HashMap<>();
+        Map<String, String> keys = new LinkedHashMap<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(csvRemoteURL.openStream(),
                 StandardCharsets.UTF_8))) {
             reader.readLine();

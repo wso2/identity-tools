@@ -44,6 +44,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -66,7 +67,7 @@ public class ConfigurationDiffChecker {
             throws ConfigMigrateException {
 
         Map<String, String> existingTags;
-        Map<String, String> keyValueMap = new HashMap<>();
+        Map<String, String> keyValueMap = new LinkedHashMap<>();
         if (configLoader == null) {
             throw new ConfigMigrateException("Error occurred when loading files.");
         }
@@ -76,10 +77,10 @@ public class ConfigurationDiffChecker {
             throw new ConfigMigrateException("Malformed URL :" + MigrationConstants.CATALOG_URL, e);
         }
         checkXMLDiff(configLoader.getDefaultXMLFiles(), configLoader.getMigratedXMLFiles(),
-                configLoader.getJ2TemplateFiles(), existingTags, keyValueMap, outputGenerator.getLogFile());
+                configLoader.getJ2TemplateFiles(), existingTags, keyValueMap, outputGenerator);
 
         checkPropertyDiff(configLoader.getDefaultPropertiesFiles(), configLoader.getMigratedPropertiesFiles(),
-                configLoader.getJ2TemplateFiles(), existingTags, keyValueMap, outputGenerator.getLogFile());
+                configLoader.getJ2TemplateFiles(), existingTags, keyValueMap, outputGenerator);
 
         outputGenerator.setKeyCatalogValuesMap(existingTags);
         outputGenerator.setKeyValuesMap(keyValueMap);
@@ -93,13 +94,17 @@ public class ConfigurationDiffChecker {
      * @param j2TemplateFiles
      * @param existingTags
      * @param keyValues
+     * @param outputGenerator
      * @throws ConfigMigrateException
      */
     private void checkPropertyDiff(Map<String, File> defaultPropertiesFiles,
-                                   Map<String, File> migratedPropertiesFiles, Map<String, File> j2TemplateFiles,
-                                   Map<String, String> existingTags, Map<String, String> keyValues, File logs)
-            throws ConfigMigrateException {
+                                   Map<String, File> migratedPropertiesFiles,
+                                   Map<String, File> j2TemplateFiles,
+                                   Map<String, String> existingTags,
+                                   Map<String, String> keyValues,
+                                   OutputGenerator outputGenerator) throws ConfigMigrateException {
 
+        File logFile = outputGenerator.getLogFile();
         if (migratedPropertiesFiles == null) {
             throw new ConfigMigrateException("There are no property files to be migrated. ");
         }
@@ -110,11 +115,11 @@ public class ConfigurationDiffChecker {
                             findDiffPropertiesFiles(defaultPropertiesFiles.get(entry.getKey()),
                                     migratedPropertiesFiles.get(entry.getKey()));
                     getPropertyDiffToMaps(migratedPropertiesFiles.get(entry.getKey()), changedPropertyDiffSet,
-                            existingTags, keyValues);
+                            existingTags, keyValues, outputGenerator);
                 } else {
-                    Files.write(Paths.get(logs.getPath()), (entry.getValue().getPath() + " is not templated with toml" +
-                            ". \n").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
-                    log.info(entry.getValue().getPath() + " is not templated with toml.");
+                    Files.write(Paths.get(logFile.getPath()), (entry.getValue().getPath() + " is not templated with" +
+                                    " toml. \n").getBytes(StandardCharsets.UTF_8),
+                            StandardOpenOption.APPEND);
                     File unTemplateFile =
                             new File(MigrationConstants.UN_TEMPLATE_FILE_FOLDER + MigrationConstants
                                     .FILE_SEPARATOR + entry.getKey());
@@ -163,11 +168,13 @@ public class ConfigurationDiffChecker {
      * @param changedPropertySet property difference.
      * @param existingTags       existing tags in the knowledge base.
      * @param keyValues          key-value map.
+     * @param outputGenerator    OutputGenerator object class.
      */
     private void getPropertyDiffToMaps(File migratedFile,
                                        Set<Map.Entry<String, String>> changedPropertySet,
                                        Map<String, String> existingTags,
-                                       Map<String, String> keyValues) {
+                                       Map<String, String> keyValues,
+                                       OutputGenerator outputGenerator) {
 
         for (Map.Entry<String, String> property : changedPropertySet) {
             String csvEntry;
@@ -176,29 +183,34 @@ public class ConfigurationDiffChecker {
                         MigrationConstants.PROPERTIES_FILE_TYPE).concat(MigrationConstants.CSV_SEPARATOR_APPENDER)
                         .concat(property.getKey()).concat("| | | | | |");
                 existingTags.put(property.getKey(), csvEntry);
-                log.info("Add this entry to the remote catalog : " + csvEntry + MigrationConstants.NEW_LINE);
                 keyValues.put(property.getKey(), property.getValue());
+                outputGenerator.setGenerateToml(false);
             } else {
                 keyValues.put(property.getKey(), property.getValue());
             }
         }
     }
 
-    private void checkXMLDiff(Map<String, File> defaultXMLFiles, Map<String, File> migratedXMLFiles, Map<String,
-            File> j2files, Map<String, String> existingTags, Map<String, String> keyValueMap, File logs) throws
-            ConfigMigrateException {
+    private void checkXMLDiff(Map<String, File> defaultXMLFiles,
+                              Map<String, File> migratedXMLFiles,
+                              Map<String, File> j2files,
+                              Map<String, String> existingTags,
+                              Map<String, String> keyValueMap,
+                              OutputGenerator outputGenerator) throws ConfigMigrateException {
 
+        File logFile = outputGenerator.getLogFile();
         for (Map.Entry<String, File> entry : migratedXMLFiles.entrySet()) {
             try {
                 if (isFileTemplated(defaultXMLFiles, j2files, entry)) {
 
                     DetailedDiff detailedDiff = compareXMLFiles(defaultXMLFiles.get(entry.getKey()),
                             migratedXMLFiles.get(entry.getKey()));
-                    getDifferenceToMaps(migratedXMLFiles.get(entry.getKey()), detailedDiff, existingTags, keyValueMap);
+                    getDifferenceToMaps(migratedXMLFiles.get(entry.getKey()), detailedDiff, existingTags, keyValueMap
+                            , outputGenerator);
                 } else {
-                    Files.write(Paths.get(logs.getPath()), (entry.getValue().getPath() + " is not templated with toml" +
-                            ". \n").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
-                    log.info(entry.getValue().getPath() + " is not templated with toml. ");
+                    Files.write(Paths.get(logFile.getPath()), (entry.getValue().getPath() +
+                            " is not templated with toml. \n").getBytes(StandardCharsets.UTF_8),
+                            StandardOpenOption.APPEND);
                     File outFile =
                             new File(MigrationConstants.UN_TEMPLATE_FILE_FOLDER + MigrationConstants
                                     .FILE_SEPARATOR + entry.getKey());
@@ -253,9 +265,11 @@ public class ConfigurationDiffChecker {
         return detailedDiff;
     }
 
-
-    private void getDifferenceToMaps(File migratedFile, DetailedDiff detailedDiff,
-                                     Map<String, String> existingXMLTags, Map<String, String> keyValues) {
+    private void getDifferenceToMaps(File migratedFile,
+                                     DetailedDiff detailedDiff,
+                                     Map<String, String> existingXMLTags,
+                                     Map<String, String> keyValues,
+                                     OutputGenerator outputGenerator) {
 
         for (Object diffObject : detailedDiff.getAllDifferences()) {
             Difference diff = (Difference) diffObject;
@@ -268,13 +282,13 @@ public class ConfigurationDiffChecker {
                 continue;
             }
 
-            if (isXpathInExistingTags(existingXMLTags, diff)) {
+            if (isXpathNotInExistingTags(existingXMLTags, diff)) {
                 if (isMigratedXpathEqualsDefaultXpath(diff)) {
                     csvKey = diff.getControlNodeDetail().getXpathLocation();
                     defaultValue = diff.getControlNodeDetail().getValue();
-                } else if (StringUtils.isNotBlank(diff.getTestNodeDetail().getXpathLocation())) {
+                } else if (StringUtils.isNotBlank(diff.getTestNodeDetail().getXpathLocation()) &&
+                        StringUtils.isBlank(diff.getControlNodeDetail().getXpathLocation())) {
                     csvKey = diff.getTestNodeDetail().getXpathLocation();
-                    defaultValue = " ";
                 }
                 changedValue = diff.getTestNodeDetail().getValue();
                 csvEntry =
@@ -284,6 +298,7 @@ public class ConfigurationDiffChecker {
                                 .concat(defaultValue).concat("| |");
                 existingXMLTags.put(csvKey, csvEntry);
                 keyValues.put(csvKey, changedValue);
+                outputGenerator.setGenerateToml(false);
             } else {
                 keyValues.put(diff.getTestNodeDetail().getXpathLocation(), diff.getTestNodeDetail().getValue());
             }
@@ -295,7 +310,7 @@ public class ConfigurationDiffChecker {
         return diff.getTestNodeDetail().getXpathLocation().equals(diff.getControlNodeDetail().getXpathLocation());
     }
 
-    private boolean isXpathInExistingTags(Map<String, String> existingXMLTags, Difference diff) {
+    private boolean isXpathNotInExistingTags(Map<String, String> existingXMLTags, Difference diff) {
 
         return existingXMLTags.get(diff.getTestNodeDetail().getXpathLocation()) == null;
     }

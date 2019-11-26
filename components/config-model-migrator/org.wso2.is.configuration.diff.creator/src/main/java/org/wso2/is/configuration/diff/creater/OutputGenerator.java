@@ -43,6 +43,7 @@ public class OutputGenerator {
     private File logFile = new File(MigrationConstants.LOG_FILE);
     private Map<String, String> keyValuesMap = new HashMap<>();
     private Map<String, String> keyCatalogValuesMap = new HashMap<>();
+    private boolean generateToml = true;
 
     /**
      * Create all the output csv files and directory.
@@ -144,5 +145,15 @@ public class OutputGenerator {
     public void setKeyCatalogValuesMap(Map<String, String> keyCatalogValuesMap) {
 
         this.keyCatalogValuesMap = keyCatalogValuesMap;
+    }
+
+    public boolean isGenerateToml() {
+
+        return generateToml;
+    }
+
+    public void setGenerateToml(boolean generateToml) {
+
+        this.generateToml = generateToml;
     }
 }
