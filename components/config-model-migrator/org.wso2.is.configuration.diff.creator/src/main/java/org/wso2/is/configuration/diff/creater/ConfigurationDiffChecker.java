@@ -208,9 +208,8 @@ public class ConfigurationDiffChecker {
                     getDifferenceToMaps(migratedXMLFiles.get(entry.getKey()), detailedDiff, existingTags, keyValueMap
                             , outputGenerator);
                 } else {
-                    Files.write(Paths.get(logFile.getPath()), (entry.getValue().getPath() +
-                            " is not templated with toml. \n").getBytes(StandardCharsets.UTF_8),
-                            StandardOpenOption.APPEND);
+                    Files.write(Paths.get(logFile.getPath()), (entry.getValue().getPath() + " is not templated with" +
+                            " toml. \n").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
                     File outFile =
                             new File(MigrationConstants.UN_TEMPLATE_FILE_FOLDER + MigrationConstants
                                     .FILE_SEPARATOR + entry.getKey());
@@ -273,7 +272,7 @@ public class ConfigurationDiffChecker {
 
         for (Object diffObject : detailedDiff.getAllDifferences()) {
             Difference diff = (Difference) diffObject;
-            String csvEntry;
+            String csvEntry = "";
             String csvKey = "";
             String defaultValue = "";
             String changedValue;
@@ -282,27 +281,34 @@ public class ConfigurationDiffChecker {
                 continue;
             }
 
-            if (isXpathNotInExistingTags(existingXMLTags, diff)) {
-                if (isMigratedXpathEqualsDefaultXpath(diff)) {
-                    csvKey = diff.getControlNodeDetail().getXpathLocation();
-                    defaultValue = diff.getControlNodeDetail().getValue();
-                } else if (StringUtils.isNotBlank(diff.getTestNodeDetail().getXpathLocation()) &&
-                        StringUtils.isBlank(diff.getControlNodeDetail().getXpathLocation())) {
-                    csvKey = diff.getTestNodeDetail().getXpathLocation();
+            if (isMigratedXpathEqualsDefaultXpath(diff)) {
+                csvKey = diff.getControlNodeDetail().getXpathLocation();
+                defaultValue = diff.getControlNodeDetail().getValue();
+            } else if (isPropertyNotAvailableInDefaultFile(diff)) {
+                csvKey = diff.getTestNodeDetail().getXpathLocation();
+            }
+
+            if (StringUtils.isNotBlank(csvEntry)) {
+                if (isXpathNotInExistingTags(existingXMLTags, csvEntry)) {
+                    changedValue = diff.getTestNodeDetail().getValue();
+                    csvEntry =
+                            migratedFile.getName().concat(MigrationConstants.CSV_SEPARATOR_APPENDER)
+                                    .concat(MigrationConstants.XML_FILE_TYPE)
+                                    .concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(csvKey).concat("| | | |")
+                                    .concat(defaultValue).concat("| |");
+                    existingXMLTags.put(csvKey, csvEntry);
+                    keyValues.put(csvKey, changedValue);
+                    outputGenerator.setGenerateToml(false);
+                } else {
+                    keyValues.put(diff.getTestNodeDetail().getXpathLocation(), diff.getTestNodeDetail().getValue());
                 }
-                changedValue = diff.getTestNodeDetail().getValue();
-                csvEntry =
-                        migratedFile.getName().concat(MigrationConstants.CSV_SEPARATOR_APPENDER)
-                                .concat(MigrationConstants.XML_FILE_TYPE)
-                                .concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(csvKey).concat("| | | |")
-                                .concat(defaultValue).concat("| |");
-                existingXMLTags.put(csvKey, csvEntry);
-                keyValues.put(csvKey, changedValue);
-                outputGenerator.setGenerateToml(false);
-            } else {
-                keyValues.put(diff.getTestNodeDetail().getXpathLocation(), diff.getTestNodeDetail().getValue());
             }
         }
+    }
+
+    private boolean isPropertyNotAvailableInDefaultFile(Difference diff) {
+        return StringUtils.isNotBlank(diff.getTestNodeDetail().getXpathLocation()) &&
+                StringUtils.isBlank(diff.getControlNodeDetail().getXpathLocation());
     }
 
     private boolean isMigratedXpathEqualsDefaultXpath(Difference diff) {
@@ -310,9 +316,9 @@ public class ConfigurationDiffChecker {
         return diff.getTestNodeDetail().getXpathLocation().equals(diff.getControlNodeDetail().getXpathLocation());
     }
 
-    private boolean isXpathNotInExistingTags(Map<String, String> existingXMLTags, Difference diff) {
+    private boolean isXpathNotInExistingTags(Map<String, String> existingXMLTags, String tag) {
 
-        return existingXMLTags.get(diff.getTestNodeDetail().getXpathLocation()) == null;
+        return existingXMLTags.get(tag) == null;
     }
 
     private boolean isMigratedXPathAvailableInDiff(Difference diff) {
