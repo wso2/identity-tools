@@ -60,6 +60,8 @@ public class ConfigurationMigrate {
             tomlGenTool.generateTomlFile(outGen.getKeyValuesMap(), Utils.getTomlFile(defaultISHomePath),
                     outGen.getLogFile());
             log.info("New config migration is successfully completed!!!");
+            log.info("Note : Add user-mgt.xml and master-datasources.xml configs manually. Rest have added " +
+                    "successfully to the deployment.toml file generated.");
             log.info("=================== END of the Tool =============================================");
         } else {
             Utils.writeToFile(outGen.getKeyCatalogValuesMap(), outGen.getOutputCSV());

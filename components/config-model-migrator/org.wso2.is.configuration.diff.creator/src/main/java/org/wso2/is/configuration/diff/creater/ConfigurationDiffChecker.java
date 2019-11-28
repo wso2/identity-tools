@@ -23,16 +23,15 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.custommonkey.xmlunit.DetailedDiff;
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.Difference;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
 
 import org.wso2.is.configuration.diff.creater.exception.ConfigMigrateException;
 import org.wso2.is.configuration.diff.creater.utils.MigrationConstants;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import org.xmlunit.XMLUnitException;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.diff.DefaultNodeMatcher;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.Difference;
+import org.xmlunit.diff.ElementSelectors;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -89,13 +88,13 @@ public class ConfigurationDiffChecker {
     /**
      * Check whether property files are templated or not, if true find diff.
      *
-     * @param defaultPropertiesFiles
-     * @param migratedPropertiesFiles
-     * @param j2TemplateFiles
-     * @param existingTags
-     * @param keyValues
-     * @param outputGenerator
-     * @throws ConfigMigrateException
+     * @param defaultPropertiesFiles  Map of Default pack's property files.
+     * @param migratedPropertiesFiles Map of Migrated pack's property file.
+     * @param j2TemplateFiles         Map of j2 template file set.
+     * @param existingTags            Map of existing tags.
+     * @param keyValues               Map of key values.
+     * @param outputGenerator         OutputGenerator object.
+     * @throws ConfigMigrateException ConfigMigrateException
      */
     private void checkPropertyDiff(Map<String, File> defaultPropertiesFiles,
                                    Map<String, File> migratedPropertiesFiles,
@@ -203,7 +202,7 @@ public class ConfigurationDiffChecker {
             try {
                 if (isFileTemplated(defaultXMLFiles, j2files, entry)) {
 
-                    DetailedDiff detailedDiff = compareXMLFiles(defaultXMLFiles.get(entry.getKey()),
+                    Diff detailedDiff = compareXMLFiles(defaultXMLFiles.get(entry.getKey()),
                             migratedXMLFiles.get(entry.getKey()));
                     getDifferenceToMaps(migratedXMLFiles.get(entry.getKey()), detailedDiff, existingTags, keyValueMap
                             , outputGenerator);
@@ -215,7 +214,7 @@ public class ConfigurationDiffChecker {
                                     .FILE_SEPARATOR + entry.getKey());
                     FileUtils.copyFile(entry.getValue(), outFile);
                 }
-            } catch (IOException | SAXException e) {
+            } catch (IOException e) {
                 log.error("Error occurred when parsing xml files or finding diff of xml files.");
                 throw new ConfigMigrateException("Error occurred when parsing xml files or finding diff of xml files" +
                         ". ", e);
@@ -240,80 +239,94 @@ public class ConfigurationDiffChecker {
     }
 
     /**
-     * Compare xml files using xmlUnit library.
+     * Compare xml files using xmlUnit2 library.
      *
-     * @param defaultFile  default xml file to compare with.
-     * @param migratedFile migrated xml file to compare.
-     * @return DetailedDiff of xml difference.
-     * @throws IOException  IOException.
-     * @throws SAXException SAXException.
+     * @param defaultFile Default xml file.
+     * @param migratedFile Migrated xml file.
+     * @return Diff of difference.
      */
-    private DetailedDiff compareXMLFiles(File defaultFile, File migratedFile) throws IOException, SAXException {
+    private Diff compareXMLFiles(File defaultFile, File migratedFile)  {
 
-        XMLUnit.setIgnoreWhitespace(true);
-        XMLUnit.setIgnoreAttributeOrder(true);
-        XMLUnit.setIgnoreComments(true);
-        XMLUnit.setIgnoreDiffBetweenTextAndCDATA(true);
+        try {
 
-        InputSource defaultSource = new InputSource(defaultFile.getPath());
-        InputSource changedSource = new InputSource(migratedFile.getPath());
-
-        DetailedDiff detailedDiff = new DetailedDiff(new Diff(defaultSource, changedSource));
-        detailedDiff.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
-
-        return detailedDiff;
+            return DiffBuilder.compare(migratedFile).withTest(defaultFile)
+                    .ignoreWhitespace()
+                    .ignoreComments()
+                    .checkForSimilar()
+                    .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
+                    .build();
+        } catch (XMLUnitException e) {
+            log.error("Error occurred when comparing default File : " + defaultFile.getName() + " and migrated" +
+                    " file :" + migratedFile.getName());
+        }
+        return null;
     }
 
+    /**
+     * Compare difference to print the output.
+     *
+     * @param migratedFile    Migrated xml file.
+     * @param detailedDiff    Diff of all the difference.
+     * @param existingXMLTags Map of existing xml tags.
+     * @param keyValues       Map of key values.
+     * @param outputGenerator OutputGenerator.
+     */
     private void getDifferenceToMaps(File migratedFile,
-                                     DetailedDiff detailedDiff,
+                                     Diff detailedDiff,
                                      Map<String, String> existingXMLTags,
                                      Map<String, String> keyValues,
                                      OutputGenerator outputGenerator) {
 
-        for (Object diffObject : detailedDiff.getAllDifferences()) {
-            Difference diff = (Difference) diffObject;
-            String csvEntry = "";
-            String csvKey = "";
-            String defaultValue = "";
-            String changedValue;
+        if (detailedDiff != null) {
+            Iterable<Difference> differences = detailedDiff.getDifferences();
+            for (Difference difference : differences) {
+                if (difference.getResult().name().equals("DIFFERENT")) {
+                    String csvEntry;
+                    String csvKey;
+                    String defaultValue = " ";
+                    String changedValue = " ";
 
-            if (!isMigratedXPathAvailableInDiff(diff)) {
-                continue;
-            }
+                    if (!isMigratedXPathInDiffContainsText(difference) &&
+                            isMigratedFileNotContainPropertiesWhichDefaultHas(difference)) {
+                        continue;
+                    }
 
-            if (isMigratedXpathEqualsDefaultXpath(diff)) {
-                csvKey = diff.getControlNodeDetail().getXpathLocation();
-                defaultValue = diff.getControlNodeDetail().getValue();
-            } else if (isPropertyNotAvailableInDefaultFile(diff)) {
-                csvKey = diff.getTestNodeDetail().getXpathLocation();
-            }
+                    csvKey = difference.getComparison().getControlDetails().getXPath();
+                    if (StringUtils.isNotBlank(csvKey)) {
+                        if (difference.getComparison().getControlDetails().getTarget() != null) {
+                            changedValue = difference.getComparison().getControlDetails().getTarget().getNodeValue();
+                        }
+                        if (isContainDefaultValue(difference)) {
+                            defaultValue = difference.getComparison().getTestDetails().getTarget().getNodeValue();
+                        }
+                        if (isXpathNotInExistingTags(existingXMLTags, csvKey)) {
+                            csvEntry =
+                                    migratedFile.getName().concat(MigrationConstants.CSV_SEPARATOR_APPENDER)
+                                            .concat(MigrationConstants.XML_FILE_TYPE)
+                                            .concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(csvKey)
+                                            .concat("| | | |").concat(defaultValue).concat("| |");
+                            existingXMLTags.put(csvKey, csvEntry);
+                            outputGenerator.setGenerateToml(false);
+                        }
+                        keyValues.put(csvKey, changedValue);
+                    }
 
-            if (StringUtils.isNotBlank(csvEntry)) {
-                if (isXpathNotInExistingTags(existingXMLTags, csvEntry)) {
-                    changedValue = diff.getTestNodeDetail().getValue();
-                    csvEntry =
-                            migratedFile.getName().concat(MigrationConstants.CSV_SEPARATOR_APPENDER)
-                                    .concat(MigrationConstants.XML_FILE_TYPE)
-                                    .concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(csvKey).concat("| | | |")
-                                    .concat(defaultValue).concat("| |");
-                    existingXMLTags.put(csvKey, csvEntry);
-                    keyValues.put(csvKey, changedValue);
-                    outputGenerator.setGenerateToml(false);
-                } else {
-                    keyValues.put(diff.getTestNodeDetail().getXpathLocation(), diff.getTestNodeDetail().getValue());
                 }
+
             }
         }
     }
 
-    private boolean isPropertyNotAvailableInDefaultFile(Difference diff) {
-        return StringUtils.isNotBlank(diff.getTestNodeDetail().getXpathLocation()) &&
-                StringUtils.isBlank(diff.getControlNodeDetail().getXpathLocation());
+    private boolean isContainDefaultValue(Difference difference) {
+
+        return difference.getComparison().getTestDetails().getTarget() != null
+                && difference.getComparison().getTestDetails().getTarget().getNodeValue() != null;
     }
 
-    private boolean isMigratedXpathEqualsDefaultXpath(Difference diff) {
+    private boolean isMigratedFileNotContainPropertiesWhichDefaultHas(Difference difference) {
 
-        return diff.getTestNodeDetail().getXpathLocation().equals(diff.getControlNodeDetail().getXpathLocation());
+        return difference.getComparison().getControlDetails().getXPath() == null
+                && difference.getComparison().getTestDetails().getXPath() != null;
     }
 
     private boolean isXpathNotInExistingTags(Map<String, String> existingXMLTags, String tag) {
@@ -321,11 +334,11 @@ public class ConfigurationDiffChecker {
         return existingXMLTags.get(tag) == null;
     }
 
-    private boolean isMigratedXPathAvailableInDiff(Difference diff) {
+    private boolean isMigratedXPathInDiffContainsText(Difference diff) {
 
         // Possible xpath values that will be templated.
         String[] xpathValues = {"@class", "text()"};
-        return diff.getTestNodeDetail().getXpathLocation() != null && Arrays.stream(xpathValues).anyMatch(diff
-                .getTestNodeDetail().getXpathLocation()::contains);
+        return diff.getComparison().getControlDetails().getXPath() != null && Arrays.stream(xpathValues).anyMatch(
+                diff.getComparison().getControlDetails().getXPath()::contains);
     }
 }
