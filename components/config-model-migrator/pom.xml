@@ -78,6 +78,11 @@
                 <version>${xmlunit.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.xmlunit</groupId>
+                <artifactId>xmlunit-matchers</artifactId>
+                <version>${xmlunit.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-core</artifactId>
                 <version>${apache.loging.log4j.version}</version>

@@ -26,6 +26,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.wso2.is.configuration.diff.creater.exception.ConfigMigrateException;
 import org.wso2.is.configuration.diff.creater.utils.MigrationConstants;
+import org.wso2.is.configuration.toml.generator.WSO2TomlKey;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -145,19 +146,25 @@ public class TomlGenerator {
     private Map<String, Object> generateTomlKeyMapFromData(Map<String, String> keyValueMap, File log)
             throws IOException {
 
-        Map<String, String> keyTomlMap = readOutputCSV(new URL(MigrationConstants.CATALOG_URL));
+        Map<String, WSO2TomlKey> keyTomlMap = readOutputCSV(new URL(MigrationConstants.CATALOG_URL));
         Map<String, Object> outputMap = new HashMap<>();
 
         for (Map.Entry<String, String> entry : keyValueMap.entrySet()) {
             String key = entry.getKey();
-            String tomlKey = keyTomlMap.get(key);
-            if (StringUtils.isBlank(tomlKey)) {
-                Files.write(Paths.get(log.getPath()), ("A missing toml config found for key : " + key
-                                + " and changed value : " + keyValueMap.get(key)).getBytes(StandardCharsets.UTF_8),
-                        StandardOpenOption.APPEND);
+            WSO2TomlKey tomlKey = keyTomlMap.get(key);
+            if (StringUtils.isBlank(tomlKey.getKey())) {
+                if (TomlGeneratorConstants.NOT_IN_DEFAULT_STATUS.equals(tomlKey.getStatus())) {
+                    Files.write(Paths.get(log.getPath()), ("\n ### The property : " + key
+                                    + " is not available in default IS pack.").getBytes(StandardCharsets.UTF_8),
+                            StandardOpenOption.APPEND);
+                } else {
+                    Files.write(Paths.get(log.getPath()), ("\n A missing toml config found for key : " + key
+                                    + " and changed value : " + keyValueMap.get(key)).getBytes(StandardCharsets.UTF_8),
+                            StandardOpenOption.APPEND);
+                }
                 continue;
             }
-            addKeyToOutputMap(keyValueMap, key, tomlKey, outputMap);
+            addKeyToOutputMap(keyValueMap, key, tomlKey.getKey(), outputMap);
         }
         return outputMap;
     }
@@ -181,10 +188,10 @@ public class TomlGenerator {
         }
     }
 
-    private Map<String, String> readOutputCSV(URL csvRemoteURL) throws IOException {
+    private Map<String, WSO2TomlKey> readOutputCSV(URL csvRemoteURL) throws IOException {
 
         BufferedReader reader = null;
-        Map<String, String> keys = new HashMap<>();
+        Map<String, WSO2TomlKey> keys = new HashMap<>();
         try {
             reader = new BufferedReader(new InputStreamReader(csvRemoteURL.openStream(),
                     StandardCharsets.UTF_8));
@@ -197,16 +204,21 @@ public class TomlGenerator {
         return keys;
     }
 
-    private void readFileAndPutToMap(BufferedReader reader, Map<String, String> keys)
+    private void readFileAndPutToMap(BufferedReader reader, Map<String, WSO2TomlKey> keys)
             throws IOException {
 
         String line;
+        String status = "";
         reader.readLine();
         while ((line = reader.readLine()) != null) {
             String[] parts = line.split(Pattern.quote(MigrationConstants.CSV_SEPARATOR_APPENDER));
             if (parts.length > (TomlGeneratorConstants.TOML_COLUMN_INDEX - 1)) {
-                keys.put(parts[TomlGeneratorConstants.XML_TAG_COLUMN_INDEX - 1].trim(),
-                        parts[TomlGeneratorConstants.TOML_COLUMN_INDEX - 1].trim());
+                if (parts.length == 9) {
+                   status = parts[TomlGeneratorConstants.STATUS_COLUMN_INDEX - 1].trim();
+                }
+                WSO2TomlKey tomlEntry =
+                        new WSO2TomlKey(parts[TomlGeneratorConstants.TOML_COLUMN_INDEX - 1].trim(), status);
+                keys.put(parts[TomlGeneratorConstants.XML_TAG_COLUMN_INDEX - 1].trim(), tomlEntry);
             }
         }
     }

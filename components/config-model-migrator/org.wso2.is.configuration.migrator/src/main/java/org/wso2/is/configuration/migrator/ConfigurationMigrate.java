@@ -24,8 +24,10 @@ import org.apache.logging.log4j.Logger;
 import org.wso2.is.configuration.diff.creater.DiffCheckerTool;
 import org.wso2.is.configuration.diff.creater.OutputGenerator;
 import org.wso2.is.configuration.diff.creater.exception.ConfigMigrateException;
+import org.wso2.is.configuration.diff.creater.utils.MigrationConstants;
 import org.wso2.is.configuration.migrator.util.Utils;
 import org.wso2.is.configuration.toml.generator.TomlGeneratorTool;
+import org.wso2.is.configuration.toml.generator.util.TomlGeneratorConstants;
 
 /**
  * Main class for the migration tool.
@@ -56,19 +58,30 @@ public class ConfigurationMigrate {
 
         OutputGenerator outGen;
         outGen = diffCheckTool.createDiff(migrateISHomePath, defaultISHomePath);
+        Utils.writeToFile(outGen.getKeyCatalogValuesMap(), outGen.getOutputCSV());
+        tomlGenTool.generateTomlFile(outGen.getKeyValuesMap(), Utils.getTomlFile(defaultISHomePath),
+                outGen.getLogFile());
         if (outGen.isGenerateToml()) {
-            tomlGenTool.generateTomlFile(outGen.getKeyValuesMap(), Utils.getTomlFile(defaultISHomePath),
-                    outGen.getLogFile());
-            log.info("New config migration is successfully completed!!!");
-            log.info("Note : Add user-mgt.xml and master-datasources.xml configs manually. Rest have added " +
-                    "successfully to the deployment.toml file generated.");
-            log.info("=================== END of the Tool =============================================");
+            log.info("=================================================================================");
+            log.info("|         New config migration is successfully completed!!!                     |");
+            log.info("=================================================================================");
+            log.info("\n\n Untemplated files with changes available in " + MigrationConstants
+                    .UN_TEMPLATE_FILE_FOLDER);
+            log.info("\n Logs on further output is available in " + MigrationConstants.LOG_FILE);
+            log.info("\n Updated deployment.toml file is available in " + TomlGeneratorConstants
+                    .UPDATED_DEPLOYMENT_TOML);
+            log.info("\n\n----------------------------------------Good Bye!!--------------------------------");
         } else {
-            Utils.writeToFile(outGen.getKeyCatalogValuesMap(), outGen.getOutputCSV());
-            log.error("We have figured out some configs which does not have toml configurations. \n ");
-            log.info("Please update the 'output/OutputCatalog.csv' file with toml configurations and commit" +
-                    " it to the Github and re-run the tool. \n");
-            log.info("=================== Complete and Try again to generate toml ================================");
+            log.info("=================================================================================");
+            log.info("|        New config migration Failed !!!    New Configs Found!!                 |");
+            log.info("=================================================================================");
+
+            log.info("\n \n A deployment.toml file has generated with the existing configs.");
+            log.info("\n \n ** If you need to generate the complete toml, add the toml configs to the " +
+                    MigrationConstants.OUTPUT_CATALOG_CSV + " file, commit it to the github and re-run the tool");
+            log.info("OR  Add these changes found in " + MigrationConstants.OUTPUT_CATALOG_CSV +
+                    ", to the deployment.toml manually.");
+            log.info("\n\n----------------------------------------Good Bye!!--------------------------------");
         }
     }
 }

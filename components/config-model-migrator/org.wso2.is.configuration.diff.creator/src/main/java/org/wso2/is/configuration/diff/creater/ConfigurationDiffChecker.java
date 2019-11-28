@@ -116,13 +116,7 @@ public class ConfigurationDiffChecker {
                     getPropertyDiffToMaps(migratedPropertiesFiles.get(entry.getKey()), changedPropertyDiffSet,
                             existingTags, keyValues, outputGenerator);
                 } else {
-                    Files.write(Paths.get(logFile.getPath()), (entry.getValue().getPath() + " is not templated with" +
-                                    " toml. \n").getBytes(StandardCharsets.UTF_8),
-                            StandardOpenOption.APPEND);
-                    File unTemplateFile =
-                            new File(MigrationConstants.UN_TEMPLATE_FILE_FOLDER + MigrationConstants
-                                    .FILE_SEPARATOR + entry.getKey());
-                    FileUtils.copyFile(entry.getValue(), unTemplateFile);
+                    filterUnTemplatedFiles(defaultPropertiesFiles, migratedPropertiesFiles, logFile, entry);
                 }
             } catch (IOException e) {
                 throw new ConfigMigrateException("Error occurred when writing diff to the csv.", e);
@@ -207,12 +201,7 @@ public class ConfigurationDiffChecker {
                     getDifferenceToMaps(migratedXMLFiles.get(entry.getKey()), detailedDiff, existingTags, keyValueMap
                             , outputGenerator);
                 } else {
-                    Files.write(Paths.get(logFile.getPath()), (entry.getValue().getPath() + " is not templated with" +
-                            " toml. \n").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
-                    File outFile =
-                            new File(MigrationConstants.UN_TEMPLATE_FILE_FOLDER + MigrationConstants
-                                    .FILE_SEPARATOR + entry.getKey());
-                    FileUtils.copyFile(entry.getValue(), outFile);
+                    filterUnTemplatedFiles(defaultXMLFiles, migratedXMLFiles, logFile, entry);
                 }
             } catch (IOException e) {
                 log.error("Error occurred when parsing xml files or finding diff of xml files.");
@@ -347,5 +336,21 @@ public class ConfigurationDiffChecker {
         String[] xpathValues = {"@class", "text()"};
         return diff.getComparison().getControlDetails().getXPath() != null && Arrays.stream(xpathValues).anyMatch(
                 diff.getComparison().getControlDetails().getXPath()::contains);
+    }
+
+    private void filterUnTemplatedFiles(Map<String, File> defaultXMLFiles, Map<String, File> migratedXMLFiles,
+                                        File logFile, Map.Entry<String, File> entry) throws IOException {
+
+        if (migratedXMLFiles.get(entry.getKey()) != null && defaultXMLFiles.get(entry.getKey()) != null) {
+            if (FileUtils.contentEquals(migratedXMLFiles.get(entry.getKey()),
+                    defaultXMLFiles.get(entry.getKey()))) {
+                Files.write(Paths.get(logFile.getPath()), (entry.getValue().getPath() + " is not templated " +
+                        "with toml. \n").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+                File outFile =
+                        new File(MigrationConstants.UN_TEMPLATE_FILE_FOLDER + MigrationConstants
+                                .FILE_SEPARATOR + entry.getKey());
+                FileUtils.copyFile(entry.getValue(), outFile);
+            }
+        }
     }
 }

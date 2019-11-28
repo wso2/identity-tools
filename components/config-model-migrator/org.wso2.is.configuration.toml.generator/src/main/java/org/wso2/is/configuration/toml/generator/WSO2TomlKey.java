@@ -17,16 +17,38 @@
  *
  */
 
-package org.wso2.is.configuration.toml.generator.util;
+package org.wso2.is.configuration.toml.generator;
 
 /**
- * Constant class used in toml generator.
+ * Class that store information about a toml key and status.
  */
-public class TomlGeneratorConstants {
+public class WSO2TomlKey {
 
-    public static final String UPDATED_DEPLOYMENT_TOML = "output/deployment.toml";
-    public static final String NOT_IN_DEFAULT_STATUS = "Not In Default";
-    public static final int TOML_COLUMN_INDEX = 4;
-    public static final int XML_TAG_COLUMN_INDEX = 3;
-    public static final int STATUS_COLUMN_INDEX = 9;
+    private String key;
+    private String status;
+
+    public WSO2TomlKey(String key, String status) {
+
+        this.key = key;
+        this.status = status;
+    }
+    public String getKey() {
+
+        return key;
+    }
+
+    public void setKey(String key) {
+
+        this.key = key;
+    }
+
+    public String getStatus() {
+
+        return status;
+    }
+
+    public void setStatus(String status) {
+
+        this.status = status;
+    }
 }
