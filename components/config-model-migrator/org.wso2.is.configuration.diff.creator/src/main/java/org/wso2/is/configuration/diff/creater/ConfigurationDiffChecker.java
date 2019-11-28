@@ -281,17 +281,24 @@ public class ConfigurationDiffChecker {
             Iterable<Difference> differences = detailedDiff.getDifferences();
             for (Difference difference : differences) {
                 if (difference.getResult().name().equals("DIFFERENT")) {
-                    String csvEntry;
+                    String csvEntry = null;
                     String csvKey;
                     String defaultValue = " ";
                     String changedValue = " ";
 
-                    if (!isMigratedXPathInDiffContainsText(difference) &&
-                            isMigratedFileNotContainPropertiesWhichDefaultHas(difference)) {
-                        continue;
+                    csvKey = difference.getComparison().getControlDetails().getXPath();
+                    if (!isMigratedXPathInDiffContainsText(difference)) {
+                        if (isMigratedFileNotContainPropertiesWhichDefaultHas(difference)) {
+                            continue;
+                        } else {
+                            csvEntry =
+                                    migratedFile.getName().concat(MigrationConstants.CSV_SEPARATOR_APPENDER)
+                                            .concat(MigrationConstants.XML_FILE_TYPE)
+                                            .concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(csvKey)
+                                            .concat("| | | |").concat(defaultValue).concat("| | Not In Default");
+                        }
                     }
 
-                    csvKey = difference.getComparison().getControlDetails().getXPath();
                     if (StringUtils.isNotBlank(csvKey)) {
                         if (difference.getComparison().getControlDetails().getTarget() != null) {
                             changedValue = difference.getComparison().getControlDetails().getTarget().getNodeValue();
@@ -300,19 +307,19 @@ public class ConfigurationDiffChecker {
                             defaultValue = difference.getComparison().getTestDetails().getTarget().getNodeValue();
                         }
                         if (isXpathNotInExistingTags(existingXMLTags, csvKey)) {
-                            csvEntry =
-                                    migratedFile.getName().concat(MigrationConstants.CSV_SEPARATOR_APPENDER)
-                                            .concat(MigrationConstants.XML_FILE_TYPE)
-                                            .concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(csvKey)
-                                            .concat("| | | |").concat(defaultValue).concat("| |");
+                            if (StringUtils.isBlank(csvEntry)) {
+                                csvEntry =
+                                        migratedFile.getName().concat(MigrationConstants.CSV_SEPARATOR_APPENDER)
+                                                .concat(MigrationConstants.XML_FILE_TYPE)
+                                                .concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(csvKey)
+                                                .concat("| | | |").concat(defaultValue).concat("| |");
+                            }
                             existingXMLTags.put(csvKey, csvEntry);
                             outputGenerator.setGenerateToml(false);
                         }
                         keyValues.put(csvKey, changedValue);
                     }
-
                 }
-
             }
         }
     }

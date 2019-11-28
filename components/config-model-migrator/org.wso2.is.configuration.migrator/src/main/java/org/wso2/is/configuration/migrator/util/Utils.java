@@ -19,6 +19,8 @@
 
 package org.wso2.is.configuration.migrator.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.wso2.is.configuration.diff.creater.exception.ConfigMigrateException;
 import org.wso2.is.configuration.diff.creater.utils.MigrationConstants;
 
@@ -34,6 +36,8 @@ import java.util.Map;
  * The utility methods used in migration tool.
  */
 public class Utils {
+
+    private static final Logger log = LogManager.getLogger(Utils.class);
 
     public static File getTomlFile(String homePath) {
 
