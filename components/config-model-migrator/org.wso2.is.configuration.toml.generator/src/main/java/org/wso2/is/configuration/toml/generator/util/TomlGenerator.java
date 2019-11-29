@@ -24,8 +24,8 @@ import com.moandjiezana.toml.TomlWriter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.wso2.is.configuration.diff.creater.exception.ConfigMigrateException;
-import org.wso2.is.configuration.diff.creater.utils.MigrationConstants;
+import org.wso2.is.configuration.diff.creator.exception.ConfigMigrationException;
+import org.wso2.is.configuration.diff.creator.utils.MigrationConstants;
 import org.wso2.is.configuration.toml.generator.WSO2TomlKey;
 
 import java.io.BufferedReader;
@@ -55,11 +55,11 @@ public class TomlGenerator {
      * @param deploymentTomlFile   Existing deployment.toml file.
      * @param log                  Log file.
      * @return Map of toml key and object.
-     * @throws ConfigMigrateException ConfigMigrateException
+     * @throws ConfigMigrationException ConfigMigrationException
      */
     public Map<String, Object> generateTomlKeyValueMap(Map<String, String> keyValuesMapFromDiff,
                                                        File deploymentTomlFile,
-                                                       File log) throws ConfigMigrateException {
+                                                       File log) throws ConfigMigrationException {
 
         Map<String, Object> tomlKeyValueMap;
         Toml toml = new Toml();
@@ -68,12 +68,13 @@ public class TomlGenerator {
             try {
                 generatedTomlKeyValueMap = generateTomlKeyMapFromData(keyValuesMapFromDiff, log);
             } catch (IOException e) {
-                throw new ConfigMigrateException("Error occurred when generating deployment.toml file.", e);
+                throw new ConfigMigrationException("Error occurred when generating deployment.toml file.", e);
             }
             Map<String, Object> existingTomlMap = toml.read(deploymentTomlFile).toMap();
             tomlKeyValueMap = concatTomlMaps(existingTomlMap, generatedTomlKeyValueMap);
         } else {
-            throw new ConfigMigrateException("Please enter correct output CSV file path, key value CSV file path and" +
+            throw new ConfigMigrationException("Please enter correct output CSV file path, key value CSV file path " +
+                    "and" +
                     " deployment.tml path and try again.");
         }
         return tomlKeyValueMap;

@@ -21,7 +21,7 @@ package org.wso2.is.configuration.toml.generator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.wso2.is.configuration.diff.creater.exception.ConfigMigrateException;
+import org.wso2.is.configuration.diff.creator.exception.ConfigMigrationException;
 import org.wso2.is.configuration.toml.generator.util.TomlGenerator;
 
 import java.io.File;
@@ -41,10 +41,10 @@ public class TomlGeneratorTool {
      * @param keyValuesMapFromDiff Map created from the diff of files.
      * @param deploymentTomlFile   Existing deployment toml file.
      * @param logFile              Log output file.
-     * @throws ConfigMigrateException ConfigMigrateException.
+     * @throws ConfigMigrationException  ConfigMigrationException.
      */
     public void generateTomlFile(Map<String, String> keyValuesMapFromDiff, File deploymentTomlFile, File logFile)
-            throws ConfigMigrateException {
+            throws ConfigMigrationException {
 
         TomlGenerator tomlGenerator = new TomlGenerator();
 

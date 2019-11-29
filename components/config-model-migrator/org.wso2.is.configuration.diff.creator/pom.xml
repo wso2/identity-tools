@@ -30,7 +30,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>org.wso2.is.configuration.diff.creater</artifactId>
+    <artifactId>org.wso2.is.configuration.diff.creator</artifactId>
     <packaging>jar</packaging>
 
     <name>WSO2 - Configuration Diff Checker</name>
@@ -76,6 +76,11 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.2</version>
         </dependency>
     </dependencies>
 

@@ -21,10 +21,10 @@ package org.wso2.is.configuration.migrator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.wso2.is.configuration.diff.creater.DiffCheckerTool;
-import org.wso2.is.configuration.diff.creater.OutputGenerator;
-import org.wso2.is.configuration.diff.creater.exception.ConfigMigrateException;
-import org.wso2.is.configuration.diff.creater.utils.MigrationConstants;
+import org.wso2.is.configuration.diff.creator.DiffCheckerTool;
+import org.wso2.is.configuration.diff.creator.OutputGenerator;
+import org.wso2.is.configuration.diff.creator.exception.ConfigMigrationException;
+import org.wso2.is.configuration.diff.creator.utils.MigrationConstants;
 import org.wso2.is.configuration.migrator.util.Utils;
 import org.wso2.is.configuration.toml.generator.TomlGeneratorTool;
 import org.wso2.is.configuration.toml.generator.util.TomlGeneratorConstants;
@@ -40,9 +40,9 @@ public class ConfigurationMigrate {
      * The main method which runs when running the shell-script.
      *
      * @param args args[0] = tool type, args[1] = migrated IS home path, args[2] = default IS home path.
-     * @throws ConfigMigrateException ConfigMigrateException.
+     * @throws ConfigMigrationException ConfigMigrateException.
      */
-    public static void main(String args[]) throws ConfigMigrateException {
+    public static void main(String args[]) throws ConfigMigrationException {
 
         String migrateISHomePath;
         String defaultISHomePath;
@@ -51,7 +51,7 @@ public class ConfigurationMigrate {
             defaultISHomePath = args[1];
         } else {
             log.error("Please provide migrated IS-Home path and the default IS-Home path.");
-            throw new ConfigMigrateException("Please provide migrated IS-Home path and the default IS-Home path.");
+            throw new ConfigMigrationException("Please provide migrated IS-Home path and the default IS-Home path.");
         }
         DiffCheckerTool diffCheckTool = new DiffCheckerTool();
         TomlGeneratorTool tomlGenTool = new TomlGeneratorTool();

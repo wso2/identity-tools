@@ -17,11 +17,11 @@
  *
  */
 
-package org.wso2.is.configuration.diff.creater;
+package org.wso2.is.configuration.diff.creator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.wso2.is.configuration.diff.creater.exception.ConfigMigrateException;
+import org.wso2.is.configuration.diff.creator.exception.ConfigMigrationException;
 
 /**
  * The main class for diff finding tool.
@@ -35,10 +35,10 @@ public class DiffCheckerTool {
      *
      * @param migratedISHomePath migrated IS Home Path.
      * @param defaultISHomePath  default IS Home Path.
-     * @throws ConfigMigrateException ConfigMigrateException.
+     * @throws ConfigMigrationException ConfigMigrationException.
      */
     public OutputGenerator createDiff(String migratedISHomePath, String defaultISHomePath)
-            throws ConfigMigrateException {
+            throws ConfigMigrationException {
 
         ConfigLoader configLoader = new ConfigLoader();
         configLoader.validate(migratedISHomePath, defaultISHomePath);

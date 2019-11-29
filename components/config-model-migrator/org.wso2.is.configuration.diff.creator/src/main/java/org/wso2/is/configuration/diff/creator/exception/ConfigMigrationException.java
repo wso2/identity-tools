@@ -17,19 +17,19 @@
  *
  */
 
-package org.wso2.is.configuration.diff.creater.exception;
+package org.wso2.is.configuration.diff.creator.exception;
 
 /**
  * Exception class for config migrator.
  */
-public class ConfigMigrateException extends Exception {
+public class ConfigMigrationException extends Exception {
 
-    public ConfigMigrateException(String message) {
+    public ConfigMigrationException(String message) {
 
         super(message);
     }
 
-    public ConfigMigrateException(String message, Throwable cause) {
+    public ConfigMigrationException(String message, Throwable cause) {
 
         super(message, cause);
     }

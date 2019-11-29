@@ -47,7 +47,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.tools</groupId>
-            <artifactId>org.wso2.is.configuration.diff.creater</artifactId>
+            <artifactId>org.wso2.is.configuration.diff.creator</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>

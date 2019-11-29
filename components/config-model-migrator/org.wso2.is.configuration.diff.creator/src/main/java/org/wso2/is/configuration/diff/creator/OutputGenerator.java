@@ -17,13 +17,13 @@
  *
  */
 
-package org.wso2.is.configuration.diff.creater;
+package org.wso2.is.configuration.diff.creator;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.is.configuration.diff.creater.exception.ConfigMigrateException;
-import org.wso2.is.configuration.diff.creater.utils.MigrationConstants;
+import org.wso2.is.configuration.diff.creator.exception.ConfigMigrationException;
+import org.wso2.is.configuration.diff.creator.utils.MigrationConstants;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,9 +48,9 @@ public class OutputGenerator {
     /**
      * Create all the output csv files and directory.
      *
-     * @throws ConfigMigrateException ConfigMigrateException.
+     * @throws ConfigMigrationException ConfigMigrationException.
      */
-    public void createOutputFiles() throws ConfigMigrateException {
+    public void createOutputFiles() throws ConfigMigrationException {
 
         try {
             createDirectory(outputDirectory);
@@ -62,7 +62,7 @@ public class OutputGenerator {
             createFile(logFile);
             setLogFile(logFile);
         } catch (IOException e) {
-            throw new ConfigMigrateException("Error occurred when creating output files.");
+            throw new ConfigMigrationException("Error occurred when creating output files.");
         }
     }
 

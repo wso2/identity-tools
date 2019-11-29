@@ -35,7 +35,7 @@
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon.identity.tools</groupId>
-            <artifactId>org.wso2.is.configuration.diff.creater</artifactId>
+            <artifactId>org.wso2.is.configuration.diff.creator</artifactId>
             <scope>compile</scope>
         </dependency>
         <dependency>

@@ -17,7 +17,7 @@
  *
  */
 
-package org.wso2.is.configuration.diff.creater.utils;
+package org.wso2.is.configuration.diff.creator.utils;
 
 /**
  * Constant class used in config migration.

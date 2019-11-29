@@ -17,15 +17,16 @@
  *
  */
 
-package org.wso2.is.configuration.diff.creater;
+package org.wso2.is.configuration.diff.creator;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import org.wso2.is.configuration.diff.creater.exception.ConfigMigrateException;
-import org.wso2.is.configuration.diff.creater.utils.MigrationConstants;
+import org.wso2.is.configuration.diff.creator.exception.ConfigMigrationException;
+import org.wso2.is.configuration.diff.creator.utils.MigrationConstants;
 import org.xmlunit.XMLUnitException;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.diff.DefaultNodeMatcher;
@@ -60,20 +61,20 @@ public class ConfigurationDiffChecker {
      *
      * @param configLoader    ConfigLoader which loads all the files in conf folder and filter them.
      * @param outputGenerator OutputGenerator which writes output to the CSV files.
-     * @throws ConfigMigrateException ConfigMigrateException
+     * @throws ConfigMigrationException ConfigMigrationException
      */
     public void findConfigDiff(ConfigLoader configLoader, OutputGenerator outputGenerator)
-            throws ConfigMigrateException {
+            throws ConfigMigrationException {
 
         Map<String, String> existingTags;
         Map<String, String> keyValueMap = new LinkedHashMap<>();
         if (configLoader == null) {
-            throw new ConfigMigrateException("Error occurred when loading files.");
+            throw new ConfigMigrationException("Error occurred when loading files.");
         }
         try {
             existingTags = configLoader.readFromCSV(new URL(MigrationConstants.CATALOG_URL));
         } catch (IOException e) {
-            throw new ConfigMigrateException("Malformed URL :" + MigrationConstants.CATALOG_URL, e);
+            throw new ConfigMigrationException("Malformed URL :" + MigrationConstants.CATALOG_URL, e);
         }
         checkXMLDiff(configLoader.getDefaultXMLFiles(), configLoader.getMigratedXMLFiles(),
                 configLoader.getJ2TemplateFiles(), existingTags, keyValueMap, outputGenerator);
@@ -94,18 +95,18 @@ public class ConfigurationDiffChecker {
      * @param existingTags            Map of existing tags.
      * @param keyValues               Map of key values.
      * @param outputGenerator         OutputGenerator object.
-     * @throws ConfigMigrateException ConfigMigrateException
+     * @throws ConfigMigrationException ConfigMigrationException
      */
     private void checkPropertyDiff(Map<String, File> defaultPropertiesFiles,
                                    Map<String, File> migratedPropertiesFiles,
                                    Map<String, File> j2TemplateFiles,
                                    Map<String, String> existingTags,
                                    Map<String, String> keyValues,
-                                   OutputGenerator outputGenerator) throws ConfigMigrateException {
+                                   OutputGenerator outputGenerator) throws ConfigMigrationException {
 
         File logFile = outputGenerator.getLogFile();
-        if (migratedPropertiesFiles == null) {
-            throw new ConfigMigrateException("There are no property files to be migrated. ");
+        if (MapUtils.isEmpty(migratedPropertiesFiles)) {
+            throw new ConfigMigrationException("There are no property files to be migrated. ");
         }
         for (Map.Entry<String, File> entry : migratedPropertiesFiles.entrySet()) {
             try {
@@ -116,10 +117,10 @@ public class ConfigurationDiffChecker {
                     getPropertyDiffToMaps(migratedPropertiesFiles.get(entry.getKey()), changedPropertyDiffSet,
                             existingTags, keyValues, outputGenerator);
                 } else {
-                    filterUnTemplatedFiles(defaultPropertiesFiles, migratedPropertiesFiles, logFile, entry);
+                    filterNotTemplatedFiles(defaultPropertiesFiles, migratedPropertiesFiles, logFile, entry);
                 }
             } catch (IOException e) {
-                throw new ConfigMigrateException("Error occurred when writing diff to the csv.", e);
+                throw new ConfigMigrationException("Error occurred when writing diff to the csv.", e);
             }
         }
     }
@@ -130,10 +131,10 @@ public class ConfigurationDiffChecker {
      * @param defaultFile  default file to compare with.
      * @param migratedFile migrated file used to compare.
      * @return A set of difference.
-     * @throws ConfigMigrateException ConfigMigrateException.
+     * @throws ConfigMigrationException ConfigMigrationException.
      */
     private Set<Map.Entry<String, String>> findDiffPropertiesFiles(File defaultFile, File migratedFile)
-            throws ConfigMigrateException {
+            throws ConfigMigrationException {
 
         Properties defaultProperties = new Properties();
         Properties migratedProperties = new Properties();
@@ -150,7 +151,7 @@ public class ConfigurationDiffChecker {
             migratedPropertySet.removeAll(defaultPropertySet);
             return migratedPropertySet;
         } catch (IOException e) {
-            throw new ConfigMigrateException("The configurations can not be loaded properly. Please try again. ", e);
+            throw new ConfigMigrationException("The configurations can not be loaded properly. Please try again. ", e);
         }
     }
 
@@ -171,7 +172,7 @@ public class ConfigurationDiffChecker {
 
         for (Map.Entry<String, String> property : changedPropertySet) {
             String csvEntry;
-            if (existingTags.get(property.getKey()) == null) {
+            if (StringUtils.isBlank(existingTags.get(property.getKey()))) {
                 csvEntry = migratedFile.getName().concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(
                         MigrationConstants.PROPERTIES_FILE_TYPE).concat(MigrationConstants.CSV_SEPARATOR_APPENDER)
                         .concat(property.getKey()).concat("| | | | | |");
@@ -189,24 +190,24 @@ public class ConfigurationDiffChecker {
                               Map<String, File> j2files,
                               Map<String, String> existingTags,
                               Map<String, String> keyValueMap,
-                              OutputGenerator outputGenerator) throws ConfigMigrateException {
+                              OutputGenerator outputGenerator) throws ConfigMigrationException {
 
         File logFile = outputGenerator.getLogFile();
         for (Map.Entry<String, File> entry : migratedXMLFiles.entrySet()) {
             try {
                 if (isFileTemplated(defaultXMLFiles, j2files, entry)) {
-
                     Diff detailedDiff = compareXMLFiles(defaultXMLFiles.get(entry.getKey()),
                             migratedXMLFiles.get(entry.getKey()));
-                    getDifferenceToMaps(migratedXMLFiles.get(entry.getKey()), detailedDiff, existingTags, keyValueMap
-                            , outputGenerator);
+                    if (detailedDiff != null) {
+                        getDifferenceToMaps(migratedXMLFiles.get(entry.getKey()), detailedDiff, existingTags,
+                                keyValueMap, outputGenerator);
+                    }
                 } else {
-                    filterUnTemplatedFiles(defaultXMLFiles, migratedXMLFiles, logFile, entry);
+                    filterNotTemplatedFiles(defaultXMLFiles, migratedXMLFiles, logFile, entry);
                 }
             } catch (IOException e) {
-                log.error("Error occurred when parsing xml files or finding diff of xml files.");
-                throw new ConfigMigrateException("Error occurred when parsing xml files or finding diff of xml files" +
-                        ". ", e);
+                throw new ConfigMigrationException("Error occurred when parsing xml files or finding diff of xml " +
+                        "files. ", e);
             }
         }
     }
@@ -237,7 +238,6 @@ public class ConfigurationDiffChecker {
     private Diff compareXMLFiles(File defaultFile, File migratedFile)  {
 
         try {
-
             return DiffBuilder.compare(migratedFile).withTest(defaultFile)
                     .ignoreWhitespace()
                     .ignoreComments()
@@ -266,48 +266,46 @@ public class ConfigurationDiffChecker {
                                      Map<String, String> keyValues,
                                      OutputGenerator outputGenerator) {
 
-        if (detailedDiff != null) {
-            Iterable<Difference> differences = detailedDiff.getDifferences();
-            for (Difference difference : differences) {
-                if (difference.getResult().name().equals("DIFFERENT")) {
-                    String csvEntry = null;
-                    String csvKey;
-                    String defaultValue = " ";
-                    String changedValue = " ";
+        Iterable<Difference> differences = detailedDiff.getDifferences();
+        for (Difference difference : differences) {
+            if ("DIFFERENT".equals(difference.getResult().name())) {
+                String csvEntry = null;
+                String csvKey;
+                String defaultValue = " ";
+                String changedValue = " ";
 
-                    csvKey = difference.getComparison().getControlDetails().getXPath();
-                    if (!isMigratedXPathInDiffContainsText(difference)) {
-                        if (isMigratedFileNotContainPropertiesWhichDefaultHas(difference)) {
-                            continue;
-                        } else {
+                csvKey = difference.getComparison().getControlDetails().getXPath();
+                if (!isMigratedXPathInDiffContainsText(difference)) {
+                    if (isMigratedFileNotContainPropertiesWhichDefaultHas(difference)) {
+                        continue;
+                    } else {
+                        csvEntry =
+                                migratedFile.getName().concat(MigrationConstants.CSV_SEPARATOR_APPENDER)
+                                        .concat(MigrationConstants.XML_FILE_TYPE)
+                                        .concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(csvKey)
+                                        .concat("| | | |").concat(defaultValue).concat("| | Not In Default");
+                    }
+                }
+
+                if (StringUtils.isNotBlank(csvKey)) {
+                    if (difference.getComparison().getControlDetails().getTarget() != null) {
+                        changedValue = difference.getComparison().getControlDetails().getTarget().getNodeValue();
+                    }
+                    if (isContainDefaultValue(difference)) {
+                        defaultValue = difference.getComparison().getTestDetails().getTarget().getNodeValue();
+                    }
+                    if (isXpathNotInExistingTags(existingXMLTags, csvKey)) {
+                        if (StringUtils.isBlank(csvEntry)) {
                             csvEntry =
                                     migratedFile.getName().concat(MigrationConstants.CSV_SEPARATOR_APPENDER)
                                             .concat(MigrationConstants.XML_FILE_TYPE)
                                             .concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(csvKey)
-                                            .concat("| | | |").concat(defaultValue).concat("| | Not In Default");
+                                            .concat("| | | |").concat(defaultValue).concat("| |");
                         }
+                        existingXMLTags.put(csvKey, csvEntry);
+                        outputGenerator.setGenerateToml(false);
                     }
-
-                    if (StringUtils.isNotBlank(csvKey)) {
-                        if (difference.getComparison().getControlDetails().getTarget() != null) {
-                            changedValue = difference.getComparison().getControlDetails().getTarget().getNodeValue();
-                        }
-                        if (isContainDefaultValue(difference)) {
-                            defaultValue = difference.getComparison().getTestDetails().getTarget().getNodeValue();
-                        }
-                        if (isXpathNotInExistingTags(existingXMLTags, csvKey)) {
-                            if (StringUtils.isBlank(csvEntry)) {
-                                csvEntry =
-                                        migratedFile.getName().concat(MigrationConstants.CSV_SEPARATOR_APPENDER)
-                                                .concat(MigrationConstants.XML_FILE_TYPE)
-                                                .concat(MigrationConstants.CSV_SEPARATOR_APPENDER).concat(csvKey)
-                                                .concat("| | | |").concat(defaultValue).concat("| |");
-                            }
-                            existingXMLTags.put(csvKey, csvEntry);
-                            outputGenerator.setGenerateToml(false);
-                        }
-                        keyValues.put(csvKey, changedValue);
-                    }
+                    keyValues.put(csvKey, changedValue);
                 }
             }
         }
@@ -338,19 +336,24 @@ public class ConfigurationDiffChecker {
                 diff.getComparison().getControlDetails().getXPath()::contains);
     }
 
-    private void filterUnTemplatedFiles(Map<String, File> defaultXMLFiles, Map<String, File> migratedXMLFiles,
-                                        File logFile, Map.Entry<String, File> entry) throws IOException {
+    private void filterNotTemplatedFiles(Map<String, File> defaultXMLFiles, Map<String, File> migratedXMLFiles,
+                                         File logFile, Map.Entry<String, File> entry) throws IOException {
 
-        if (migratedXMLFiles.get(entry.getKey()) != null && defaultXMLFiles.get(entry.getKey()) != null) {
-            if (FileUtils.contentEquals(migratedXMLFiles.get(entry.getKey()),
-                    defaultXMLFiles.get(entry.getKey()))) {
-                Files.write(Paths.get(logFile.getPath()), (entry.getValue().getPath() + " is not templated " +
-                        "with toml. \n").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
-                File outFile =
-                        new File(MigrationConstants.UN_TEMPLATE_FILE_FOLDER + MigrationConstants
-                                .FILE_SEPARATOR + entry.getKey());
-                FileUtils.copyFile(entry.getValue(), outFile);
-            }
+        if (isNotTemplatedChangedFileExists(defaultXMLFiles, migratedXMLFiles, entry)) {
+            Files.write(Paths.get(logFile.getPath()), (entry.getValue().getPath() + " is not templated " +
+                    "with toml. \n").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+            File outFile =
+                    new File(MigrationConstants.UN_TEMPLATE_FILE_FOLDER + MigrationConstants
+                            .FILE_SEPARATOR + entry.getKey());
+            FileUtils.copyFile(entry.getValue(), outFile);
         }
+    }
+
+    private boolean isNotTemplatedChangedFileExists(Map<String, File> defaultXMLFiles,
+                                                    Map<String, File> migratedXMLFiles,
+                                                    Map.Entry<String, File> entry) throws IOException {
+
+        return migratedXMLFiles.get(entry.getKey()) != null && defaultXMLFiles.get(entry.getKey()) != null
+                && FileUtils.contentEquals(migratedXMLFiles.get(entry.getKey()), defaultXMLFiles.get(entry.getKey()));
     }
 }

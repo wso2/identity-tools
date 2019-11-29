@@ -21,8 +21,8 @@ package org.wso2.is.configuration.migrator.util;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.wso2.is.configuration.diff.creater.exception.ConfigMigrateException;
-import org.wso2.is.configuration.diff.creater.utils.MigrationConstants;
+import org.wso2.is.configuration.diff.creator.exception.ConfigMigrationException;
+import org.wso2.is.configuration.diff.creator.utils.MigrationConstants;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,9 +50,10 @@ public class Utils {
      *
      * @param keyCatalogValuesMap Map of catalog keys and values.
      * @param outputCSV           The output csv file.
+     * @throws ConfigMigrationException ConfigMigrationException.
      */
     public static void writeToFile(Map<String, String> keyCatalogValuesMap, File outputCSV)
-            throws ConfigMigrateException {
+            throws ConfigMigrationException {
 
         if (keyCatalogValuesMap != null) {
             try {
@@ -63,7 +64,7 @@ public class Utils {
                             .NEW_LINE).getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
                 }
             } catch (IOException e) {
-                throw new ConfigMigrateException("Error occurred when writing catalog file.", e);
+                throw new ConfigMigrationException("Error occurred when writing catalog file.", e);
             }
         }
     }

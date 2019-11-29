@@ -17,13 +17,13 @@
  *
  */
 
-package org.wso2.is.configuration.diff.creater;
+package org.wso2.is.configuration.diff.creator;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.wso2.is.configuration.diff.creater.exception.ConfigMigrateException;
-import org.wso2.is.configuration.diff.creater.utils.MigrationConstants;
+import org.wso2.is.configuration.diff.creator.exception.ConfigMigrationException;
+import org.wso2.is.configuration.diff.creator.utils.MigrationConstants;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -61,19 +61,17 @@ public class ConfigLoader {
      * @param migratedISHomePath Migrated IS home path.
      * @param defaultISHomePath  Default IS home path.
      */
-    public void validate(String migratedISHomePath, String defaultISHomePath) throws ConfigMigrateException {
+    public void validate(String migratedISHomePath, String defaultISHomePath) throws ConfigMigrationException {
 
         String errorMsg;
         if (StringUtils.isBlank(migratedISHomePath) && StringUtils.isBlank(defaultISHomePath)) {
-             errorMsg = "Please enter migrated IS home path and default IS home path as inputs.";
-            log.error(errorMsg);
-            throw new ConfigMigrateException(errorMsg);
+            errorMsg = "Please enter migrated IS home path and default IS home path as inputs.";
+            throw new ConfigMigrationException(errorMsg);
         }
         if (!new File(migratedISHomePath).exists() && !new File(defaultISHomePath).exists()) {
             errorMsg = "The provided IS home paths does not exist. Please try again after entering correct input" +
                     " Paths.";
-            log.error(errorMsg);
-            throw new ConfigMigrateException(errorMsg);
+            throw new ConfigMigrationException(errorMsg);
         }
     }
 
@@ -82,10 +80,10 @@ public class ConfigLoader {
      *
      * @param migratedProductHomePath migrated IS home path.
      * @param defaultProductHomePath  default IS home path.
-     * @throws ConfigMigrateException ConfigMigrateException.
+     * @throws ConfigMigrationException ConfigMigrationException.
      */
     public void filterFiles(String migratedProductHomePath, String defaultProductHomePath)
-            throws ConfigMigrateException {
+            throws ConfigMigrationException {
 
         try {
             defaultXMLFiles = getFilesInPath(Paths.get(defaultProductHomePath.concat(MigrationConstants.CONF_PATH)),
@@ -103,7 +101,7 @@ public class ConfigLoader {
             log.info("Files have been filtered successfully!");
 
         } catch (IOException e) {
-            throw new ConfigMigrateException("Error occurred when filtering files by extension type.", e);
+            throw new ConfigMigrationException("Error occurred when filtering files by extension type.", e);
         }
     }
 
