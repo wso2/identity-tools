@@ -22,7 +22,6 @@
         <version>5</version>
     </parent>
 
-
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.wso2.carbon.identity.tools</groupId>
@@ -42,9 +41,9 @@
 
     <modules>
         <module>components/org.wso2.is.password.reencrypt</module>
+        <!-- Modules for new config model migration tool.     -->
+        <module>components/config-model-migrator</module>
     </modules>
-
-
 
     <pluginRepositories>
         <pluginRepository>

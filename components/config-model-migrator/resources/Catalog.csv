@@ -1,0 +1,318 @@
+FileName | fileType | Tag(xpath or property) | tomlConfig | dataType | description | defaultValue | PossibleValues | Config Status
+registry.xml | xml | /wso2registry[1]/remoteInstance[1]/id[1]/text()[1] |  |  |  |  |  | Not Needed
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[3]/jndiConfig[1]/name[1]/text()[1] |  | String | jndi name of the Identity DB | jdbc/WSO2IdentityDB |  | Not templated
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[2]/jndiConfig[1]/name[1]/text()[1] |  | String | jndi name of the shared DB | jdbc/SHARED_DB |  | Not Templated
+identity.xml | xml | /Server[1]/OAuth[1]/OAuth1AuthorizeUrl[1]/text()[1] | oauth.endpoints.oauth1_authorize_url | String | WSO2 Identity Server OAuth1 authorize URL | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth/authorize-url |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/OAuth2ErrorPage[1]/text()[1] | oauth.endpoints.oauth2_error_page | String | WSO2 Identity Server OAuth2 Error page | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/oauth2_error.do |  | Templated
+registry.xml | xml | /wso2registry[1]/remoteInstance[1]/cacheId[1]/text()[1] | governance_data.cache_id | String | This is the cache_id, which is a unique value. |  |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[9]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/OAuth2ConsentPage[1]/text()[1] | oauth.endpoints.oauth2_consent_page | String | OAuth consent page URL | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/oauth2_consent.do |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/OIDCLogoutConsentPage[1]/text()[1] | oauth.endpoints.oidc_logout_consent_page | String | OAuth OIDC consent page during logout flow. | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/oauth2_logout_consent.do |  | Templated
+identity.xml | xml | /Server[1]/SSOService[1]/SessionIndexCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/UserAccessTokenDefaultValidityPeriod[1]/text()[1] | oauth.token_validation.user_access_token_validity | int | User Access token validity period in seconds | 3600 |  | Templated
+carbon.xml | xml | /Server[1]/Security[1]/XSSPreventionConfig[1]/Rule[1]/text()[1] |  |  |  |  |  | Not Templated
+carbon.xml | xml | /Server[1]/Security[1]/XSSPreventionConfig[1]/Patterns[1]/Pattern[1]/text()[1] |  |  |  |  |  | Not Templated
+web.xml | xml | /web-app[1]/session-config[1]/session-timeout[1]/text()[1] | tomcat.global.session_timeout | int | Tomcat session timeout in minutes | 15 |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[12]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[6]/text()[1] |  |  |  |  |  | Removed
+entitlement.properties | properties | PDP.Balana.Config.Enable | identity.entitlement.policy_point.pdp.balana_config_enabled | boolean | Balana policy decision point is enabled or not. |  |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/OAuth2TokenEPUrl[1]/text()[1] | oauth.endpoints.oauth2_token_url | String | WSO2 Identity server Oauth2 token end point. | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/token |  | Templated
+carbon.xml | xml | /Server[1]/Version[1]/text()[1] |  |  |  | 5.9.0 |  | Version Change
+carbon.xml | xml | /Server[1]/Ports[1]/Offset[1]/text()[1] | server.offset | int | If you need to change the port of the identity server, you need to add an offset. Default this will be 0 and the port which mapped to it is 9443 | 0 |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/OAuth2UserInfoEPUrl[1]/text()[1] | oauth.endpoints.oauth2_user_info_url | String | OAuth2 User Infor endpoint URL | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/userinfo |  | Templated
+registry.xml | xml | /wso2registry[1]/remoteInstance[1]/dbConfig[1]/text()[1] |  |  |  |  |  | Not needed
+identity.xml | xml | /Server[1]/OAuth[1]/OIDCCheckSessionEPUrl[1]/text()[1] | oauth.endpoints.oidc_check_session_url | String | OpenID Connect check session URL | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/oidc/checksession |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/OIDCConsentPage[1]/text()[1] | oauth.endpoints.oidc_consent_page | String | OpenID Connect consent page | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/oauth2_consent.do |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[13]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/Security[1]/TrustManagerType[1]/text()[1] | key_mgt.trust_manager_type | String | Keystore manager Type | SunX509 |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/EnableOAuthCache[1]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/SSOService[1]/PersistanceCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/OIDCLogoutPage[1]/text()[1] | oauth.endpoints.oidc_logout_page | String | OpenID Connect logout page | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/oauth2_logout.do |  | Templated
+carbon.xml | xml | /Server[1]/Security[1]/KeyStore[1]/KeyAlias[1]/text()[1] | keystore.primary.alias | String | The Private Key alias of the primary keystore. | wso2carbon |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[5]/text()[1] |  |  |  |  |  | Removed
+carbon.xml | xml | /Server[1]/HostName[1]/text()[1] | server.hostname | String | The host name of the identity server can be configured through this property. Default value will be localhost. | localhost |  | Templated
+carbon.xml | xml | /Server[1]/Security[1]/TrustStore[1]/Location[1]/text()[1] | truststore.file_name | String | The client trustore file location. | ${carbon.home}/repository/resources/security/client-truststore.jks |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[15]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/SessionDataPersist[1]/SessionDataCleanUp[1]/CleanUpPeriod[1]/text()[1] | session_data.cleanup.clean_expired_session_data_every | int | This is the time period (in minutes) that the cleanup task would run. The default value is 1 day. This is used for both session data cleanup and operation data cleanup through the same task. | 1440 |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[18]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[4]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/AccessTokenDefaultValidityPeriod[1]/text()[1] | oauth.token_validation.app_access_token_validity | int | The OAuth access token validity period | 3600 |  | Templated
+identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/SessionDataPersist[1]/PoolSize[1]/text()[1] | session_data.persistence.persistence_pool_size | int | ‘PoolSize’ equals to 0 means that it is disabled and then the authentication flow is blocked until this particular data persistence task is completed. To execute the persistence task in asynchronously, set the value to >0 value. Based on the pool size, the system creates the task parallel to execute the persistence task that was in the queue. | 0 |  | Templated
+axis2.xml | xml | /axisconfig[1]/clustering[1]/parameter[7]/text()[1] | clustering.local_member_host | String | The host name or IP address of this member | 127.0.0.1 |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/OIDCLogoutEPUrl[1]/text()[1] | oauth.endpoints.oidc_logout_url | String | OpenID connect logout endpoint URL | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/oidc/logout |  | Templated
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/Configuration[1]/AdminUser[1]/Password[1]/text()[1] | super_admin.password | String | The Supper Admin password of the Identity Server that is defined at the first start up | admin |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[16]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/OAuth2AuthzEPUrl[1]/text()[1] | oauth.endpoints.oauth2_authz_url | String | OAuth2 authorize end point of WSO2 Identity Server | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/authorize |  | Templated
+carbon.xml | xml | /Server[1]/MgtHostName[1]/text()[1] | server.hostname | String | The management hostname of the Identity Server | localhost |  | Deprecated
+identity.xml | xml | /Server[1]/OAuth[1]/AuthorizationGrantCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[3]/text()[1] |  |  |  |  |  | Removed
+carbon.xml | xml | /Server[1]/Security[1]/XSSPreventionConfig[1]/Enabled[1]/text()[1] |  |  |  |  |  | Not Templated
+identity.xml | xml | /Server[1]/OAuth[1]/ClaimCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[17]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/IdentityOAuthTokenGenerator[1]/text()[1] | oauth.extensions.token_generator | String | OAuth Token Generator class. |  |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[14]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/AppInfoCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/TimestampSkew[1]/text()[1] | oauth.timestamp_skew | int | The time stamp skew is used to manage small time gaps in the system clocks of different servers |  |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[11]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/DataSource[1]/Name[1]/text()[1] | identity.data_source | String | The jndi value of the Identity DataSource | jdbc/WSO2IdentityDB |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[7]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/OAuth1RequestTokenUrl[1]/text()[1] | oauth.endpoints.oauth1_request_token_url | String | OAuth1 token request URL in WSO2 Identity Server | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth/request-token |  | Templated
+axis2.xml | xml | /axisconfig[1]/clustering[1]/parameter[3]/text()[1] | clustering.domain | String | The clustering domain/group. Nodes in the same group will belong to the same multicast          domain. There will not be interference between nodes in different groups. | wso2.carbon.domain |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/SessionDataCacheTimeout[1]/text()[1] |  |  |  |  |  | Removed
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[2]/name[1]/text()[1] |  | String | Shared datasource name | WSO2_SHARED_DB |  | Not Templated
+identity.xml | xml | /Server[1]/OAuth[1]/OAuth1AccessTokenUrl[1]/text()[1] | oauth.endpoints.oauth1_access_token_url | String | OAuth1 access token URL in WSO2 Identity Server | ${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth/access-token |  | Templated
+carbon.xml | xml | /Server[1]/EnableEmailUserName[1]/text()[1] | tenant_mgt.enable_email_domain | boolean | To enable email as username, make this to true. Default value will be false. |  |  | Templated
+registry.xml | xml | /wso2registry[1]/dbConfig[2]/dataSource[1]/text()[1] |  | - |  |  |  | Not Templated
+identity.xml | xml | /Server[1]/Security[1]/KeyStoresDir[1]/text()[1] | key_mgt.keystore_dir | String | Key Store directory location | ${carbon.home}/conf/keystores |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/ShowDisplayNameInConsentPage[1]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/SessionDataPersist[1]/Enable[1]/text()[1] | session_data.persistence.enable_persistence | String | Enable Session data persistance in WSO2 Identity Server | TRUE |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/TokenPersistenceProcessor[1]/text()[1] | oauth.extensions.token_persistence_processor | String | The class which is responsible for token persistance process | org.wso2.carbon.identity.oauth.tokenprocessor.PlainTextPersistenceProcessor |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[10]/text()[1] |  |  |  |  |  | Removed
+identity.xml | xml | /Server[1]/OAuth[1]/RequiredRespHeaderClaimUris[1]/ClaimUri[8]/text()[1] |  |  |  |  |  | Removed
+axis2.xml | xml | /axisconfig[1]/parameter[16]/text()[1] |  |  |  |  |  | Version Change
+carbon.xml | xml | /Server[1]/Security[1]/KeyStore[1]/Location[1]/text()[1] | keystore.primary.file_name | String | The Primary Keystore file location. | ${carbon.home}/repository/resources/security/wso2carbon.jks |  | Templated
+identity.xml | xml | /Server[1]/OpenID[1]/OpenIDSkipUserConsent[1]/text()[1] |  |  |  | FALSE |  | Not templated
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/Configuration[1]/AdminUser[1]/UserName[1]/text()[1] | super_admin.username | String | The Supper Admin username. We need to configure this during first startup. | admin |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RefreshTokenValidityPeriod[1]/text()[1] | oauth.token_validation.refresh_token_validity | int | Default Refresh token validity period | 3600 |  | Templated
+identity.xml | xml | /Server[1]/Security[1]/KeyManagerType[1]/text()[1] | key_mgt.key_manager_type | String | Type of the keystore | SunX509 |  | Templated
+application-authentication.xml | xml | /ApplicationAuthentication[1]/Extensions[1]/RequestCoordinator[1]/text()[1] | authentication.framework.extensions.request_coordinator | String | The Default request Co-ordinator class for authentication framework of WSO2 Identity Server | org.wso2.carbon.identity.application.authentication.framework.handler.request.impl.DefaultRequestCoordinator |  | Templated
+registry.xml | xml | /wso2registry[1]/remoteInstance[1]/enableCache[1]/text()[1] | governance_data.enable_cache | boolean | Whether cache is enabled for governance registry or not. |  |  | Templated
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/@class | authorization_manager.class | String | Userstore Manager class that used as PRIMARY userstore for the system. | org.wso2.carbon.user.core.ldap.ReadWriteLDAPUserStoreManager |  | Add Manually
+identity.xml | xml | /Server[1]/TimeConfig[1]/RememberMeTimeout[1]/text()[1] | session.timeout.remember_me_session_timeout | String | The time out for remember me option. | 20160m |  | Templated
+axis2.xml | xml | /axisconfig[1]/parameter[15]/text()[1] |  |  |  |  |  | Version Change
+identity.xml | xml | /Server[1]/OAuth[1]/AuthorizationCodeDefaultValidityPeriod[1]/text()[1] | oauth.token_validation.authorization_code_validity | int | The default authorization code expiry time in seconds. | 300 |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/RenewRefreshTokenForRefreshGrant[1]/text()[1] | oauth.token_renewal.renew_refresh_token | boolean | Enable renew refresh tokens, in each access token generation. | TRUE |  | Templated
+identity.xml | xml | /Server[1]/TimeConfig[1]/SessionIdleTimeout[1]/text()[1] | session.timeout.idle_session_timeout | int | The IDP session idle timeout of WSO2 Identity Server in minutes | 15 |  | Templated
+axis2.xml | xml | /axisconfig[1] |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[1]/text()[1] |  |  |  | ${hotdeployment} |  | NotTemplated
+axis2.xml | xml | /axisconfig[1]/parameter[2]/text()[1] |  |  |  | ${hotupdate} |  | Not templated
+axis2.xml | xml | /axisconfig[1]/parameter[8]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[8]/text()[1] |  |  |  | FALSE |  | Not Templated
+axis2.xml | xml | /axisconfig[1]/parameter[9]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[10] |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[10]/@locked |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[10]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[10]/text()[1] |  |  |  | TRUE |  | Not Templated
+axis2.xml | xml | /axisconfig[1]/parameter[11] |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[11]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[11]/text()[1] |  |  |  | FALSE |  | Not Templated
+axis2.xml | xml | /axisconfig[1]/parameter[12]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[12]/text()[1] |  |  |  | inmemory |  | Not Templated
+axis2.xml | xml | /axisconfig[1]/parameter[13]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[13]/text()[1] |  |  |  | services |  | Not Templated
+axis2.xml | xml | /axisconfig[1]/parameter[14]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[14]/text()[1] |  |  |  | axis2services |  | Not Templated
+axis2.xml | xml | /axisconfig[1]/parameter[15] |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[15]/@locked |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[15]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[16]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[17] |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[17]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[17]/text()[1] |  |  |  | @product.name@-@product.version@ |  | Not Templated
+axis2.xml | xml | /axisconfig[1]/parameter[18]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[19]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[19]/text()[1] |  |  |  | FALSE |  | Not Templated
+axis2.xml | xml | /axisconfig[1]/parameter[20] |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[20]/@locked |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[20]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[20]/text()[1] |  |  |  | TRUE |  | Not Templated
+axis2.xml | xml | /axisconfig[1]/parameter[21]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[21]/text()[1] |  |  |  | ./repository/deployment/server/synapse-configs |  | Not Templated
+axis2.xml | xml | /axisconfig[1]/parameter[22]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[23]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[23]/text()[1] |  |  |  | . |  | Not Templated
+axis2.xml | xml | /axisconfig[1]/parameter[24] |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[24]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/parameter[24]/text()[1] |  |  |  | WSO2 Carbon Server |  | Not Templated
+axis2.xml | xml | /axisconfig[1]/transportSender[2] |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/transportSender[2]/@class |  |  |  | org.apache.axis2.transport.mail.MailTransportSender |  | Not Templated
+axis2.xml | xml | /axisconfig[1]/transportSender[2]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/transportSender[2]/parameter[1]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/transportSender[2]/parameter[1]/text()[1] | output_adapter.email.from_address | String | Email address for axis2 email sender. | abcd@gmail.com |  | Templated
+axis2.xml | xml | /axisconfig[1]/transportSender[2]/parameter[2]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/transportSender[2]/parameter[2]/text()[1] | output_adapter.email.username | String | Email user that use as the email sender. | abcd |  | Templated
+axis2.xml | xml | /axisconfig[1]/transportSender[2]/parameter[3]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/transportSender[2]/parameter[3]/text()[1] | output_adapter.email.password | String | Password of the email sender. | xxxx |  | Templated
+axis2.xml | xml | /axisconfig[1]/transportSender[3]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/transportSender[4] |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/transportSender[4]/@class |  |  |  | org.apache.axis2.transport.http.CommonsHTTPTransportSender |  | Not Templated
+axis2.xml | xml | /axisconfig[1]/transportSender[4]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/transportSender[4]/parameter[1]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/transportSender[4]/parameter[2]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/transportSender[4]/parameter[3]/@name |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/transportSender[4]/parameter[4] |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/transportSender[4]/parameter[5] |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/transportSender[4]/parameter[6] |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/transportSender[4]/parameter[7] |  |  |  |  |  | Not In Default
+axis2.xml | xml | /axisconfig[1]/clustering[1]/@enable |  |  |  |  |  | Not In Default
+web.xml | xml | /web-app[1] |  |  |  |  |  | Not In Default
+web.xml | xml | /web-app[1]/filter[5]/filter-name[1]/text()[1] |  |  |  | CaptchaFilter |  | Not Templated
+web.xml | xml | /web-app[1]/filter[5]/filter-class[1]/text()[1] |  |  |  | org.wso2.carbon.identity.captcha.filter.CaptchaFilter |  | Not Templated
+web.xml | xml | /web-app[1]/session-config[1] |  |  |  |  |  | Not In Default
+registry.xml | xml | /wso2registry[1] |  |  |  |  |  | Not In Default
+registry.xml | xml | /wso2registry[1]/remoteInstance[1]/@url |  |  |  |  |  | Not In Default
+registry.xml | xml | /wso2registry[1]/mount[1]/@overwrite |  |  |  |  |  | Not In Default
+registry.xml | xml | /wso2registry[1]/mount[1]/@path |  |  |  |  |  | Not In Default
+registry.xml | xml | /wso2registry[1]/mount[1]/instanceId[1]/text()[1] |  |  |  | gov |  | Not Templated
+registry.xml | xml | /wso2registry[1]/mount[1]/targetPath[1]/text()[1] | governance_data.path | String | Target path of the mounted governace registry | /_system/governance |  | Templated
+registry.xml | xml | /wso2registry[1]/mount[2]/@overwrite |  |  |  |  |  | Not In Default
+registry.xml | xml | /wso2registry[1]/mount[2]/@path |  |  |  |  |  | Not In Default
+registry.xml | xml | /wso2registry[1]/mount[2]/instanceId[1]/text()[1] |  |  |  | conf |  | Not Templated
+registry.xml | xml | /wso2registry[1]/mount[2]/targetPath[1]/text()[1] | config_data.path | String | Target path of the mounted config registry | /_system/config |  | Templated
+registry.xml | xml | /wso2registry[1]/indexingConfiguration[1]/startIndexing[1]/text()[1] |  |  |  | FALSE |  | Removed
+registry.xml | xml | /wso2registry[1]/staticConfiguration[1]/versioningProperties[1]/text()[1] | static_configuration.versioning_properties.enable | Boolean | Enable versioning properties | FALSE |  | Templated
+registry.xml | xml | /wso2registry[1]/staticConfiguration[1]/versioningComments[1]/text()[1] | static_configuration.versioning_comments.enable | Boolean | Enable versioning comments | FALSE |  | Templated
+registry.xml | xml | /wso2registry[1]/staticConfiguration[1]/versioningTags[1]/text()[1] | static_configuration.versioning_tags.enable | Boolean | Enabling versioning tags | FALSE |  | Templated
+registry.xml | xml | /wso2registry[1]/staticConfiguration[1]/versioningRatings[1]/text()[1] | static_configuration.versioning_ratings.enable | Boolean | Enabling versioning ratings | FALSE |  | Templated
+application-authentication.xml | xml | /ApplicationAuthentication[1] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/Extensions[1]/AuthenticationRequestHandler[1]/text()[1] | authentication.framework.extensions.authentication_request_handler | String | Authentication Request Handler class name | org.wso2.carbon.identity.application.authentication.framework.handler.request.impl.DefaultAuthenticationRequestHandler |  | Templated
+application-authentication.xml | xml | /ApplicationAuthentication[1]/Extensions[1]/StepBasedSequenceHandler[1]/text()[1] | authentication.framework.extensions.step_based_sequence_handler | String | Hanlder class for Step based authentication handling. | org.wso2.carbon.identity.application.authentication.framework.handler.sequence.impl.GraphBasedSequenceHandler |  | Templated
+application-authentication.xml | xml | /ApplicationAuthentication[1]/Extensions[1]/StepHandler[1]/text()[1] | authentication.framework.extensions.step_handler | String | Step handler class name | org.wso2.carbon.identity.application.authentication.framework.handler.step.impl.GraphBasedStepHandler |  | Templated
+application-authentication.xml | xml | /ApplicationAuthentication[1]/Extensions[1]/ClaimHandler[1]/text()[1] | authentication.framework.extensions.claim_handler | String | Claim Handler class name | org.wso2.carbon.identity.application.authentication.framework.handler.claims.impl.DefaultClaimHandler |  | Templated
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorNameMappings[1] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorNameMappings[1]/AuthenticatorNameMapping[7]/@alias |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorNameMappings[1]/AuthenticatorNameMapping[7]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorNameMappings[1]/AuthenticatorNameMapping[8] |  |  |  |  |  | Not In Default
+carbon.xml | xml | /Server[1] |  |  |  |  |  | Not In Default
+carbon.xml | xml | /Server[1]/Cache[1] |  |  |  |  |  | Not In Default
+carbon.xml | xml | /Server[1]/Security[1] |  |  |  |  |  | Not In Default
+carbon.xml | xml | /Server[1]/Security[1]/XSSPreventionConfig[1]/Patterns[1] |  |  |  |  |  | Not In Default
+carbon.xml | xml | /Server[1]/Security[1]/XSSPreventionConfig[1]/Patterns[1]/Pattern[1] |  |  |  |  |  | Not In Default
+carbon.xml | xml | /Server[1]/Security[1]/XSSPreventionConfig[1]/Patterns[1]/Pattern[2] |  |  |  |  |  | Not In Default
+carbon.xml | xml | /Server[1]/Security[1]/XSSPreventionConfig[1]/Patterns[1]/Pattern[3] |  |  |  |  |  | Not In Default
+carbon.xml | xml | /Server[1]/Security[1]/XSSPreventionConfig[1]/Patterns[1]/Pattern[4] |  |  |  |  |  | Not In Default
+carbon.xml | xml | /Server[1]/Security[1]/CSRFPreventionConfig[1] |  |  |  |  |  | Not In Default
+carbon.xml | xml | /Server[1]/Security[1]/TokenStoreClassName[1] |  |  |  |  |  | Not In Default
+carbon.xml | xml | /Server[1]/Security[1]/CSRFPreventionConfig[2] |  |  |  |  |  | Not In Default
+carbon.xml | xml | /Server[1]/Security[1]/CRLFPreventionConfig[1] |  |  |  |  |  | Not In Default
+carbon.xml | xml | /Server[1]/Security[1]/XSSPreventionConfig[2] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/JDBCPersistenceManager[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/SessionDataPersist[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/SessionDataPersist[1]/SessionDataCleanUp[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/SessionDataPersist[1]/SessionDataCleanUp[1]/Enable[1]/text()[1] | session_data.cleanup.enable_expired_data_cleanup | Boolean | This property will enable sessopn data clean up when session data is persisted. | TRUE |  | Templated
+identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/SessionDataPersist[1]/OperationDataCleanUp[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/SessionDataPersist[1]/OperationDataCleanUp[1]/Enable[1]/text()[1] | session_data.cleanup.clean_logged_out_sessions_at_immediate_cycle | Boolean | This property will enable cleaning logout sessions imediately in the next cycle. | TRUE |  | Templated
+identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/SessionDataPersist[1]/OperationDataCleanUp[1]/CleanUpPeriod[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/SessionDataPersist[1]/OperationDataCleanUp[1]/CleanUpTimeout[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/OAuth[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/OAuth[1]/SupportedGrantTypes[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/OAuth[1]/SupportedGrantTypes[1]/SupportedGrantType[4] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/OAuth[1]/SAML2Grant[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/OAuth[1]/OpenIDConnect[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/OAuth[1]/OpenIDConnect[1]/IDTokenIssuerID[1]/text()[1] | oauth.oidc.id_token.issuer | String | ID toke issuer of WSO2 Identity Server | https://localhost:${carbon.management.port}/oauth2/token |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/OpenIDConnect[1]/IDTokenCustomClaimsCallBackHandler[1]/text()[1] | oauth.oidc.extensions.claim_callback_handler | String | CallBack handler for idtoken claims. | org.wso2.carbon.identity.openidconnect.SAMLAssertionClaimsCallback |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/OpenIDConnect[1]/IDTokenExpiration[1]/text()[1] | oauth.oidc.token_validation.id_token_validity | Int | ID token validity period | 3600 |  | Templated
+identity.xml | xml | /Server[1]/OAuth[1]/OpenIDConnect[1]/SkipUserConsent[1]/text()[1] |  | Boolean | Enable prompting  | FALSE |  | Overriden by oauth.prompt_consent
+identity.xml | xml | /Server[1]/OAuth[1]/OpenIDConnect[1]/IDTokenSubjectClaim[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/OAuth[1]/OpenIDConnect[1]/UserInfoEndpointClaimDialect[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/OAuth[1]/AppInfoCacheTimeout[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/OAuth[1]/AuthorizationGrantCacheTimeout[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/OAuth[1]/SessionDataCacheTimeout[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/OAuth[1]/ClaimCacheTimeout[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/OAuth[1]/EnableOAuthCache[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/OAuth[1]/ClientAuthHandlers[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/SSOService[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/SSOService[1]/IdentityProviderURL[1]/text()[1] | saml.endpoints.idp_url | String | SAML SSO URL of WSO2 Identity Server | https://localhost:${carbon.management.port}/samlsso |  | Templated
+identity.xml | xml | /Server[1]/SSOService[1]/DefaultLogoutEndpoint[1]/text()[1] | saml.endpoints.logout | String | SAML logout URL of WSO2 Identity Server | https://localhost:${carbon.management.port}/authenticationendpoint/samlsso_logout.do |  | Templated
+identity.xml | xml | /Server[1]/SSOService[1]/NotificationEndpoint[1]/text()[1] | saml.endpoints.notification | String | SAMLSSO notification endpoint of WSO2 Identity Server | https://localhost:${carbon.management.port}/authenticationendpoint/samlsso_notification.do |  | Templated
+identity.xml | xml | /Server[1]/SSOService[1]/PersistanceCacheTimeout[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/SSOService[1]/SessionIndexCacheTimeout[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/SecurityTokenService[1]/IdentityProviderURL[1]/text()[1] | sts.endpoint.idp | String | Default value for IdentityProviderURL is  built in following format             https://<HostName>:<MgtTrpProxyPort except 443>/<ProxyContextPath>/services/wso2carbon-sts             If that doesn't satisfy uncomment the following config and explicitly configure the value | https://localhost:${carbon.management.port}/services/wso2carbon-sts |  | Templated
+identity.xml | xml | /Server[1]/PassiveSTS[1]/IdentityProviderURL[1]/text()[1] | passive_sts.endpoints.idp | String | Passive STS enpoint URL of WSO2 Identity Server | https://localhost:${carbon.management.port}/passivests |  | Templated
+identity.xml | xml | /Server[1]/PassiveSTS[1]/RetryURL[1]/text()[1] | passive_sts.endpoints.retry | String | Passive STS retry URL of WSO2 Identity Server | https://localhost:${carbon.management.port}/authenticationendpoint/retry.do |  | Templated
+identity.xml | xml | /Server[1]/SCIM[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/SCIM[1]/UserEPUrl[1]/text()[1] | scim.endpoints.users_endpoint | String | SCIM default user-endpoint URL | https://localhost:${carbon.management.port}/wso2/scim/Users |  | Templated
+identity.xml | xml | /Server[1]/SCIM[1]/GroupEPUrl[1]/text()[1] | scim.endpoints.groups_endpoint | String | SCIM default group endpoint URL | https://localhost:${carbon.management.port}/wso2/scim/Groups |  | Templated
+identity.xml | xml | /Server[1]/SCIM[1]/SCIMAuthenticators[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[2] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[2]/@enable |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[2]/@orderId |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[3] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[3]/@enable |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[4] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[4]/@enable |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[4]/@name |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[4]/@orderId |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[4]/@type |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[5] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[5]/@enable |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[5]/@name |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[5]/@orderId |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[5]/@type |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[6] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[6]/@name |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[6]/@orderId |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[6]/@type |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[7] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[7]/@enable |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[7]/@name |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[7]/@orderId |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[7]/@type |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[8] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[8]/@name |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[8]/@orderId |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[8]/@type |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[1]/@enable |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[1]/@timeout |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[2] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[2]/@enable |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[2]/@timeout |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[3] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[3]/@enable |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[3]/@timeout |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[4] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[4]/@enable |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[4]/@timeout |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[5] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[5]/@timeout |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[6] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[6]/@enable |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[6]/@timeout |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[7] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[7]/@enable |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[7]/@name |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[7]/@timeout |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[8] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[8]/@enable |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[8]/@name |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[8]/@timeout |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[9] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[9]/@enable |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[9]/@name |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[9]/@timeout |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[10] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[10]/@enable |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[10]/@name |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[10]/@timeout |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[11] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[11]/@enable |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[11]/@name |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[11]/@timeout |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[12] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[12]/@name |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[12]/@timeout |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[13] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[13]/@name |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[13]/@timeout |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[14] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[14]/@enable |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[14]/@name |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[14]/@timeout |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[15] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[15]/@name |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[15]/@timeout |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[16] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[16]/@name |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[16]/@timeout |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[17] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[17]/@name |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[17]/@timeout |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[18] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[18]/@name |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[18]/@timeout |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/SAML[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ISAnalytics[1] |  |  |  |  |  | Not In Default
