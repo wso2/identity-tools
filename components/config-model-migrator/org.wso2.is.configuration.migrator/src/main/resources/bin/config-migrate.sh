@@ -33,11 +33,17 @@ do
         read MIGRATE_IS_HOME_PATH
         if [ "$MIGRATE_IS_HOME_PATH" = " " ]
         then
-        echo "You have not entered a IS home path that needs to be migrated"
-        echo "Please try again."
-        continue
+          echo "You have not entered a IS home path that needs to be migrated"
+          echo "Please try again."
+          continue
         else
-        break
+              if [ ! -d "$MIGRATE_IS_HOME_PATH" ]; then
+              echo "$MIGRATE_IS_HOME_PATH folder does not exists."
+              echo "Please try again."
+              continue
+              else
+              break
+              fi
         fi
 done
 
@@ -51,7 +57,13 @@ do
         echo "Please try again."
         continue
         else
-        break
+                  if [ ! -d "$DEFAULT_IS_HOME_PATH" ]; then
+                  echo "$DEFAULT_IS_HOME_PATH folder does not exists."
+                  echo "Please try again."
+                  continue
+                  else
+                  break
+                  fi
         fi
 done
 

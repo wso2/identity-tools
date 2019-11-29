@@ -60,19 +60,21 @@ public class ConfigLoader {
      *
      * @param migratedISHomePath Migrated IS home path.
      * @param defaultISHomePath  Default IS home path.
-     * @throws ConfigMigrateException
      */
     public void validate(String migratedISHomePath, String defaultISHomePath) throws ConfigMigrateException {
 
+        String errorMsg;
         if (StringUtils.isBlank(migratedISHomePath) && StringUtils.isBlank(defaultISHomePath)) {
-            throw new ConfigMigrateException("Please enter migrated IS home path and default IS home path as inputs.");
+             errorMsg = "Please enter migrated IS home path and default IS home path as inputs.";
+            log.error(errorMsg);
+            throw new ConfigMigrateException(errorMsg);
         }
         if (!new File(migratedISHomePath).exists() && !new File(defaultISHomePath).exists()) {
-            // TODO: 2019-11-25 validate file path log error
-            // TODO: 2019-11-25 file wise versa inputs
-            throw new ConfigMigrateException("The given IS home paths are not valid. Please try again!");
+            errorMsg = "The provided IS home paths does not exist. Please try again after entering correct input" +
+                    " Paths.";
+            log.error(errorMsg);
+            throw new ConfigMigrateException(errorMsg);
         }
-//        log.info("Inputs are successfully validated.");
     }
 
     /**
