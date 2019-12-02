@@ -31,10 +31,9 @@ public class MigrationConstants {
     public static final String OUTPUT_FOLDER = "output";
     public static final String UN_TEMPLATE_FILE_FOLDER = "output/unTemplatedFiles";
     public static final String NEW_LINE = "\n";
-    // TODO: 2019-11-21 This link should be changed once the PR is merged with the catalog.csv file.
-    public static final String CATALOG_URL = "https://raw.githubusercontent.com/GDRDABARERA/toml-config-migrator" +
-            "/master/Catalog.csv";
-    public static final String OUTPUT_CATALOG_CSV = "outputCatalog.csv";
+    public static final String CATALOG_URL = "https://raw.githubusercontent.com/wso2/identity-tools/master/" +
+            "components/config-model-migrator/resources/catalog.csv";
+    public static final String OUTPUT_CATALOG_CSV = "output-catalog.csv";
     public static final String CATALOG_FIRST_ENTRY = "FileName | fileType | Tag(xpath or property) | tomlConfig |" +
             " dataType | description | defaultValue | PossibleValues | Config Status";
     public static final String DEPLOYMENT_TOML_FILE = "deployment.toml";
