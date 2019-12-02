@@ -140,11 +140,11 @@ public class TomlGenerator {
      * Generate a map of Toml key and value to write the toml file.
      *
      * @param keyValueMap Map of key-values.
-     * @param log         Log file.
+     * @param logFile         Log file.
      * @return Map of toml key and value
      * @throws IOException
      */
-    private Map<String, Object> generateTomlKeyMapFromData(Map<String, String> keyValueMap, File log)
+    private Map<String, Object> generateTomlKeyMapFromData(Map<String, String> keyValueMap, File logFile)
             throws IOException {
 
         Map<String, WSO2TomlKey> keyTomlMap = readOutputCSV(new URL(MigrationConstants.CATALOG_URL));
@@ -153,19 +153,21 @@ public class TomlGenerator {
         for (Map.Entry<String, String> entry : keyValueMap.entrySet()) {
             String key = entry.getKey();
             WSO2TomlKey tomlKey = keyTomlMap.get(key);
-            if (StringUtils.isBlank(tomlKey.getKey())) {
-                if (TomlGeneratorConstants.NOT_IN_DEFAULT_STATUS.equals(tomlKey.getStatus())) {
-                    Files.write(Paths.get(log.getPath()), ("\n ### The property : " + key
-                                    + " is not available in default IS pack.").getBytes(StandardCharsets.UTF_8),
-                            StandardOpenOption.APPEND);
-                } else {
-                    Files.write(Paths.get(log.getPath()), ("\n A missing toml config found for key : " + key
-                                    + " and changed value : " + keyValueMap.get(key)).getBytes(StandardCharsets.UTF_8),
-                            StandardOpenOption.APPEND);
+            if (tomlKey != null) {
+                if (StringUtils.isBlank(tomlKey.getKey())) {
+                    if (TomlGeneratorConstants.NOT_IN_DEFAULT_STATUS.equals(tomlKey.getStatus())) {
+                        Files.write(Paths.get(logFile.getPath()), ("\n ### The property : " + key
+                                        + " is not available in default IS pack.").getBytes(StandardCharsets.UTF_8),
+                                StandardOpenOption.APPEND);
+                    } else {
+                        Files.write(Paths.get(logFile.getPath()), ("\n A missing toml config found for key : " + key
+                                        + " and changed value : " + keyValueMap.get(key))
+                                        .getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+                    }
+                    continue;
                 }
-                continue;
+                addKeyToOutputMap(keyValueMap, key, tomlKey.getKey(), outputMap);
             }
-            addKeyToOutputMap(keyValueMap, key, tomlKey.getKey(), outputMap);
         }
         return outputMap;
     }

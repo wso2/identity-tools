@@ -202,7 +202,7 @@ identity.xml | xml | /Server[1]/OAuth[1]/OpenIDConnect[1] |  |  |  |  |  | Not I
 identity.xml | xml | /Server[1]/OAuth[1]/OpenIDConnect[1]/IDTokenIssuerID[1]/text()[1] | oauth.oidc.id_token.issuer | String | ID toke issuer of WSO2 Identity Server | https://localhost:${carbon.management.port}/oauth2/token |  | Templated
 identity.xml | xml | /Server[1]/OAuth[1]/OpenIDConnect[1]/IDTokenCustomClaimsCallBackHandler[1]/text()[1] | oauth.oidc.extensions.claim_callback_handler | String | CallBack handler for idtoken claims. | org.wso2.carbon.identity.openidconnect.SAMLAssertionClaimsCallback |  | Templated
 identity.xml | xml | /Server[1]/OAuth[1]/OpenIDConnect[1]/IDTokenExpiration[1]/text()[1] | oauth.oidc.token_validation.id_token_validity | Int | ID token validity period | 3600 |  | Templated
-identity.xml | xml | /Server[1]/OAuth[1]/OpenIDConnect[1]/SkipUserConsent[1]/text()[1] |  | Boolean | Enable prompting  | FALSE |  | Overriden by oauth.prompt_consent
+identity.xml | xml | /Server[1]/OAuth[1]/OpenIDConnect[1]/SkipUserConsent[1]/text()[1] |  | Boolean | Enable prompting | FALSE |  | Overriden by oauth.prompt_consent
 identity.xml | xml | /Server[1]/OAuth[1]/OpenIDConnect[1]/IDTokenSubjectClaim[1] |  |  |  |  |  | Not In Default
 identity.xml | xml | /Server[1]/OAuth[1]/OpenIDConnect[1]/UserInfoEndpointClaimDialect[1] |  |  |  |  |  | Not In Default
 identity.xml | xml | /Server[1]/OAuth[1]/AppInfoCacheTimeout[1] |  |  |  |  |  | Not In Default
@@ -316,3 +316,504 @@ identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[18]/@name |
 identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[18]/@timeout |  |  |  |  |  | Not In Default
 identity.xml | xml | /Server[1]/SAML[1] |  |  |  |  |  | Not In Default
 identity.xml | xml | /Server[1]/ISAnalytics[1] |  |  |  |  |  | Not In Default
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1] |  |  |  |  |  | Not In Default
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[1]/definition[1]/configuration[1]/url[1]/text()[1] |  |  |  | jdbc:h2:./repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE |  |
+master-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[1]/definition[1]/configuration[1]/defaultAutoCommit[1]/text()[1] |  |  |  | TRUE |  |
+tenant-axis2.xml | xml | /axisconfig[1]/messageFormatters[1]/messageFormatter[1]/@class |  |  |  | org.apache.axis2.transport.http.ApplicationXMLFormatter |  |
+tenant-axis2.xml | xml | /axisconfig[1]/messageFormatters[1]/messageFormatter[2]/@class |  |  |  | org.apache.axis2.transport.http.XFormURLEncodedFormatter |  |
+tenant-axis2.xml | xml | /axisconfig[1]/messageFormatters[1]/messageFormatter[3]/@class |  |  |  | org.apache.axis2.transport.http.MultipartFormDataFormatter |  |
+tenant-axis2.xml | xml | /axisconfig[1]/messageFormatters[1]/messageFormatter[5]/@class |  |  |  | org.apache.axis2.transport.http.ApplicationXMLFormatter |  |
+tenant-axis2.xml | xml | /axisconfig[1]/messageFormatters[1]/messageFormatter[6]/@class |  |  |  | org.apache.axis2.transport.http.SOAPMessageFormatter |  |
+tenant-axis2.xml | xml | /axisconfig[1]/messageFormatters[1]/messageFormatter[7]/@class |  |  |  | org.apache.axis2.json.gson.JsonFormatter |  |
+tenant-axis2.xml | xml | /axisconfig[1]/messageFormatters[1]/messageFormatter[8]/@class |  |  |  | org.apache.axis2.json.JSONBadgerfishMessageFormatter |  |
+tenant-axis2.xml | xml | /axisconfig[1]/messageBuilders[1] |  |  |  |  |  | Not In Default
+tenant-axis2.xml | xml | /axisconfig[1]/messageBuilders[1]/messageBuilder[3]/@class |  |  |  | org.apache.axis2.builder.MultipartFormDataBuilder |  |
+tenant-axis2.xml | xml | /axisconfig[1]/messageBuilders[1]/messageBuilder[3]/@contentType |  |  |  |  |  | Not In Default
+tenant-axis2.xml | xml | /axisconfig[1]/messageBuilders[1]/messageBuilder[4]/@class |  |  |  | org.apache.axis2.json.gson.JsonBuilder |  |
+tenant-axis2.xml | xml | /axisconfig[1]/messageBuilders[1]/messageBuilder[4]/@contentType |  |  |  |  |  | Not In Default
+tenant-axis2.xml | xml | /axisconfig[1]/messageBuilders[1]/messageBuilder[5]/@class |  |  |  | org.apache.axis2.json.JSONBadgerfishOMBuilder |  |
+tenant-axis2.xml | xml | /axisconfig[1]/messageBuilders[1]/messageBuilder[5]/@contentType |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[1] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[1]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[1]/Parameter[1]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[1]/Parameter[1]/text()[1] |  |  |  | FALSE |  |
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[2] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[2]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[2]/Parameter[1]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[2]/Parameter[1]/text()[1] |  |  |  | https://accounts.google.com/o/oauth2/auth |  |
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[3] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[3]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[4] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[4]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[4]/Parameter[1]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[4]/Parameter[1]/text()[1] |  |  |  | https://discover.mobileconnect.io/gsma/v2/discovery/ |  |
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[5] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[5]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[6] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[6]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[7] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[7]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[7]/Parameter[1]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[7]/Parameter[1]/text()[1] |  |  |  | Bearer |  |
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[7]/Parameter[2]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[7]/Parameter[2]/text()[1] |  |  |  | https://api.sendgrid.com/api/mail.send.json |  |
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[7]/Parameter[3]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[7]/Parameter[3]/text()[1] |  |  |  | sendgridAPIKeyValue |  |
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[8]/Parameter[1]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[8]/Parameter[1]/text()[1] |  |  |  | https://login.live.com/oauth20_authorize.srf |  |
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[8]/Parameter[2]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[8]/Parameter[2]/text()[1] |  |  |  | https://apis.live.net/v5.0/me?access_token= |  |
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[8]/Parameter[3]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[8]/Parameter[3]/text()[1] |  |  |  | https://login.live.com/oauth20_token.srf |  |
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[9]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[9]/Parameter[1]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[9]/Parameter[1]/text()[1] |  |  |  | https://api.login.yahoo.com/oauth2/get_token |  |
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[9]/Parameter[2]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[9]/Parameter[2]/text()[1] |  |  |  | https://api.login.yahoo.com/oauth2/request_auth |  |
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[9]/Parameter[3]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[9]/Parameter[3]/text()[1] |  |  |  | https://social.yahooapis.com/v1/user/ |  |
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[10] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[10]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[10]/Parameter[1]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[10]/Parameter[1]/text()[1] |  |  |  | https://localhost:8443/x509-certificate-servlet |  |
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[11] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[11]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[11]/Parameter[1] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[11]/Parameter[2] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[11]/Parameter[3] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[12]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[12]/Parameter[1]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[12]/Parameter[1]/text()[1] |  |  |  | https://graph.facebook.com/me |  |
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[12]/Parameter[2]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[12]/Parameter[2]/text()[1] |  |  |  | https://graph.facebook.com/oauth/access_token |  |
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[12]/Parameter[3]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[12]/Parameter[3]/text()[1] |  |  |  | http://www.facebook.com/dialog/oauth |  |
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[13] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[13]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[13]/Parameter[1]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[13]/Parameter[1]/text()[1] |  |  |  | 1 |  |
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[13]/Parameter[2] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[13]/Parameter[3] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[13]/Parameter[4] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[13]/Parameter[5] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[13]/Parameter[6] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[13]/Parameter[7] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[13]/Parameter[8] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[13]/Parameter[9] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[13]/Parameter[10] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[13]/Parameter[11] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[14] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[14]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[14]/Parameter[1]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[14]/Parameter[1]/text()[1] |  |  |  | basic |  |
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[14]/Parameter[2] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[14]/Parameter[3] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[14]/Parameter[4] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[14]/Parameter[5] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[14]/Parameter[6] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[14]/Parameter[7] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[14]/Parameter[8] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[14]/Parameter[9] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[14]/Parameter[10] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[14]/Parameter[11] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[15] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[15]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[15]/Parameter[1]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[15]/Parameter[1]/text()[1] |  |  |  | basic |  |
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[15]/Parameter[2] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[16] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[16]/@name |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[16]/Parameter[1] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[16]/Parameter[2] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[16]/Parameter[3] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[16]/Parameter[4] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[16]/Parameter[5] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[16]/Parameter[6] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[16]/Parameter[7] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[16]/Parameter[8] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[16]/Parameter[9] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[16]/Parameter[10] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[16]/Parameter[11] |  |  |  |  |  | Not In Default
+application-authentication.xml | xml | /ApplicationAuthentication[1]/AuthenticatorConfigs[1]/AuthenticatorConfig[16]/Parameter[12] |  |  |  |  |  | Not In Default
+context.xml | xml | /Context[1] |  |  |  |  |  | Not In Default
+context.xml | xml | /Context[1]/@allowLinking |  |  |  |  |  | Not In Default
+event-processor.xml | xml | /eventProcessorConfiguration[1]/mode[2]/persistence[1]/@enable |  |  |  |  |  | Not In Default
+consent-mgt-config.xml | xml | /ConsentManager[1]/DataSource[1]/Name[1]/text()[1] |  |  |  | jdbc/WSO2IdentityDB |  |
+consent-mgt-config.xml | xml | /ConsentManager[1]/PIIController[1]/OnBehalf[1]/text()[1] |  |  |  | change-me |  |
+bps-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[1]/definition[1]/configuration[1] |  |  |  |  |  | Not In Default
+bps-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[1]/definition[1]/configuration[1]/testOnBorrow[1] |  |  |  |  |  | Not In Default
+bps-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[1]/definition[1]/configuration[1]/validationQuery[1] |  |  |  |  |  | Not In Default
+bps-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[1]/definition[1]/configuration[1]/validationInterval[1] |  |  |  |  |  | Not In Default
+bps-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[1]/definition[1]/configuration[1]/useDataSourceFactory[1] |  |  |  |  |  | Not In Default
+bps-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[1]/definition[1]/configuration[1]/defaultAutoCommit[1] |  |  |  |  |  | Not In Default
+bps-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[1]/definition[1]/configuration[1]/maxActive[1] |  |  |  |  |  | Not In Default
+bps-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[1]/definition[1]/configuration[1]/maxIdle[1] |  |  |  |  |  | Not In Default
+bps-datasources.xml | xml | /datasources-configuration[1]/datasources[1]/datasource[1]/definition[1]/configuration[1]/maxWait[1] |  |  |  |  |  | Not In Default
+carbon.xml | xml | /Server[1]/Tenant[1] |  |  |  |  |  | Not In Default
+carbon.xml | xml | /Server[1]/Tenant[1]/TenantDelete[1] |  |  |  |  |  | Not In Default
+carbon.xml | xml | /Server[1]/Tenant[1]/ListenerInvocationPolicy[1] |  |  |  |  |  | Not In Default
+carbon.xml | xml | /Server[1]/HideMenuItemIds[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/JDBCPersistenceManager[1]/SessionDataPersist[1]/SessionDataCleanUp[1]/DeleteChunkSize[1]/text()[1] |  |  |  | 8192 |  |
+identity.xml | xml | /Server[1]/OAuth[1]/OAuth2RevokeEPUrl[1]/text()[1] |  |  |  | https://localhost:${carbon.management.port}/oauth2/revoke |  |
+identity.xml | xml | /Server[1]/OAuth[1]/OAuth2IntrospectEPUrl[1]/text()[1] |  |  |  | https://localhost:${carbon.management.port}/oauth2/introspect |  |
+identity.xml | xml | /Server[1]/OAuth[1]/OIDCWebFingerEPUrl[1]/text()[1] |  |  |  | https://localhost:${carbon.management.port}/.well-known/webfinger |  |
+identity.xml | xml | /Server[1]/OAuth[1]/OAuth2DCREPUrl[1]/text()[1] |  |  |  | https://localhost:${carbon.management.port}/api/identity/oauth2/dcr/v1.1/register |  |
+identity.xml | xml | /Server[1]/OAuth[1]/OAuth2JWKSPage[1]/text()[1] |  |  |  | https://localhost:${carbon.management.port}/oauth2/jwks |  |
+identity.xml | xml | /Server[1]/OAuth[1]/OIDCDiscoveryEPUrl[1]/text()[1] |  |  |  | https://localhost:${carbon.management.port}/oauth2/oidcdiscovery |  |
+identity.xml | xml | /Server[1]/OAuth[1]/OpenIDConnect[1]/SupportedIDTokenEncryptionAlgorithms[1]/SupportedIDTokenEncryptionAlgorithm[1]/text()[1] |  |  |  | RSA-OAEP |  |
+identity.xml | xml | /Server[1]/OAuth[1]/OpenIDConnect[1]/SupportedIDTokenEncryptionAlgorithms[1]/SupportedIDTokenEncryptionAlgorithm[2]/text()[1] |  |  |  | RSA1_5 |  |
+identity.xml | xml | /Server[1]/OAuth[1]/OpenIDConnect[1]/AddUserstoreDomainToIdToken[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/OAuth[1]/OpenIDConnect[1]/AddUserstoreDomainToIdToken[1]/text()[1] |  |  |  |  |  |
+identity.xml | xml | /Server[1]/SSOService[1]/ArtifactResolutionEndpoint[1]/text()[1] |  |  |  | https://localhost:${carbon.management.port}/samlartresolve |  |
+identity.xml | xml | /Server[1]/SCIM2[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[9] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[10] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[11] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[12] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[13] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[14] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[15] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[16] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[17] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/EventListeners[1]/EventListener[18] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[19] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[20] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[21] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/CacheConfig[1]/CacheManager[1]/Cache[22] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[1]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[1]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[1]/@secured |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[1]/Permissions[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[2]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[2]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[2]/@secured |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[3] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[3]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[3]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[4]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[4]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[5] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[5]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[5]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[5]/Permissions[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[6] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[6]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[6]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[6]/Permissions[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[7]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[7]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[7]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/usermgt/view |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[8]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[8]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[8]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/usermgt/view |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[9]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[9]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[9]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/configmgt/list |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[10] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[10]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[10]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[11]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[11]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[11]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/configmgt/update |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[12] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[12]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[12]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[12]/Permissions[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[13]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[13]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[13]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/configmgt/delete |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[14] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[14]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[14]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[15]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[15]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[15]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/configmgt/update |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[16] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[16]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[16]/Permissions[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[17]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[17]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/configmgt/delete |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[18] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[18]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[18]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[19]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[19]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[19]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/configmgt/update |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[20]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[20]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[21] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[21]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[21]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[22] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[22]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[22]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[22]/Permissions[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[23]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[23]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[24]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[24]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[24]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/consentmgt/add |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[25] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[25]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[25]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[25]/Permissions[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[26] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[26]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[26]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[27]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[27]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[27]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/consentmgt/add |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[28] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[28]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[28]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[28]/Permissions[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[29] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[29]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[29]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[30]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[30]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[30]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/consentmgt/add |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[31] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[31]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[31]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[31]/Permissions[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[32] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[32]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[32]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[33]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[33]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[33]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/identitymgt |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[34] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[34]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[34]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[34]/@secured |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[34]/Permissions[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[35]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[35]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/applicationmgt/create |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[36]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[36]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/applicationmgt/delete |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[37]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[37]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[37]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/applicationmgt/update |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[38]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[38]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[38]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/applicationmgt/view |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[39]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[39]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/applicationmgt/delete |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[40]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[40]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/applicationmgt/create |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[41]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[41]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[41]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/applicationmgt/view |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[42]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[42]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[42]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/pep |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[43]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[43]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/usermgt/create |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[44]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[44]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/usermgt/list |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[45]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[45]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[45]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/rolemgt/create |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[46]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[46]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[46]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/rolemgt/view |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[47]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[47]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/usermgt/view |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[48]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[48]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/usermgt/update |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[49]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[49]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[49]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/usermgt/update |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[50]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[50]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[50]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/usermgt/delete |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[51]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[51]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/rolemgt/view |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[52]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[52]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/rolemgt/update |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[53]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[53]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[53]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/rolemgt/update |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[54]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[54]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/rolemgt/delete |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[55]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[56]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[56]/Permissions[1]/text()[1] |  |  |  | /permission/admin/manage/identity/usermgt/delete |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[57]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[57]/Permissions[1]/text()[1] |  |  |  | /permission/admin/login |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[58]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[58]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[58]/@secured |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[58]/Permissions[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[59]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[59]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[59]/@secured |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[59]/Permissions[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[60]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[60]/@secured |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[60]/Permissions[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[60]/Permissions[1]/text()[1] |  |  |  |  |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[61]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[61]/@secured |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[61]/Permissions[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[61]/Permissions[1]/text()[1] |  |  |  |  |  |
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[62] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[62]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[63] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[63]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[64] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[64]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[65]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[66] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[66]/@context |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[66]/@http-method |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/ResourceAccessControl[1]/Resource[66]/Permissions[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/TenantContextsToRewrite[1]/WebApp[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/AdaptiveAuth[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/AdaptiveAuth[1]/EventPublisher[1]/ReceiverURL[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/AdaptiveAuth[1]/EventPublisher[1]/ReceiverURL[1]/text()[1] |  |  |  |  |  |
+identity.xml | xml | /Server[1]/AdaptiveAuth[1]/EventPublisher[1]/BasicAuthentication[1]/Enable[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/AdaptiveAuth[1]/EventPublisher[1]/BasicAuthentication[1]/Enable[1]/text()[1] |  |  |  |  |  |
+identity.xml | xml | /Server[1]/AdaptiveAuth[1]/EventPublisher[1]/BasicAuthentication[1]/Username[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/AdaptiveAuth[1]/EventPublisher[1]/BasicAuthentication[1]/Username[1]/text()[1] |  |  |  |  |  |
+identity.xml | xml | /Server[1]/AdaptiveAuth[1]/EventPublisher[1]/BasicAuthentication[1]/Password[1] |  |  |  |  |  | Not In Default
+identity.xml | xml | /Server[1]/AdaptiveAuth[1]/EventPublisher[1]/BasicAuthentication[1]/Password[1]/text()[1] |  |  |  |  |  |
+catalina-server.xml | xml | /Server[1]/Service[1]/Connector[1]/@compressableMimeType |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Connector[1] |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Connector[2] |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Connector[2]/@clientAuth |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Connector[2]/@compressableMimeType |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Connector[2]/@keystoreFile |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Connector[2]/@keystorePass |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Connector[2]/@sslEnabledProtocols |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Connector[2]/@sslProtocol |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1] |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1]/Valve[1] |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1]/Valve[1]/@className |  |  |  | org.wso2.carbon.tomcat.ext.valves.RequestEncodingValve |  |
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1]/Valve[2] |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1]/Valve[2]/@className |  |  |  | org.wso2.carbon.tomcat.ext.valves.RequestCorrelationIdValve |  |
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1]/Valve[2]/@directory |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1]/Valve[2]/@pattern |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1]/Valve[2]/@prefix |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1]/Valve[2]/@suffix |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1]/Valve[3] |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1]/Valve[3]/@className |  |  |  | org.wso2.carbon.tomcat.ext.valves.CarbonContextCreatorValve |  |
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1]/Valve[3]/@threshold |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1]/Valve[4] |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1]/Valve[4]/@className |  |  |  | org.apache.catalina.valves.AccessLogValve |  |
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1]/Valve[5] |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1]/Valve[5]/@className |  |  |  | org.wso2.carbon.tomcat.ext.valves.CarbonStuckThreadDetectionValve |  |
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1]/Valve[6]/@className |  |  |  | org.wso2.carbon.tomcat.ext.valves.CompositeValve |  |
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1]/Valve[7]/@className |  |  |  | org.wso2.carbon.identity.auth.valve.AuthenticationValve |  |
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1]/Valve[8] |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1]/Valve[8]/@className |  |  |  | org.wso2.carbon.identity.authz.valve.AuthorizationValve |  |
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1]/Valve[8]/@showReport |  |  |  |  |  | Not In Default
+catalina-server.xml | xml | /Server[1]/Service[1]/Engine[1]/Host[1]/Valve[8]/@showServerInfo |  |  |  |  |  | Not In Default
+authenticators.xml | xml | /Authenticators[1]/Authenticator[1] |  |  |  |  |  | Not In Default
+authenticators.xml | xml | /Authenticators[1]/Authenticator[2] |  |  |  |  |  | Not In Default
+authenticators.xml | xml | /Authenticators[1]/Authenticator[2]/Config[1] |  |  |  |  |  | Not In Default
+authenticators.xml | xml | /Authenticators[1]/Authenticator[2]/Config[1]/Parameter[1]/@name |  |  |  |  |  | Not In Default
+authenticators.xml | xml | /Authenticators[1]/Authenticator[2]/Config[1]/Parameter[1]/text()[1] |  |  |  | carbonServer |  |
+authenticators.xml | xml | /Authenticators[1]/Authenticator[2]/Config[1]/Parameter[2]/@name |  |  |  |  |  | Not In Default
+authenticators.xml | xml | /Authenticators[1]/Authenticator[2]/Config[1]/Parameter[2]/text()[1] |  |  |  | https://localhost:${carbon.management.port}/samlsso |  |
+authenticators.xml | xml | /Authenticators[1]/Authenticator[2]/Config[1]/Parameter[3]/@name |  |  |  |  |  | Not In Default
+authenticators.xml | xml | /Authenticators[1]/Authenticator[2]/Config[1]/Parameter[3]/text()[1] |  |  |  | FALSE |  |
+authenticators.xml | xml | /Authenticators[1]/Authenticator[2]/Config[1]/Parameter[5]/text()[1] |  |  |  | https://localhost:${carbon.management.port}/acs |  |
+authenticators.xml | xml | /Authenticators[1]/Authenticator[3] |  |  |  |  |  | Not In Default
+authenticators.xml | xml | /Authenticators[1]/Authenticator[3]/Config[1] |  |  |  |  |  | Not In Default
+authenticators.xml | xml | /Authenticators[1]/Authenticator[3]/Config[1]/Parameter[1]/@name |  |  |  |  |  | Not In Default
+authenticators.xml | xml | /Authenticators[1]/Authenticator[3]/Config[1]/Parameter[1]/text()[1] |  |  |  | FALSE |  |
+authenticators.xml | xml | /Authenticators[1]/Authenticator[3]/Config[1]/Parameter[2]/@name |  |  |  |  |  | Not In Default
+authenticators.xml | xml | /Authenticators[1]/Authenticator[3]/Config[1]/Parameter[2]/text()[1] |  |  |  | UserName |  |
+authenticators.xml | xml | /Authenticators[1]/Authenticator[3]/Config[1]/Parameter[3] |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/Configuration[1] |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/Configuration[1]/Property[3]/text()[1] |  |  |  | jdbc/SHARED_DB |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/Configuration[1]/text()[1] |  |  |  |  |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[1]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[1]/text()[1] |  |  |  | TRUE |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[2]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[2]/text()[1] |  |  |  | 100 |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[3]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[3]/text()[1] |  |  |  | WSO2.ORG |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[4]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[4]/text()[1] |  |  |  | TRUE |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[5]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[5]/text()[1] |  |  |  | , |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[6]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[6]/text()[1] |  |  |  | admin |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[7] |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[7]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[7]/text()[1] |  |  |  |  |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[8]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[8]/text()[1] |  |  |  | org.wso2.carbon.user.core.tenant.CommonHybridLDAPTenantManager |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[9]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[9]/text()[1] |  |  |  | ou=Users,dc=wso2,dc=org |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[10]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[10]/text()[1] |  |  |  | (&(objectClass=groupOfNames)(cn=?)) |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[11] |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[11]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[12]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[12]/text()[1] |  |  |  | FALSE |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[13]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[13]/text()[1] |  |  |  | (&(objectClass=person)(uid=?)) |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[14]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[14]/text()[1] |  |  |  | 5000 |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[15]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[15]/text()[1] |  |  |  | uid |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[17]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[17]/text()[1] |  |  |  | [a-zA-Z0-9._\- | //]{3,30}$ |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[18]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[18]/text()[1] |  |  |  | TRUE |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[19]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[19]/text()[1] |  |  |  | FALSE |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[20]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[20]/text()[1] |  |  |  | ldap://localhost:${Ports.EmbeddedLDAP.LDAPServerPort} |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[21]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[21]/text()[1] |  |  |  | uid=admin,ou=system |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[22]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[23]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[23]/text()[1] |  |  |  | [a-zA-Z0-9._\- | //]{3,30}$ |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[24]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[24]/text()[1] |  |  |  | groupOfNames |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[25]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[26]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[26]/text()[1] |  |  |  | PLAIN_TEXT |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[27]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[27]/text()[1] |  |  |  | ou=Groups,dc=wso2,dc=org |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[28]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[28]/text()[1] |  |  |  | TRUE |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[29]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[30]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[30]/text()[1] |  |  |  | 120000 |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[31]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[31]/text()[1] |  |  |  | member |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[32]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[32]/text()[1] |  |  |  | identityPerson |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[33]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[33]/text()[1] |  |  |  | Password length should be within 5 to 30 characters |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[34]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[35]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[35]/text()[1] |  |  |  | ^[\S]{5,30}$ |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[36]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[37]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[37]/text()[1] |  |  |  | Username pattern policy violated |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[39]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[39]/text()[1] |  |  |  | (objectClass=groupOfNames) |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[40]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[40]/text()[1] |  |  |  | TRUE |  |
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[41] |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[41]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[42] |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[42]/@name |  |  |  |  |  | Not In Default
+user-mgt.xml | xml | /UserManager[1]/Realm[1]/UserStoreManager[1]/Property[43]/@name |  |  |  |  |  | Not In Default
+Owasp.CsrfGuard.Carbon.properties | properties | org.owasp.csrfguard.JavascriptServlet.injectIntoAttributes |  |  |  |  |  | Not Templated
+EndpointConfig.properties | properties | key.manager.type | identity.auth_framework.endpoint.key_manager_type | String | Keystore Type | JKS |  | Templated
+EndpointConfig.properties | properties | trust.manager.type | identity.auth_framework.endpoint.trust_manager_type | String | Trustore Type | JKS |  | Templated
+captcha-config.properties | properties | recaptcha.site.key | recaptcha.site_key | String | The Site key of the reCaptcha | 6LeL8iATAAAAABEWUx1LwFAiSCT06fY7Kfra5WcT |  | Templated
+captcha-config.properties | properties | recaptcha.secret.key | recaptcha.secret_key | String | The secret of the recaptcha | 6LeL8iATAAAAAJUgXu_ZgEm_dOC3AT4gmWRstil4 |  | Templated
+entitlement.properties | properties | PDP.DecisionCaching.Enable | identity.entitlement.policy_point.pdp.caching.decision_caching.enabled | Boolean | This will enable the decision caching in the PDP | TRUE |  | Templated
+entitlement.properties | properties | Entitlement.Engine.CachingInterval | identity.entitlement.entitlement_engine_caching_interval | Int | The entitlement engine caching interval available | 86400 |  | Templated
