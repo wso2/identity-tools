@@ -106,7 +106,7 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <Private-package>org.wso2.is.password.reencrypt.internal</Private-package>
+                        <Private-package>org.wso2.is.password.reencrypt.secondaryuserstore.internal</Private-package>
                         <Import-Package>
                             org.osgi.framework; version="${osgi.framework.imp.pkg.version.range}",
                             org.osgi.service.component; version="${osgi.service.component.imp.pkg.version.range}",
@@ -121,8 +121,8 @@
                             org.wso2.carbon.user.api, org.wso2.carbon.user.core.*, org.wso2.carbon.utils.dbcreator
                         </Import-Package>
                         <Export-Package>
-                            org.wso2.is.password.reencrypt.secondaryUserStore.*,
-                            !org.wso2.is.password.reencrypt.secondaryUserStore.internal
+                            org.wso2.is.password.reencrypt.secondaryuserstore.*,
+                            !org.wso2.is.password.reencrypt.secondaryuserstore.internal
                         </Export-Package>
                     </instructions>
                 </configuration>
@@ -130,7 +130,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-scr-plugin</artifactId>
-                <version>1.22.0</version>
+                <version>${maven-scr-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>generate-scr-scrdescriptor</id>
@@ -180,7 +180,7 @@
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
         <snakeyaml.version.range>[1.16.0, 1.17.0)</snakeyaml.version.range>
         <commons-lang.wso2.osgi.version.range>[2.6.0,3.0.0)</commons-lang.wso2.osgi.version.range>
-
+        <maven-scr-plugin.version>1.22.0</maven-scr-plugin.version>
     </properties>
 
 </project>

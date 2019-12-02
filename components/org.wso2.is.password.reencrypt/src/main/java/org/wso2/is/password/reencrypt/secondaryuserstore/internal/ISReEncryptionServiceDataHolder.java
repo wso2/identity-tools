@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package secondaryUserStore.internal;
+package org.wso2.is.password.reencrypt.secondaryuserstore.internal;
 
 import org.wso2.carbon.base.api.ServerConfigurationService;
 
@@ -22,15 +22,26 @@ import org.wso2.carbon.base.api.ServerConfigurationService;
  */
 public class ISReEncryptionServiceDataHolder {
 
-    private static ServerConfigurationService serverConfigurationService;
+    private static volatile ISReEncryptionServiceDataHolder isReEncryptionServiceDataHolder =
+            new ISReEncryptionServiceDataHolder();
+    private ServerConfigurationService serverConfigurationService;
 
-    public static ServerConfigurationService getServerConfigurationService() {
+    private ISReEncryptionServiceDataHolder() {
+
+    }
+
+    public static ISReEncryptionServiceDataHolder getInstance() {
+
+        return isReEncryptionServiceDataHolder;
+    }
+
+    public ServerConfigurationService getServerConfigurationService() {
 
         return serverConfigurationService;
     }
 
-    public static void setServerConfigurationService(ServerConfigurationService serverConfigurationService) {
+    public void setServerConfigurationService(ServerConfigurationService serverConfigurationService) {
 
-        ISReEncryptionServiceDataHolder.serverConfigurationService = serverConfigurationService;
+        this.serverConfigurationService = serverConfigurationService;
     }
 }
