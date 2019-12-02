@@ -73,7 +73,7 @@ public class ConfigurationMigrate {
             log.info("\n\n----------------------------------------Good Bye!!--------------------------------");
         } else {
             log.info("=================================================================================");
-            log.info("|        New config migration Failed !!!    New Configs Found!!                 |");
+            log.info("|    New Config migration is partially Successful!  Identified New Configs!     |");
             log.info("=================================================================================");
 
             log.info("\n \n A deployment.toml file has generated with the existing configs.");

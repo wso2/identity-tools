@@ -1,25 +1,27 @@
 # New Config Model Migration Tool
 
 ## Why to use this tool?
-This tool will help to identify and migrate the old xml configurations to the new configuration model 
-and create the deployment.toml file, which suites the new config model that comes with
- Identity Server 5.9.0 or above. This will be knowledge gathering tool which will gather all the configurations
- that change by the clients and save them as a knowledge for the future use. At one time developer has to commit
- changes to the `Catalog.csv` and thereafter, that knowledge can be used by other developers .
-
+This tool will help to identify and migrate the old xml configurations to the [new configuration model](https://is.docs.wso2.com/en/5.9.0/references/new-configuration-model/) 
+ (that comes with Identity Server 5.9.0 or above) and create the deployment.toml file which suites the new config model. 
+ 
+ This tool will use the pre-identified toml configurations that is recorded in `catalog.csv` file. This `catalog.csv` file
+ will be frequently updated with the new configs which will found by the tool itself.
+ 
 ## What this tool gives?
-* It will create the `deployement.toml` file with the existing knowledge that identified before and 
-committed in the `Catalog.csv` file hosted in resources folder of this tool.
 
-* The rest of the newly identified changes will be recorded in a new `outputCatalog.csv` 
-file inside the output folder.
+* Updated `deployement.toml` file based on the pre-identified toml configs in `catalog.csv` file hosted in resources folder of this tool.
 
-* The not-templated, changed files will be filtered to a folder called `unTemplatedFiles` inside the 
+* `catalog.csv` file will be the knowledge to this tool. Hence if new configs
+ found without toml configurations in `output-catalog.csv`, `catalog.csv` file should be updated with the changes.
+ 
+* The content of the `catalog.csv` file and newly found configs will be added to a new file called `output-catalog.csv` file inside the `output` folder.
+  
+* The untemplated, changed files will be filtered to a folder called `unTemplatedFiles` inside the 
 output folder.
 
 * The logs will be recorded in the `log.txt` file inside the output folder.
 
-## How to run the tool
+## How To Run The Tool
 
 1. Clone the repository [identity-tools](https://github.com/wso2/identity-tools).
 
@@ -38,10 +40,10 @@ using below shell command.
        sh config-migrate.sh
 
 3. This will asks for 2 inputs and it will generate the `deployment.toml` file using the 
-existing [knowledge](https://raw.githubusercontent.com/wso2/identity-tools/master/components/config-model-migrator/resources/Catalog.csv)
+existing [knowledge](https://raw.githubusercontent.com/wso2/identity-tools/master/components/config-model-migrator/resources/catalog.csv)
 
 
-## Inputs to the tool
+## Inputs To The Tool
 
 1. **Migrated IS home** : The migrated Identity Server (Identity Server 5.8.0 or below)  Home path.
 2. **Default IS home** :  The default Identity Server (Identity Server 5.9.0 or above)  Home path.
@@ -54,21 +56,29 @@ config model.
 
 Next, replace the existing `deployment.toml` with this created `deployment.toml` file and restart the server.
 
-2. **New config migration Failed, New Configs Found** : This tells that new config migration is not fully completed.
- This means this has found some more configs which has not found earlier and which are not available in the existing knowledge(`Catalog.csv`),
+2. **Partial Success** : This tells that new config migration is not fully completed.
+ This means this has found some more configs which has not found earlier and which are not available in the existing knowledge(`catalog.csv`),
   
-  This will create the 'deployment.toml' file using the 
-existing knowledge found and add the other differences to the `outputCatalog.csv` (This contains the
-changes in the `Catalog.csv` and newly found changes)
+  This will create the `deployment.toml` file using the 
+existing knowledge found and add the other differences to the `output-catalog.csv` (This contains the
+changes in the `catalog.csv` and newly found changes)
 
 ##### To complete the flow at the failure stage, you can do one of the following:
 
-* You can update the `outputCatalog.csv` and update the `Catalog.csv` by committing the content to the
+* You can update the `output-catalog.csv` and update the `catalog.csv` by committing the content to the
  identity-tools repo and re-run the tool again. This will give you complete success in the second attempt.
+ 
+**Note** : 
+  If you can not create a [pull request](https://github.com/wso2/identity-tools/pulls), create a [git issue](https://github.com/wso2/identity-tools/issues) with the identified changes so that we can update the `catalog.csv`
  
  or
  
- * Add the differences found in `outputCatalog.csv` manually to the `deployment.toml` 
+ * Add the differences found in `output-catalog.csv` manually to the `deployment.toml` 
  file and replace it with the existing file.
  Restart the server.
  
+  ---
+ ###### To Improve This Tool:
+ 
+ We really appreciate your feedback and your user experience about this tool. Create a 
+ [git issue](https://github.com/wso2/identity-tools/issues) and let us know your feedback.
