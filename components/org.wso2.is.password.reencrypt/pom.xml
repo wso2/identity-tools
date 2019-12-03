@@ -24,7 +24,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.is.password.reencrypt</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
     <packaging>bundle</packaging>
 
     <dependencies>
@@ -183,4 +183,8 @@
         <maven-scr-plugin.version>1.22.0</maven-scr-plugin.version>
     </properties>
 
+
+  <scm>
+    <tag>v1.0.2</tag>
+  </scm>
 </project>
