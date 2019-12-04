@@ -26,7 +26,7 @@
 
     <groupId>org.wso2.carbon.identity.tools</groupId>
     <artifactId>identity-tools</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
     <packaging>pom</packaging>
     <name>WSO2 Identity Tools</name>
     <description>Unified Identity tools of WSO2 IS</description>
@@ -36,7 +36,7 @@
         <url>https://github.com/wso2/identity-tools.git</url>
         <developerConnection>scm:git:https://github.com/wso2/identity-tools.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/identity-tools.git</connection>
-        <tag>HEAD</tag>
+        <tag>v1.0.3</tag>
     </scm>
 
     <modules>
