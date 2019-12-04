@@ -23,23 +23,27 @@ output folder.
 
 ## How To Run The Tool
 
-1. Clone the repository [identity-tools](https://github.com/wso2/identity-tools).
+1. Get the `org.wso2.configuration.migrater-<version>-bundle.zip` from the leatest [releases](https://github.com/wso2/identity-tools/releases/tag/v1.0.2) or do the below steps.
 
-2. Build it using maven by running the below command. 
+     * Clone the repository [identity-tools](https://github.com/wso2/identity-tools).
 
-       mvn clean install
+     * Build it using maven by running the below command. 
 
-3. Go to the `identity-tools/components/config-model-migrator/org.wso2.is.configuration.migrator/target` folder 
-and copy the `org.wso2.configuration.migrater-<version>-bundle.zip` zip file to a different location.
+                    mvn clean install
 
-4. Unzip the `org.wso2.configuration.migrater-<version>-bundle.zip`.
+     * Go to the `identity-tools/components/config-model-migrator/org.wso2.is.configuration.migrator/target` folder 
+      and copy the `org.wso2.configuration.migrater-<version>-bundle.zip` zip file to a different location.
 
-5. Go to `org.wso2.configuration.migrater-<version>-bundle/bin` folder, open a terminal and run the tool 
+
+
+2. Unzip the `org.wso2.configuration.migrater-<version>-bundle.zip`.
+
+3. Go to `org.wso2.configuration.migrater-<version>-bundle/bin` folder, open a terminal and run the tool 
 using below shell command.
 
        sh config-migrate.sh
 
-3. This will asks for 2 inputs and it will generate the `deployment.toml` file using the 
+4. This will asks for 2 inputs and it will generate the `deployment.toml` file using the 
 existing [knowledge](https://raw.githubusercontent.com/wso2/identity-tools/master/components/config-model-migrator/resources/catalog.csv)
 
 
