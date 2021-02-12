@@ -9,7 +9,6 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>org.wso2.carbon.identity.keyrotation</artifactId>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -62,6 +61,32 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>1.4.199</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.49</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20180813</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>2.12.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.10.5</version>
         </dependency>
     </dependencies>
 </project>

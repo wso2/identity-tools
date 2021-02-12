@@ -15,25 +15,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.identity.keyrotation.util;
+package org.wso2.carbon.identity.keyrotation.dao;
 
 /**
- * The exception which will be thrown if something unexpected happens during crypto operations.
+ * Class to reEncrypt the WorkFlow data in DB.
  */
-public class CryptoException extends Exception {
+public class WorkFlowDAO {
 
-    public CryptoException() {
-
-        super();
-    }
-
-    public CryptoException(String message) {
-
-        super(message);
-    }
-
-    public CryptoException(String message, Throwable e) {
-
-        super(message, e);
-    }
 }

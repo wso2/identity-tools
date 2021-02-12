@@ -1,0 +1,10 @@
+# Path details needed for the re-encryption.
+oldDatabase: jdbc:h2:./repository/database/WSO2IDENTITY_OLDDB
+
+newDatabase: jdbc:h2:./repository/database/WSO2IDENTITY_NEWDB
+
+eventPublisherCore: /repository/deployment/server/eventpublishers
+
+secondaryUserstore: /repository/deployment/server/userstores
+
+tenantUserStore: /repository/tenants

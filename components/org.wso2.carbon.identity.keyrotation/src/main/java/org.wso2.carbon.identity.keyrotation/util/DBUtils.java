@@ -18,22 +18,8 @@
 package org.wso2.carbon.identity.keyrotation.util;
 
 /**
- * The exception which will be thrown if something unexpected happens during crypto operations.
+ * Class to instantiate the database connection.
  */
-public class CryptoException extends Exception {
+public class DBUtils {
 
-    public CryptoException() {
-
-        super();
-    }
-
-    public CryptoException(String message) {
-
-        super(message);
-    }
-
-    public CryptoException(String message, Throwable e) {
-
-        super(message, e);
-    }
 }
