@@ -19,21 +19,21 @@ package org.wso2.carbon.identity.keyrotation.model;
 
 import org.apache.axiom.om.util.Base64;
 
+import static org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants.TRANSFORMATION;
+
 /**
  * Class to hold the cipher, transformation and initialization vector metadata.
  */
 public class CipherMetaData {
 
     private String c;
-
-    private String t = "AES/GCM/NoPadding";
-
+    private String t = TRANSFORMATION;
     private String iv;
 
     /**
      * Getter for the transformation.
      *
-     * @return Transformation       Set of operation to be performed on the given input to product some output.
+     * @return Set of operation to be performed on the given input to product some output.
      */
     public String getTransformation() {
 
@@ -43,7 +43,7 @@ public class CipherMetaData {
     /**
      * Setter for the transformation.
      *
-     * @param transformation        Set of operation to be performed on the given input to product some output.
+     * @param transformation Set of operation to be performed on the given input to product some output.
      */
     public void setTransformation(String transformation) {
 
@@ -53,7 +53,7 @@ public class CipherMetaData {
     /**
      * Getter for the ciphertext.
      *
-     * @return Cipher               The ciphertext.
+     * @return The ciphertext.
      */
     public String getCipherText() {
 
@@ -63,7 +63,7 @@ public class CipherMetaData {
     /**
      * Setter for the ciphertext.
      *
-     * @param cipher                The ciphertext.
+     * @param cipher The ciphertext.
      */
     public void setCipherText(String cipher) {
 
@@ -73,7 +73,7 @@ public class CipherMetaData {
     /**
      * Getter for the base64 decoded ciphertext.
      *
-     * @return Cipher               Base64 decoded cipher.
+     * @return Base64 decoded cipher.
      */
     public byte[] getCipherBase64Decoded() {
 
@@ -83,7 +83,7 @@ public class CipherMetaData {
     /**
      * Getter for the IV.
      *
-     * @return IV                   Initialization Vector.
+     * @return Initialization vector.
      */
     public String getIv() {
 
@@ -93,7 +93,7 @@ public class CipherMetaData {
     /**
      * Setter for the IV.
      *
-     * @param iv                    Initialization Vector.
+     * @param iv Initialization vector.
      */
     public void setIv(String iv) {
 
@@ -103,7 +103,7 @@ public class CipherMetaData {
     /**
      * Getter for the base64 decoded IV.
      *
-     * @return IV                   Base64 decoded Initialization Vector.
+     * @return Base64 decoded initialization vector.
      */
     public byte[] getIvBase64Decoded() {
 

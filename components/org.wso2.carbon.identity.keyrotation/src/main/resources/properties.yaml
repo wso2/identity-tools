@@ -1,10 +1,7 @@
 # Path details needed for the re-encryption.
-oldDatabase: jdbc:h2:./repository/database/WSO2IDENTITY_OLDDB
+oldSecretKey: AFA27B44D43B02A9FEA41D13CEDC2E40
 
-newDatabase: jdbc:h2:./repository/database/WSO2IDENTITY_NEWDB
+newSecretKey: AFA27B44D43B02A9FEA41D13CEDC2E40
 
-eventPublisherCore: /repository/deployment/server/eventpublishers
+isHome: /usr/lib/wso2/IdentityServer/<IS_HOME>
 
-secondaryUserstore: /repository/deployment/server/userstores
-
-tenantUserStore: /repository/tenants

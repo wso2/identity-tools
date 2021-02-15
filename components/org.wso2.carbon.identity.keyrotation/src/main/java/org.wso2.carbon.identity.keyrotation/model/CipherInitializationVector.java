@@ -18,18 +18,17 @@
 package org.wso2.carbon.identity.keyrotation.model;
 
 /**
- * Class to hold the cipher and Initialization Vector metadata.
+ * Class to hold the cipher and initialization vector metadata.
  */
 public class CipherInitializationVector {
 
     private String cipher;
-
     private String initializationVector;
 
     /**
      * Getter for the cipher.
      *
-     * @return Cipher       The ciphertext.
+     * @return Cipher The ciphertext.
      */
     public String getCipher() {
 
@@ -39,7 +38,7 @@ public class CipherInitializationVector {
     /**
      * Setter for the cipher.
      *
-     * @param cipher        The ciphertext.
+     * @param cipher The ciphertext.
      */
     public void setCipher(String cipher) {
 
@@ -47,9 +46,9 @@ public class CipherInitializationVector {
     }
 
     /**
-     * Getter for the Initialization Vector.
+     * Getter for the initialization vector.
      *
-     * @return IV           The Initialization Vector.
+     * @return IV The initialization vector.
      */
     public String getInitializationVector() {
 
@@ -57,9 +56,9 @@ public class CipherInitializationVector {
     }
 
     /**
-     * Setter for the Initialization Vector.
+     * Setter for the initialization vector.
      *
-     * @param initializationVector
+     * @param initializationVector The initialization vector.
      */
     public void setInitializationVector(String initializationVector) {
 

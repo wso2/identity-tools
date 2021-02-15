@@ -23,6 +23,7 @@ import org.apache.axiom.om.util.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
 import org.wso2.carbon.uuid.generator.UUIDGeneratorManager;
 
 import java.nio.ByteBuffer;
@@ -43,24 +44,24 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.wso2.carbon.identity.keyrotation.model.CipherMetaData;
 
+import static org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants.ALGORITHM;
+import static org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants.TRANSFORMATION;
+
 /**
  * Class that implements the encryption and decryption tasks.
  */
 public class CryptoProvider {
 
     private static final Log log = LogFactory.getLog(CryptoProvider.class);
-    private static final String secretKey = "AFA27B44D43B02A9FEA41D13CEDC2E40";
-    private static final String DEFAULT_SYMMETRIC_CRYPTO_ALGORITHM = "AES";
-    private static final String AES_GCM_SYMMETRIC_CRYPTO_ALGORITHM = "AES/GCM/NoPadding";
     public static final int GCM_IV_LENGTH = 16;
     public static final String JAVA_SECURITY_API_PROVIDER = "BC";
 
     /**
      * Computes and returns the ciphertext of the given cleartext.
      *
-     * @param cleartext         The cleartext to be encrypted.
-     * @return Ciphertext       The encrypted cleartext.
-     * @throws CryptoException  Crypto operation exception.
+     * @param cleartext The cleartext to be encrypted.
+     * @return The encrypted cleartext.
+     * @throws CryptoException Exception which will be thrown if something unexpected happens during crypto operations..
      */
     public byte[] encrypt(byte[] cleartext) throws CryptoException {
 
@@ -73,14 +74,24 @@ public class CryptoProvider {
         try {
             //Add the BC security provider for better security instead of the default provider.
             Security.addProvider(new BouncyCastleProvider());
-            cipher = Cipher.getInstance(AES_GCM_SYMMETRIC_CRYPTO_ALGORITHM, JAVA_SECURITY_API_PROVIDER);
-            cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(), new IvParameterSpec(iv));
+            cipher = Cipher.getInstance(TRANSFORMATION, JAVA_SECURITY_API_PROVIDER);
+            KeyRotationConfig keyRotationConfig = KeyRotationConfig.loadConfigs();
+            cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(keyRotationConfig.getNewSecretKey()),
+                    new IvParameterSpec(iv));
             cipherText = cipher.doFinal(cleartext);
             cipherText = createSelfContainedCiphertext(cipherText, iv);
 
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException | NoSuchProviderException e) {
-            String errorMessage = String.format("Error occurred while initializing and encrypting using Cipher object" +
-                    " with algorithm: '%s'.", AES_GCM_SYMMETRIC_CRYPTO_ALGORITHM);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | NoSuchProviderException e) {
+            String errorMessage = String.format("Error occurred while instantiating Cipher object" +
+                    " with algorithm: '%s'.", TRANSFORMATION);
+            throw new CryptoException(errorMessage, e);
+        } catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
+            String errorMessage = String.format("Error occurred while initializing Cipher object" +
+                    " with algorithm: '%s'.", TRANSFORMATION);
+            throw new CryptoException(errorMessage, e);
+        } catch (IllegalBlockSizeException | BadPaddingException e) {
+            String errorMessage = String.format("Error occurred while encrypting using Cipher object" +
+                    " with algorithm: '%s'.", TRANSFORMATION);
             throw new CryptoException(errorMessage, e);
         }
         return cipherText;
@@ -89,26 +100,35 @@ public class CryptoProvider {
     /**
      * Computes and returns the cleartext of the given ciphertext.
      *
-     * @param cipherText        The ciphertext to be decrypted.
-     * @return Cleartext        The decrypted ciphertext.
-     * @throws CryptoException  Crypto operation exception.
+     * @param cipherText The ciphertext to be decrypted.
+     * @return The decrypted ciphertext.
+     * @throws CryptoException Exception which will be thrown if something unexpected happens during crypto operations.
      **/
     public byte[] decrypt(byte[] cipherText) throws CryptoException {
 
         log.info("Decrypting data with symmetric key encryption with algorithm AES/GCM/NoPadding");
-        if (cipherText == null) {
-            throw new CryptoException("Plaintext can't be null.");
+        if (cipherText == null && cipherText.length == 0) {
+            throw new CryptoException("Plaintext cannot be empty.");
         }
         try {
             CipherMetaData cipherMetaData = createCipherMetaData(cipherText);
-            Cipher cipher = Cipher.getInstance(AES_GCM_SYMMETRIC_CRYPTO_ALGORITHM, JAVA_SECURITY_API_PROVIDER);
+            Cipher cipher = Cipher.getInstance(TRANSFORMATION, JAVA_SECURITY_API_PROVIDER);
+            KeyRotationConfig keyRotationConfig = KeyRotationConfig.loadConfigs();
             cipher.init(Cipher.DECRYPT_MODE,
-                    getSecretKey(),
+                    getSecretKey(keyRotationConfig.getOldSecretKey()),
                     new IvParameterSpec(cipherMetaData.getIvBase64Decoded()));
             return cipher.doFinal(cipherMetaData.getCipherBase64Decoded());
-        } catch (InvalidKeyException | NoSuchPaddingException | BadPaddingException | NoSuchProviderException | IllegalBlockSizeException | NoSuchAlgorithmException | InvalidAlgorithmParameterException e) {
-            String errorMessage = String.format("Error occurred while initializing and encrypting using Cipher object" +
-                    " with algorithm: '%s'.", AES_GCM_SYMMETRIC_CRYPTO_ALGORITHM);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | NoSuchProviderException e) {
+            String errorMessage = String.format("Error occurred while instantiating Cipher object" +
+                    " with algorithm: '%s'.", TRANSFORMATION);
+            throw new CryptoException(errorMessage, e);
+        } catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
+            String errorMessage = String.format("Error occurred while initializing Cipher object" +
+                    " with algorithm: '%s'.", TRANSFORMATION);
+            throw new CryptoException(errorMessage, e);
+        } catch (IllegalBlockSizeException | BadPaddingException e) {
+            String errorMessage = String.format("Error occurred while encrypting using Cipher object" +
+                    " with algorithm: '%s'.", TRANSFORMATION);
             throw new CryptoException(errorMessage, e);
         }
     }
@@ -116,18 +136,19 @@ public class CryptoProvider {
     /**
      * Returns the raw secret key as a byte array.
      *
-     * @return Secret key       The data encryption key.
+     * @param secretKey The data encryption key.
+     * @return Secret key.
      */
-    private SecretKeySpec getSecretKey() {
+    private SecretKeySpec getSecretKey(String secretKey) {
 
         return new SecretKeySpec(secretKey.getBytes(), 0, secretKey.getBytes().length,
-                DEFAULT_SYMMETRIC_CRYPTO_ALGORITHM);
+                ALGORITHM);
     }
 
     /**
      * Creates and returns a universally unique identifier for the IV.
      *
-     * @return IV               Initialization vector used for encryption/decryption.
+     * @return Initialization vector used for encryption/decryption.
      */
     private byte[] getInitializationVector() {
 
@@ -142,27 +163,26 @@ public class CryptoProvider {
     /**
      * Creates and returns a self contained ciphertext with IV.
      *
-     * @param originalCipher             The ciphertext.
-     * @param iv                         The Initialization Vector.
-     * @return cipherWithMetaDataStr     Self contained meta data comprising of the cipher, transformation and IV.
+     * @param originalCipher The ciphertext.
+     * @param iv             The Initialization Vector.
+     * @return Self contained meta data comprising of the cipher, transformation and IV.
      */
     private byte[] createSelfContainedCiphertext(byte[] originalCipher, byte[] iv) {
 
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         CipherMetaData cipherMetaData = new CipherMetaData();
         cipherMetaData.setCipherText(KeyRotationServiceUtils.getSelfContainedCiphertextWithIv(originalCipher, iv));
-        cipherMetaData.setTransformation(AES_GCM_SYMMETRIC_CRYPTO_ALGORITHM);
+        cipherMetaData.setTransformation(TRANSFORMATION);
         cipherMetaData.setIv(Base64.encode(iv));
         String cipherWithMetadataStr = gson.toJson(cipherMetaData);
-        log.info("Cipher with meta data : " + cipherWithMetadataStr);
         return cipherWithMetadataStr.getBytes(Charset.defaultCharset());
     }
 
     /**
      * Returns the self contained cipherText with IV.
      *
-     * @param cipherTextBytes            The ciphertext.
-     * @return cipherMetaData            Self contained meta data comprising of the cipher and IV.
+     * @param cipherTextBytes The ciphertext.
+     * @return Self contained meta data comprising of the cipher and IV.
      */
     private CipherMetaData createCipherMetaData(byte[] cipherTextBytes) {
 
@@ -172,17 +192,15 @@ public class CryptoProvider {
     /**
      * Returns the refactored encrypted ciphertext needed for the decryption method.
      *
-     * @param cipherText                 The ciphertext.
-     * @return Refactored cipher         The refactored ciphertext.
+     * @param cipherText The ciphertext.
+     * @return Refactored cipher The refactored ciphertext.
      */
     public byte[] reFactorCipherText(byte[] cipherText) {
 
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-        log.info(cipherText);
         String cipherStr = new String(cipherText, Charset.defaultCharset());
         CipherMetaData cipherMetaData = gson.fromJson(cipherStr, CipherMetaData.class);
         cipherText = cipherMetaData.getCipherBase64Decoded();
-        log.info(cipherText);
         return cipherText;
     }
 }
