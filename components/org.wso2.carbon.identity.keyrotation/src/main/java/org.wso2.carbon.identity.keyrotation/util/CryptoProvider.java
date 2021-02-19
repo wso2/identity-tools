@@ -55,7 +55,8 @@ public class CryptoProvider {
     /**
      * Computes and returns the ciphertext of the given cleartext.
      *
-     * @param cleartext The cleartext to be encrypted.
+     * @param cleartext         The cleartext to be encrypted.
+     * @param keyRotationConfig Configuration data needed to perform the task.
      * @return The encrypted cleartext.
      * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
      */
@@ -96,7 +97,8 @@ public class CryptoProvider {
     /**
      * Computes and returns the cleartext of the given ciphertext.
      *
-     * @param cipherText The ciphertext to be decrypted.
+     * @param cipherText        The ciphertext to be decrypted.
+     * @param keyRotationConfig Configuration data needed to perform the task.
      * @return The decrypted ciphertext.
      * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
      **/

@@ -51,7 +51,8 @@ public class IdentityDAO {
     /**
      * To retrieve the list of data in IDN_IDENTITY_USER_DATA as chunks.
      *
-     * @param startIndex The start index of the data chunk.
+     * @param startIndex        The start index of the data chunk.
+     * @param keyRotationConfig Configuration data needed to perform the task.
      * @return List comprising of the records in the table.
      * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
      */
@@ -66,7 +67,7 @@ public class IdentityDAO {
                 preparedStatement.setString(1, String.valueOf(startIndex));
                 preparedStatement.setInt(2, CHUNK_SIZE);
                 ResultSet resultSet = preparedStatement.executeQuery();
-                if (resultSet.next()) {
+                while (resultSet.next()) {
                     identitySecretList
                             .add(new IdentitySecret(resultSet.getString("TENANT_ID"),
                                     resultSet.getString("USER_NAME"),
@@ -78,7 +79,7 @@ public class IdentityDAO {
                         e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while getting connection to IDN_IDENTITY_USER_DATA.",
+            throw new KeyRotationException("Error while getting connection to DB.",
                     e);
         }
 
@@ -89,10 +90,11 @@ public class IdentityDAO {
      * To reEncrypt the secret key in IDN_IDENTITY_USER_DATA using the new key.
      *
      * @param updateIdentitySecretList The list containing records that should be re-encrypted.
+     * @param keyRotationConfig        Configuration data needed to perform the task.
      * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
      */
-    public void updateIdentitySecrets(List<IdentitySecret> updateIdentitySecretList,
-                                      KeyRotationConfig keyRotationConfig) throws KeyRotationException {
+    public void updateIdentitySecretsChunks(List<IdentitySecret> updateIdentitySecretList,
+                                            KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getDbUrl(), keyRotationConfig.getUsername(),
@@ -114,7 +116,7 @@ public class IdentityDAO {
                         e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while getting connection to IDN_IDENTITY_USER_DATA.",
+            throw new KeyRotationException("Error while getting connection to DB.",
                     e);
         }
 

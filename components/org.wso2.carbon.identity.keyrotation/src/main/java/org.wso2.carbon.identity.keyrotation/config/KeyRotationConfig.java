@@ -31,7 +31,8 @@ public class KeyRotationConfig {
 
     private String oldSecretKey;
     private String newSecretKey;
-    private String isHome;
+    private String oldISHome;
+    private String newISHome;
     private String dbUrl;
     private String username;
     private String password;
@@ -73,14 +74,24 @@ public class KeyRotationConfig {
         this.newSecretKey = newSecretKey;
     }
 
-    public String getIsHome() {
+    public String getOldISHome() {
 
-        return isHome;
+        return oldISHome;
     }
 
-    public void setIsHome(String isHome) {
+    public void setOldISHome(String oldISHome) {
 
-        this.isHome = isHome;
+        this.oldISHome = oldISHome;
+    }
+
+    public String getNewISHome() {
+
+        return newISHome;
+    }
+
+    public void setNewISHome(String newISHome) {
+
+        this.newISHome = newISHome;
     }
 
     public String getDbUrl() {
@@ -116,7 +127,8 @@ public class KeyRotationConfig {
     @Override
     public String toString() {
 
-        return "\noldSecretKey: " + oldSecretKey + "\nnewSecretKey: " + newSecretKey + "\nisHome: " + isHome +
-                "\ndbUrl: " + dbUrl + "\nusername: " + username + "\npassword: " + password + "\n";
+        return "\noldSecretKey: " + oldSecretKey + "\nnewSecretKey: " + newSecretKey + "\noldISHome: " + oldISHome +
+                "\nnewISHome: " + newISHome + "\ndbUrl: " + dbUrl + "\nusername: " + username + "\npassword: " +
+                password + "\n";
     }
 }
