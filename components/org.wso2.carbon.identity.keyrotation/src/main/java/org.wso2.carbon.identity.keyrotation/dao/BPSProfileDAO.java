@@ -22,4 +22,14 @@ package org.wso2.carbon.identity.keyrotation.dao;
  */
 public class BPSProfileDAO {
 
+    private static final BPSProfileDAO instance = new BPSProfileDAO();
+
+    public BPSProfileDAO() {
+
+    }
+
+    public static BPSProfileDAO getInstance() {
+
+        return instance;
+    }
 }

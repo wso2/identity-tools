@@ -19,6 +19,7 @@ package org.wso2.carbon.identity.keyrotation.config;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationServiceUtils;
 
 import static org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants.PROPERTIES_FILE_PATH;
@@ -31,22 +32,23 @@ public class KeyRotationConfig {
     private String oldSecretKey;
     private String newSecretKey;
     private String isHome;
+    private String dbUrl;
+    private String username;
+    private String password;
     private static KeyRotationConfig keyRotationConfig = null;
     private static final Log log = LogFactory.getLog(KeyRotationConfig.class);
 
-    public static KeyRotationConfig loadConfigs() {
+    public static KeyRotationConfig loadConfigs() throws KeyRotationException {
 
         if (keyRotationConfig == null) {
-            String keyRotationConfigFileName = PROPERTIES_FILE_PATH;
-            log.info("Loading Key Rotation Configs, PATH:" + PROPERTIES_FILE_PATH);
-            try {
-                keyRotationConfig = KeyRotationServiceUtils.loadKeyRotationConfig(keyRotationConfigFileName);
-            } catch (Exception e) {
-                log.error("Error while loading Key Rotation configs.", e);
+            if (log.isDebugEnabled()) {
+                log.info("Loading Key Rotation Configs from absolute path: " + PROPERTIES_FILE_PATH);
             }
-            log.info("Successfully loaded the config file.");
+            keyRotationConfig = KeyRotationServiceUtils.loadKeyRotationConfig(PROPERTIES_FILE_PATH);
+            if (log.isDebugEnabled()) {
+                log.info("Successfully loaded the config file.");
+            }
         }
-
         return KeyRotationConfig.keyRotationConfig;
 
     }
@@ -81,9 +83,40 @@ public class KeyRotationConfig {
         this.isHome = isHome;
     }
 
+    public String getDbUrl() {
+
+        return dbUrl;
+    }
+
+    public void setDbUrl(String dbUrl) {
+
+        this.dbUrl = dbUrl;
+    }
+
+    public String getUsername() {
+
+        return username;
+    }
+
+    public void setUsername(String username) {
+
+        this.username = username;
+    }
+
+    public String getPassword() {
+
+        return password;
+    }
+
+    public void setPassword(String password) {
+
+        this.password = password;
+    }
+
     @Override
     public String toString() {
 
-        return "\noldSecretKey: " + oldSecretKey + "\nnewSecretKey: " + newSecretKey + "\nisHome: " + isHome + "\n";
+        return "\noldSecretKey: " + oldSecretKey + "\nnewSecretKey: " + newSecretKey + "\nisHome: " + isHome +
+                "\ndbUrl: " + dbUrl + "\nusername: " + username + "\npassword: " + password + "\n";
     }
 }

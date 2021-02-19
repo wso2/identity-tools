@@ -22,4 +22,15 @@ package org.wso2.carbon.identity.keyrotation.dao;
  */
 public class OAuthDAO {
 
+    private static final OAuthDAO instance = new OAuthDAO();
+
+    public OAuthDAO() {
+
+    }
+
+    public static OAuthDAO getInstance() {
+
+        return instance;
+    }
+
 }

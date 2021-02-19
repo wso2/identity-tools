@@ -22,4 +22,15 @@ package org.wso2.carbon.identity.keyrotation.dao;
  */
 public class WorkFlowDAO {
 
+    private static final WorkFlowDAO instance = new WorkFlowDAO();
+
+    public WorkFlowDAO() {
+
+    }
+
+    public static WorkFlowDAO getInstance() {
+
+        return instance;
+    }
+
 }

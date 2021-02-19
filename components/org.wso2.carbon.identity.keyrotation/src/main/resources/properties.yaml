@@ -1,7 +1,9 @@
 # Path details needed for the re-encryption.
+
 oldSecretKey: AFA27B44D43B02A9FEA41D13CEDC2E40
-
 newSecretKey: AFA27B44D43B02A9FEA41D13CEDC2E40
-
 isHome: /usr/lib/wso2/IdentityServer/<IS_HOME>
+dbUrl: jdbc:h2:~/Desktop/IS/wso2is-5.11.0-beta5-SNAPSHOT/repository/database/WSO2IDENTITY_DB
+username: wso2carbon
+password: wso2carbon
 

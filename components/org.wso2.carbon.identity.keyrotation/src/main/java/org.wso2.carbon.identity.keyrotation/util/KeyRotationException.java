@@ -20,19 +20,19 @@ package org.wso2.carbon.identity.keyrotation.util;
 /**
  * The exception which will be thrown if something unexpected happens during crypto operations.
  */
-public class CryptoException extends Exception {
+public class KeyRotationException extends Exception {
 
-    public CryptoException() {
+    public KeyRotationException() {
 
         super();
     }
 
-    public CryptoException(String message) {
+    public KeyRotationException(String message) {
 
         super(message);
     }
 
-    public CryptoException(String message, Throwable e) {
+    public KeyRotationException(String message, Throwable e) {
 
         super(message, e);
     }

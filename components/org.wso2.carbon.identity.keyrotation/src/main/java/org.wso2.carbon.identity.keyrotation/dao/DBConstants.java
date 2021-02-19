@@ -22,4 +22,11 @@ package org.wso2.carbon.identity.keyrotation.dao;
  */
 public class DBConstants {
 
+    public static final String DATA_KEY = "http://wso2.org/claims/identity/secretkey";
+    public static final String GET_IDENTITY_SECRET = "SELECT TENANT_ID, USER_NAME, DATA_KEY, DATA_VALUE " +
+            "FROM " +
+            "IDN_IDENTITY_USER_DATA ORDER BY TENANT_ID, USER_NAME, DATA_KEY LIMIT ?, ?";
+    public static final String UPDATE_IDENTITY_SECRET =
+            "UPDATE IDN_IDENTITY_USER_DATA SET DATA_VALUE=? WHERE TENANT_ID=? AND USER_NAME=? AND DATA_KEY=?";
+    public static final int CHUNK_SIZE = 2;
 }
