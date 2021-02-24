@@ -27,4 +27,8 @@ public class KeyRotationConstants {
     public static final String TRANSFORMATION = "AES/GCM/NoPadding";
     public static final String PROPERTIES_FILE_PATH = System.getProperty("user.dir") +
             "/components/org.wso2.carbon.identity.keyrotation/src/main/resources/properties.yaml";
+    public static final String USERSTORES = "userstores";
+    public static final String SUPERTENANT_USERSTORE_PATH = "/repository/deployment/server/userstores";
+    public static final String TEANANT_USERSTORE_PATH = "/repository/tenants/";
+    public static final String EVENT_PUBLISHERS_PATH = "/repository/deployment/server/";
 }

@@ -78,5 +78,10 @@
             <artifactId>snakeyaml</artifactId>
             <version>1.21</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>org.wso2.carbon.identity.workflow.mgt</artifactId>
+            <version>5.18.195</version>
+        </dependency>
     </dependencies>
 </project>

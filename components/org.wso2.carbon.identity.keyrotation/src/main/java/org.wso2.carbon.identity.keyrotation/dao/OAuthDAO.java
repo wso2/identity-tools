@@ -18,6 +18,9 @@
 package org.wso2.carbon.identity.keyrotation.dao;
 
 import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
+import org.wso2.carbon.identity.keyrotation.model.OAuthCode;
+import org.wso2.carbon.identity.keyrotation.model.OAuthSecret;
+import org.wso2.carbon.identity.keyrotation.model.OAuthToken;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 
 import java.sql.Connection;
@@ -34,6 +37,7 @@ import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.GET_OAUTH_AUT
 import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.GET_OAUTH_SECRET;
 import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.UPDATE_OAUTH_ACCESS_TOKEN;
 import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.UPDATE_OAUTH_AUTHORIZATION_CODE;
+import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.UPDATE_OAUTH_SECRET;
 
 /**
  * Class to reEncrypt the OAuth data in DB.
@@ -64,8 +68,8 @@ public class OAuthDAO {
 
         List<OAuthCode> oAuthCodeList = new ArrayList<>();
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getDbUrl(), keyRotationConfig.getUsername(),
-                        keyRotationConfig.getPassword())) {
+                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
+                        keyRotationConfig.getIdnPassword())) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(GET_OAUTH_AUTHORIZATION_CODE)) {
                 preparedStatement.setInt(1, startIndex);
                 preparedStatement.setInt(2, CHUNK_SIZE);
@@ -96,8 +100,8 @@ public class OAuthDAO {
             throws KeyRotationException {
 
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getDbUrl(), keyRotationConfig.getUsername(),
-                        keyRotationConfig.getPassword())) {
+                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
+                        keyRotationConfig.getIdnPassword())) {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_OAUTH_AUTHORIZATION_CODE)) {
                 for (OAuthCode oAuthCode : updateAuthCodeList) {
@@ -113,7 +117,7 @@ public class OAuthDAO {
                         e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while getting connection to DB.", e);
+            throw new KeyRotationException("Error while connecting to DB.", e);
         }
 
     }
@@ -126,19 +130,19 @@ public class OAuthDAO {
      * @return List comprising of the records in the table.
      * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
      */
-    public List<OAuthTokens> getOAuthTokenChunks(int startIndex, KeyRotationConfig keyRotationConfig) throws
+    public List<OAuthToken> getOAuthTokenChunks(int startIndex, KeyRotationConfig keyRotationConfig) throws
             KeyRotationException {
 
-        List<OAuthTokens> oAuthTokenList = new ArrayList<>();
+        List<OAuthToken> oAuthTokenList = new ArrayList<>();
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getDbUrl(), keyRotationConfig.getUsername(),
-                        keyRotationConfig.getPassword())) {
+                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
+                        keyRotationConfig.getIdnPassword())) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(GET_OAUTH_ACCESS_TOKEN)) {
                 preparedStatement.setInt(1, startIndex);
                 preparedStatement.setInt(2, CHUNK_SIZE);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-                    oAuthTokenList.add(new OAuthTokens(resultSet.getString("TOKEN_ID"),
+                    oAuthTokenList.add(new OAuthToken(resultSet.getString("TOKEN_ID"),
                             resultSet.getString("ACCESS_TOKEN"),
                             resultSet.getString("CONSUMER_KEY_ID")));
                 }
@@ -146,7 +150,7 @@ public class OAuthDAO {
                 throw new KeyRotationException("Error while retrieving auth tokens from IDN_OAUTH2_ACCESS_TOKEN.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while getting connection to DB.", e);
+            throw new KeyRotationException("Error while connecting to DB.", e);
         }
         return oAuthTokenList;
     }
@@ -158,18 +162,18 @@ public class OAuthDAO {
      * @param keyRotationConfig    Configuration data needed to perform the task.
      * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
      */
-    public void updateOAuthTokenChunks(List<OAuthTokens> updateAuthTokensList, KeyRotationConfig keyRotationConfig)
+    public void updateOAuthTokenChunks(List<OAuthToken> updateAuthTokensList, KeyRotationConfig keyRotationConfig)
             throws
             KeyRotationException {
 
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getDbUrl(), keyRotationConfig.getUsername(),
-                        keyRotationConfig.getPassword())) {
+                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
+                        keyRotationConfig.getIdnPassword())) {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_OAUTH_ACCESS_TOKEN)) {
-                for (OAuthTokens oAuthTokens : updateAuthTokensList) {
-                    preparedStatement.setString(1, oAuthTokens.getAccessToken());
-                    preparedStatement.setString(2, oAuthTokens.getTokenId());
+                for (OAuthToken oAuthToken : updateAuthTokensList) {
+                    preparedStatement.setString(1, oAuthToken.getAccessToken());
+                    preparedStatement.setString(2, oAuthToken.getTokenId());
                     preparedStatement.addBatch();
                 }
                 preparedStatement.executeBatch();
@@ -180,7 +184,7 @@ public class OAuthDAO {
                         "Error while updating access tokens from IDN_OAUTH2_ACCESS_TOKEN.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while getting connection to DB.", e);
+            throw new KeyRotationException("Error while connecting to DB.", e);
         }
 
     }
@@ -193,19 +197,19 @@ public class OAuthDAO {
      * @return List comprising of the records in the table.
      * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
      */
-    public List<OAuthSecrets> getOAuthSecretChunks(int startIndex, KeyRotationConfig keyRotationConfig) throws
+    public List<OAuthSecret> getOAuthSecretChunks(int startIndex, KeyRotationConfig keyRotationConfig) throws
             KeyRotationException {
 
-        List<OAuthSecrets> oAuthSecretsList = new ArrayList<>();
+        List<OAuthSecret> oAuthSecretList = new ArrayList<>();
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getDbUrl(), keyRotationConfig.getUsername(),
-                        keyRotationConfig.getPassword())) {
+                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
+                        keyRotationConfig.getIdnPassword())) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(GET_OAUTH_SECRET)) {
                 preparedStatement.setInt(1, startIndex);
                 preparedStatement.setInt(2, CHUNK_SIZE);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-                    oAuthSecretsList.add(new OAuthSecrets(resultSet.getString("ID"),
+                    oAuthSecretList.add(new OAuthSecret(resultSet.getString("ID"),
                             resultSet.getString("CONSUMER_SECRET"),
                             resultSet.getString("APP_NAME")));
                 }
@@ -213,8 +217,40 @@ public class OAuthDAO {
                 throw new KeyRotationException("Error while retrieving secrets from IDN_OAUTH_CONSUMER_APPS.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while getting connection to DB.", e);
+            throw new KeyRotationException("Error while connecting to DB.", e);
         }
-        return oAuthSecretsList;
+        return oAuthSecretList;
+    }
+
+    /**
+     * To reEncrypt the secrets in IDN_OAUTH_CONSUMER_APPS using the new key.
+     *
+     * @param updateOAuthSecretList The list containing records that should be re-encrypted.
+     * @param keyRotationConfig      Configuration data needed to perform the task.
+     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     */
+    public void updateOAuthSecretChunks(List<OAuthSecret> updateOAuthSecretList, KeyRotationConfig keyRotationConfig)
+            throws
+            KeyRotationException {
+
+        try (Connection connection = DriverManager
+                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
+                        keyRotationConfig.getIdnPassword())) {
+            connection.setAutoCommit(false);
+            try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_OAUTH_SECRET)) {
+                for (OAuthSecret oAuthSecret : updateOAuthSecretList) {
+                    preparedStatement.setString(1, oAuthSecret.getConsumerSecret());
+                    preparedStatement.setString(2, oAuthSecret.getId());
+                    preparedStatement.addBatch();
+                }
+                preparedStatement.executeBatch();
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                throw new KeyRotationException("Error while updating OAuth secrets from IDN_OAUTH_CONSUMER_APPS.", e);
+            }
+        } catch (SQLException e) {
+            throw new KeyRotationException("Error while connecting to DB.", e);
+        }
     }
 }

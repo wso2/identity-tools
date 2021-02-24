@@ -16,18 +16,18 @@
  * under the License.
  */
 
-package org.wso2.carbon.identity.keyrotation.dao;
+package org.wso2.carbon.identity.keyrotation.model;
 
 /**
- * Class to hold the IDN_OAUTH_CONSUMER_APPS content.
+ * Class to hold the consumer secrets in IDN_OAUTH_CONSUMER_APPS.
  */
-public class OAuthSecrets {
+public class OAuthSecret {
 
     private String id;
     private String consumerSecret;
     private String appName;
 
-    public OAuthSecrets(String id, String consumerSecret, String appName) {
+    public OAuthSecret(String id, String consumerSecret, String appName) {
 
         this.id = id;
         this.consumerSecret = consumerSecret;

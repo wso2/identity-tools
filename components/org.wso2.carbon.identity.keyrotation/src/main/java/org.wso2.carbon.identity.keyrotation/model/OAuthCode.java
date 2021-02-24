@@ -16,10 +16,10 @@
  * under the License.
  */
 
-package org.wso2.carbon.identity.keyrotation.dao;
+package org.wso2.carbon.identity.keyrotation.model;
 
 /**
- * Class to hold the IDN_OAUTH2_AUTHORIZATION_CODE content.
+ * Class to hold the authorization codes stored in IDN_OAUTH2_AUTHORIZATION_CODE.
  */
 public class OAuthCode {
 

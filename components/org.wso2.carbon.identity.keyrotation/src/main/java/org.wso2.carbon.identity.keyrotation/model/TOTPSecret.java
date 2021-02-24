@@ -16,19 +16,19 @@
  * under the License.
  */
 
-package org.wso2.carbon.identity.keyrotation.dao;
+package org.wso2.carbon.identity.keyrotation.model;
 
 /**
- * Class to hold the IDN_IDENTITY_USER_DATA content.
+ * Class to hold the TOTP secrets stored in IDN_IDENTITY_USER_DATA.
  */
-public class IdentitySecret {
+public class TOTPSecret {
 
     private String tenantId;
     private String username;
     private String dataKey;
     private String dataValue;
 
-    public IdentitySecret(String tenantId, String username, String dataKey, String dataValue) {
+    public TOTPSecret(String tenantId, String username, String dataKey, String dataValue) {
 
         this.tenantId = tenantId;
         this.username = username;

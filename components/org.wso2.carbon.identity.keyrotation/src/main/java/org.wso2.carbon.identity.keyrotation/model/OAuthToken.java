@@ -16,18 +16,18 @@
  * under the License.
  */
 
-package org.wso2.carbon.identity.keyrotation.dao;
+package org.wso2.carbon.identity.keyrotation.model;
 
 /**
- * Class to hold the IDN_OAUTH2_ACCESS_TOKEN content.
+ * Class to hold the oauth tokens stored in IDN_OAUTH2_ACCESS_TOKEN.
  */
-public class OAuthTokens {
+public class OAuthToken {
 
     private String tokenId;
     private String accessToken;
     private String consumerKeyId;
 
-    public OAuthTokens(String tokenId, String accessToken, String consumerKeyId) {
+    public OAuthToken(String tokenId, String accessToken, String consumerKeyId) {
 
         this.tokenId = tokenId;
         this.accessToken = accessToken;

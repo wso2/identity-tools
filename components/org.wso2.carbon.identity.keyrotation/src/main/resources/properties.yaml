@@ -2,9 +2,12 @@
 
 oldSecretKey: AFA27B44D43B02A9FEA41D13CEDC2E40
 newSecretKey: AFA27B44D43B02A9FEA41D13CEDC2E40
-oldISHome: /usr/lib/wso2/IdentityServer/<OLD_IS_HOME>
-newISHome: /usr/lib/wso2/IdentityServer/<NEW_IS_HOME>
-dbUrl: jdbc:h2:~/Desktop/IS/wso2is-5.11.0-beta5-SNAPSHOT/repository/database/WSO2IDENTITY_DB
-username: wso2carbon
-password: wso2carbon
+oldISHome: /home/geesa/Desktop/IS/wso2is-5.11.0-beta5-SNAPSHOT
+newISHome: /home/geesa/Desktop/IS/wso2is-5.11.0
+idnDBUrl: jdbc:h2:~/Desktop/IS/wso2is-5.11.0-beta5-SNAPSHOT/repository/database/WSO2IDENTITY_DB
+idnUsername: wso2carbon
+idnPassword: wso2carbon
+regDBUrl: jdbc:h2:~/Desktop/IS/wso2is-5.11.0-beta5-SNAPSHOT/repository/database/WSO2CARBON_DB
+regUsername: wso2carbon
+regPassword: wso2carbon
 

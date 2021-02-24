@@ -33,9 +33,12 @@ public class KeyRotationConfig {
     private String newSecretKey;
     private String oldISHome;
     private String newISHome;
-    private String dbUrl;
-    private String username;
-    private String password;
+    private String idnDBUrl;
+    private String idnUsername;
+    private String idnPassword;
+    private String regDBUrl;
+    private String regUsername;
+    private String regPassword;
     private static KeyRotationConfig keyRotationConfig = null;
     private static final Log log = LogFactory.getLog(KeyRotationConfig.class);
 
@@ -94,41 +97,72 @@ public class KeyRotationConfig {
         this.newISHome = newISHome;
     }
 
-    public String getDbUrl() {
+    public String getIdnDBUrl() {
 
-        return dbUrl;
+        return idnDBUrl;
     }
 
-    public void setDbUrl(String dbUrl) {
+    public void setIdnDBUrl(String idnDBUrl) {
 
-        this.dbUrl = dbUrl;
+        this.idnDBUrl = idnDBUrl;
     }
 
-    public String getUsername() {
+    public String getIdnUsername() {
 
-        return username;
+        return idnUsername;
     }
 
-    public void setUsername(String username) {
+    public void setIdnUsername(String idnUsername) {
 
-        this.username = username;
+        this.idnUsername = idnUsername;
     }
 
-    public String getPassword() {
+    public String getIdnPassword() {
 
-        return password;
+        return idnPassword;
     }
 
-    public void setPassword(String password) {
+    public void setIdnPassword(String password) {
 
-        this.password = password;
+        this.idnPassword = password;
+    }
+
+    public String getRegDBUrl() {
+
+        return regDBUrl;
+    }
+
+    public void setRegDBUrl(String regDBUrl) {
+
+        this.regDBUrl = regDBUrl;
+    }
+
+    public String getRegUsername() {
+
+        return regUsername;
+    }
+
+    public void setRegUsername(String regUsername) {
+
+        this.regUsername = regUsername;
+    }
+
+    public String getRegPassword() {
+
+        return regPassword;
+    }
+
+    public void setRegPassword(String regPassword) {
+
+        this.regPassword = regPassword;
     }
 
     @Override
     public String toString() {
 
         return "\noldSecretKey: " + oldSecretKey + "\nnewSecretKey: " + newSecretKey + "\noldISHome: " + oldISHome +
-                "\nnewISHome: " + newISHome + "\ndbUrl: " + dbUrl + "\nusername: " + username + "\npassword: " +
-                password + "\n";
+                "\nnewISHome: " + newISHome + "\nidnDBUrl: " + idnDBUrl + "\nidnUsername: " + idnUsername +
+                "\nidnPassword: " + idnPassword + "\nregDBUrl: " + regDBUrl + "\nregUsername: " + regUsername +
+                "\nregPassword: " + regPassword + "\n";
     }
 }

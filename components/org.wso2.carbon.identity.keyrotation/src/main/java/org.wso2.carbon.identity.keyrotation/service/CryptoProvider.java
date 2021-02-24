@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.identity.keyrotation.util;
+package org.wso2.carbon.identity.keyrotation.service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,6 +23,8 @@ import org.apache.axiom.om.util.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.model.CipherMetaData;
+import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
+import org.wso2.carbon.identity.keyrotation.util.KeyRotationServiceUtils;
 import org.wso2.carbon.uuid.generator.UUIDGeneratorManager;
 
 import java.nio.ByteBuffer;

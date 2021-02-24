@@ -18,6 +18,7 @@
 package org.wso2.carbon.identity.keyrotation.dao;
 
 import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
+import org.wso2.carbon.identity.keyrotation.model.TOTPSecret;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 
 import java.sql.Connection;
@@ -29,8 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.CHUNK_SIZE;
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.GET_IDENTITY_SECRET;
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.UPDATE_IDENTITY_SECRET;
+import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.GET_TOTP_SECRET;
+import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.UPDATE_TOTP_SECRET;
 
 /**
  * Class to reEncrypt the TOTP data in DB.
@@ -56,70 +57,66 @@ public class IdentityDAO {
      * @return List comprising of the records in the table.
      * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
      */
-    public List<IdentitySecret> getIdentitySecretsChunks(int startIndex, KeyRotationConfig keyRotationConfig)
+    public List<TOTPSecret> getTOTPSecretsChunks(int startIndex, KeyRotationConfig keyRotationConfig)
             throws KeyRotationException {
 
-        List<IdentitySecret> identitySecretList = new ArrayList<>();
+        List<TOTPSecret> totpSecretList = new ArrayList<>();
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getDbUrl(), keyRotationConfig.getUsername(),
-                        keyRotationConfig.getPassword())) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(GET_IDENTITY_SECRET)) {
-                preparedStatement.setString(1, String.valueOf(startIndex));
+                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
+                        keyRotationConfig.getIdnPassword())) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(GET_TOTP_SECRET)) {
+                preparedStatement.setInt(1, startIndex);
                 preparedStatement.setInt(2, CHUNK_SIZE);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-                    identitySecretList
-                            .add(new IdentitySecret(resultSet.getString("TENANT_ID"),
+                    totpSecretList
+                            .add(new TOTPSecret(resultSet.getString("TENANT_ID"),
                                     resultSet.getString("USER_NAME"),
                                     resultSet.getString("DATA_KEY"),
                                     resultSet.getString("DATA_VALUE")));
                 }
             } catch (SQLException e) {
-                throw new KeyRotationException("Error while retrieving identity secrets from IDN_IDENTITY_USER_DATA.",
+                throw new KeyRotationException("Error while retrieving TOTP secrets from IDN_IDENTITY_USER_DATA.",
                         e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while getting connection to DB.",
-                    e);
+            throw new KeyRotationException("Error while connecting to DB.", e);
         }
 
-        return identitySecretList;
+        return totpSecretList;
     }
 
     /**
-     * To reEncrypt the secret key in IDN_IDENTITY_USER_DATA using the new key.
+     * To reEncrypt the TOTP secret key in IDN_IDENTITY_USER_DATA using the new key.
      *
-     * @param updateIdentitySecretList The list containing records that should be re-encrypted.
+     * @param updateTOTPSecretList The list containing records that should be re-encrypted.
      * @param keyRotationConfig        Configuration data needed to perform the task.
      * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
      */
-    public void updateIdentitySecretsChunks(List<IdentitySecret> updateIdentitySecretList,
-                                            KeyRotationConfig keyRotationConfig) throws KeyRotationException {
+    public void updateTOTPSecretsChunks(List<TOTPSecret> updateTOTPSecretList,
+                                        KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getDbUrl(), keyRotationConfig.getUsername(),
-                        keyRotationConfig.getPassword())) {
+                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
+                        keyRotationConfig.getIdnPassword())) {
             connection.setAutoCommit(false);
-            try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_IDENTITY_SECRET)) {
-                for (IdentitySecret identitySecret : updateIdentitySecretList) {
-                    preparedStatement.setString(1, identitySecret.getDataValue());
-                    preparedStatement.setString(2, identitySecret.getTenantId());
-                    preparedStatement.setString(3, identitySecret.getUsername());
-                    preparedStatement.setString(4, identitySecret.getDataKey());
+            try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_TOTP_SECRET)) {
+                for (TOTPSecret totpSecret : updateTOTPSecretList) {
+                    preparedStatement.setString(1, totpSecret.getDataValue());
+                    preparedStatement.setString(2, totpSecret.getTenantId());
+                    preparedStatement.setString(3, totpSecret.getUsername());
+                    preparedStatement.setString(4, totpSecret.getDataKey());
                     preparedStatement.addBatch();
                 }
                 preparedStatement.executeBatch();
                 connection.commit();
             } catch (SQLException e) {
                 connection.rollback();
-                throw new KeyRotationException("Error while updating identity secrets from IDN_IDENTITY_USER_DATA.",
+                throw new KeyRotationException("Error while updating TOTP secrets from IDN_IDENTITY_USER_DATA.",
                         e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while getting connection to DB.",
-                    e);
+            throw new KeyRotationException("Error while connecting to DB.", e);
         }
-
     }
-
 }

@@ -25,10 +25,13 @@ public class DBConstants {
     public static final int CHUNK_SIZE = 5;
     public static final String TEST_CONSUMER_KEY_ID = "39";
     public static final String TEST_APP_NAME = "dispatch";
+    public static final String TEST_USERNAME = "mytest";
+    public static final String CREDENTIAL = "Credential";
+    public static final String REQUEST = "REQUEST";
     public static final String DATA_KEY = "http://wso2.org/claims/identity/secretkey";
-    public static final String GET_IDENTITY_SECRET = "SELECT TENANT_ID, USER_NAME, DATA_KEY, DATA_VALUE " +
+    public static final String GET_TOTP_SECRET = "SELECT TENANT_ID, USER_NAME, DATA_KEY, DATA_VALUE " +
             "FROM IDN_IDENTITY_USER_DATA ORDER BY TENANT_ID, USER_NAME, DATA_KEY LIMIT ?, ?";
-    public static final String UPDATE_IDENTITY_SECRET =
+    public static final String UPDATE_TOTP_SECRET =
             "UPDATE IDN_IDENTITY_USER_DATA SET DATA_VALUE=? WHERE TENANT_ID=? AND USER_NAME=? AND DATA_KEY=?";
     public static final String GET_OAUTH_AUTHORIZATION_CODE = "SELECT CODE_ID, AUTHORIZATION_CODE, CONSUMER_KEY_ID " +
             "FROM IDN_OAUTH2_AUTHORIZATION_CODE ORDER BY CODE_ID LIMIT ?, ?";
@@ -41,5 +44,10 @@ public class DBConstants {
     public static final String GET_OAUTH_SECRET = "SELECT ID, CONSUMER_SECRET, APP_NAME " +
             "FROM IDN_OAUTH_CONSUMER_APPS ORDER BY ID LIMIT ?, ?";
     public static final String UPDATE_OAUTH_SECRET = "UPDATE IDN_OAUTH_CONSUMER_APPS SET CONSUMER_SECRET=? WHERE ID=?";
-
+    public static final String GET_BPS_PASSWORD = "SELECT PROFILE_NAME, USERNAME, TENANT_ID, PASSWORD " +
+            "FROM WF_BPS_PROFILE ORDER BY PROFILE_NAME, TENANT_ID LIMIT ?, ?";
+    public static final String UPDATE_BPS_PASSWORD = "UPDATE WF_BPS_PROFILE SET PASSWORD=? WHERE PROFILE_NAME=? AND " +
+            "TENANT_ID=?";
+    public static final String GET_WF_REQUEST = "SELECT UUID, REQUEST FROM WF_REQUEST ORDER BY UUID LIMIT ?, ?";
+    public static final String UPDATE_WF_REQUEST = "UPDATE WF_REQUEST SET REQUEST=? WHERE UUID=?";
 }
