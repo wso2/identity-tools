@@ -43,7 +43,7 @@ public class KeyRotationServiceUtils {
      * Creates and returns a self contained cipherText with IV.
      *
      * @param cipherText The ciphertext.
-     * @param iv             The Initialization Vector.
+     * @param iv         The Initialization Vector.
      * @return The Base64 encoded cipherWithMetaDataStr as a byte array.
      */
     public static String getSelfContainedCiphertextWithIv(byte[] cipherText, byte[] iv) {
@@ -75,7 +75,7 @@ public class KeyRotationServiceUtils {
     }
 
     /**
-     * To load the content of the properties.yaml file inside the resources directory.
+     * To load the configurations of the properties.yaml file inside the resources directory.
      *
      * @param configFilePath Properties.yaml file absolute path.
      * @return An object of the KeyRotationConfig class.
@@ -85,15 +85,14 @@ public class KeyRotationServiceUtils {
         Path path = Paths.get(configFilePath);
         if (Files.exists(path)) {
             try {
-                Reader in = new InputStreamReader(Files.newInputStream(path), StandardCharsets.UTF_8);
+                Reader reader = new InputStreamReader(Files.newInputStream(path), StandardCharsets.UTF_8);
                 Yaml yaml = new Yaml();
-                return yaml.loadAs(in, KeyRotationConfig.class);
+                return yaml.loadAs(reader, KeyRotationConfig.class);
             } catch (IOException e) {
                 throw new KeyRotationException("Error occurred while loading the yaml file: ", e);
             }
         } else {
             throw new KeyRotationException("File does not exist at: " + configFilePath);
         }
-
     }
 }

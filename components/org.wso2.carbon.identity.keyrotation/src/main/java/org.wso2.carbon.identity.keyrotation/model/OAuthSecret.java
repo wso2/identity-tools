@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.keyrotation.model;
 
 /**
- * Class to hold the consumer secrets in IDN_OAUTH_CONSUMER_APPS.
+ * Class to hold the data stored in IDN_OAUTH_CONSUMER_APPS.
  */
 public class OAuthSecret {
 

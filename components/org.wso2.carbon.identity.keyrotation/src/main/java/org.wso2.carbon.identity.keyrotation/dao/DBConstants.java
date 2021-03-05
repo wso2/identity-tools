@@ -18,7 +18,7 @@
 package org.wso2.carbon.identity.keyrotation.dao;
 
 /**
- * Constant class to store DB related constants.
+ * Class to store DB related constants.
  */
 public class DBConstants {
 

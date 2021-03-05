@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.keyrotation.model;
 
 /**
- * Class to hold the oauth tokens stored in IDN_OAUTH2_ACCESS_TOKEN.
+ * Class to hold the data stored in IDN_OAUTH2_ACCESS_TOKEN.
  */
 public class OAuthToken {
 

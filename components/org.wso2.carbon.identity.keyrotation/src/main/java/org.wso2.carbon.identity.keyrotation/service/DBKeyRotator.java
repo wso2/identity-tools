@@ -45,7 +45,7 @@ import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.TEST_USERNAME
 import static org.wso2.carbon.identity.keyrotation.util.EncryptionUtil.reEncryptor;
 
 /**
- * DB reEncrypting org.wso2.carbon.identity.keyrotation.service.
+ * DB reEncryption service.
  */
 public class DBKeyRotator {
 
@@ -72,7 +72,7 @@ public class DBKeyRotator {
         reEncryptOauthConsumerData(keyRotationConfig);
         reEncryptBPSData(keyRotationConfig);
         reEncryptWFRequestData(keyRotationConfig);
-        log.info("Re-encrypting DB data completed...");
+        log.info("Re-encrypting DB data completed...\n");
     }
 
     /**
@@ -90,10 +90,14 @@ public class DBKeyRotator {
         while (chunkList.size() > 0) {
             for (TOTPSecret totpSecret : chunkList) {
                 if (totpSecret.getDataKey().equals(DATA_KEY)) {
-                    log.info("Old " + totpSecret.getDataValue());
+                    if (log.isDebugEnabled()) {
+                        log.debug("Encrypted value " + totpSecret.getDataValue());
+                    }
                     String reEncryptedValue = reEncryptor(totpSecret.getDataValue(), keyRotationConfig);
                     totpSecret.setDataValue(reEncryptedValue);
-                    log.info("New " + totpSecret.getDataValue() + "\n");
+                    if (log.isDebugEnabled()) {
+                        log.debug("Re-encrypted value " + totpSecret.getDataValue());
+                    }
                 }
             }
             IdentityDAO.getInstance().updateTOTPSecretsChunks(chunkList, keyRotationConfig);
@@ -118,11 +122,15 @@ public class DBKeyRotator {
             for (OAuthCode oAuthCode : chunkList) {
                 //this condition is only for testing purposes
                 if (oAuthCode.getConsumerKeyId().equals(TEST_CONSUMER_KEY_ID)) {
-                    log.info("Old " + oAuthCode.getAuthorizationCode());
+                    if (log.isDebugEnabled()) {
+                        log.debug("Encrypted value " + oAuthCode.getAuthorizationCode());
+                    }
                     String reEncryptedValue = reEncryptor(oAuthCode.getAuthorizationCode(),
                             keyRotationConfig);
                     oAuthCode.setAuthorizationCode(reEncryptedValue);
-                    log.info("New " + oAuthCode.getAuthorizationCode() + "\n");
+                    if (log.isDebugEnabled()) {
+                        log.debug("Re-encrypted value " + oAuthCode.getAuthorizationCode());
+                    }
                 }
             }
             OAuthDAO.getInstance().updateOAuthCodeChunks(chunkList, keyRotationConfig);
@@ -147,11 +155,15 @@ public class DBKeyRotator {
             for (OAuthToken oAuthToken : chunkList) {
                 //this condition is only for testing purposes
                 if (oAuthToken.getConsumerKeyId().equals(TEST_CONSUMER_KEY_ID)) {
-                    log.info("Old " + oAuthToken.getAccessToken());
+                    if (log.isDebugEnabled()) {
+                        log.debug("Encrypted value " + oAuthToken.getAccessToken());
+                    }
                     String reEncryptedValue = reEncryptor(oAuthToken.getAccessToken(),
                             keyRotationConfig);
                     oAuthToken.setAccessToken(reEncryptedValue);
-                    log.info("New " + oAuthToken.getAccessToken() + "\n");
+                    if (log.isDebugEnabled()) {
+                        log.debug("Re-encrypted value " + oAuthToken.getAccessToken());
+                    }
                 }
             }
             OAuthDAO.getInstance().updateOAuthTokenChunks(chunkList, keyRotationConfig);
@@ -176,11 +188,15 @@ public class DBKeyRotator {
             for (OAuthSecret oAuthSecret : chunkList) {
                 //this condition is only for testing purposes
                 if (oAuthSecret.getAppName().equals(TEST_APP_NAME)) {
-                    log.info("Old " + oAuthSecret.getConsumerSecret());
+                    if (log.isDebugEnabled()) {
+                        log.debug("Encrypted value " + oAuthSecret.getConsumerSecret());
+                    }
                     String reEncryptedValue = reEncryptor(oAuthSecret.getConsumerSecret(),
                             keyRotationConfig);
                     oAuthSecret.setConsumerSecret(reEncryptedValue);
-                    log.info("New " + oAuthSecret.getConsumerSecret() + "\n");
+                    if (log.isDebugEnabled()) {
+                        log.debug("Re-encrypted value " + oAuthSecret.getConsumerSecret());
+                    }
 
                 }
             }
@@ -206,10 +222,14 @@ public class DBKeyRotator {
             for (BPSPassword bpsPassword : chunkList) {
                 //this condition is only for testing purposes
                 if (bpsPassword.getUsername().equals(TEST_USERNAME)) {
-                    log.info("Old " + bpsPassword.getPassword());
+                    if (log.isDebugEnabled()) {
+                        log.debug("Encrypted value " + bpsPassword.getPassword());
+                    }
                     String reEncryptedValue = reEncryptor(bpsPassword.getPassword(), keyRotationConfig);
                     bpsPassword.setPassword(reEncryptedValue);
-                    log.info("New " + bpsPassword.getPassword() + "\n");
+                    if (log.isDebugEnabled()) {
+                        log.debug("Re-encrypted value " + bpsPassword.getPassword());
+                    }
 
                 }
 
@@ -236,10 +256,14 @@ public class DBKeyRotator {
             for (WorkflowRequest wfRequest : chunkList) {
                 for (RequestParameter parameter : wfRequest.getRequestParameters()) {
                     if (CREDENTIAL.equals(parameter.getName())) {
-                        log.info("Old " + parameter.getValue().toString());
+                        if (log.isDebugEnabled()) {
+                            log.debug("Encrypted value " + parameter.getValue().toString());
+                        }
                         String reEncryptedValue = reEncryptor(parameter.getValue().toString(), keyRotationConfig);
                         parameter.setValue(reEncryptedValue);
-                        log.info("New " + parameter.getValue().toString() + "\n");
+                        if (log.isDebugEnabled()) {
+                            log.debug("Re-encrypted value " + parameter.getValue().toString());
+                        }
                     }
                 }
             }
@@ -248,5 +272,4 @@ public class DBKeyRotator {
             chunkList = WorkFlowDAO.getInstance().getWFRequestChunks(startIndex, keyRotationConfig);
         }
     }
-
 }

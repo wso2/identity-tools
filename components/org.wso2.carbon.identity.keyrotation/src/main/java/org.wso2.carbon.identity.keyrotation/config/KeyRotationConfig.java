@@ -25,7 +25,7 @@ import org.wso2.carbon.identity.keyrotation.util.KeyRotationServiceUtils;
 import static org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants.PROPERTIES_FILE_PATH;
 
 /**
- * Class to map the properties.yaml file content.
+ * Class to load the configurations in the properties.yaml file.
  */
 public class KeyRotationConfig {
 
@@ -53,8 +53,7 @@ public class KeyRotationConfig {
                 log.info("Successfully loaded the config file.");
             }
         }
-        return KeyRotationConfig.keyRotationConfig;
-
+        return keyRotationConfig;
     }
 
     public String getOldSecretKey() {

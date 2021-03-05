@@ -76,13 +76,11 @@ public class IdentityDAO {
                                     resultSet.getString("DATA_VALUE")));
                 }
             } catch (SQLException e) {
-                throw new KeyRotationException("Error while retrieving TOTP secrets from IDN_IDENTITY_USER_DATA.",
-                        e);
+                throw new KeyRotationException("Error while retrieving TOTP secrets from IDN_IDENTITY_USER_DATA.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to DB.", e);
+            throw new KeyRotationException("Error while connecting to identity DB.", e);
         }
-
         return totpSecretList;
     }
 
@@ -90,7 +88,7 @@ public class IdentityDAO {
      * To reEncrypt the TOTP secret key in IDN_IDENTITY_USER_DATA using the new key.
      *
      * @param updateTOTPSecretList The list containing records that should be re-encrypted.
-     * @param keyRotationConfig        Configuration data needed to perform the task.
+     * @param keyRotationConfig    Configuration data needed to perform the task.
      * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
      */
     public void updateTOTPSecretsChunks(List<TOTPSecret> updateTOTPSecretList,
@@ -112,11 +110,10 @@ public class IdentityDAO {
                 connection.commit();
             } catch (SQLException e) {
                 connection.rollback();
-                throw new KeyRotationException("Error while updating TOTP secrets from IDN_IDENTITY_USER_DATA.",
-                        e);
+                throw new KeyRotationException("Error while updating TOTP secrets from IDN_IDENTITY_USER_DATA.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to DB.", e);
+            throw new KeyRotationException("Error while connecting to identity DB.", e);
         }
     }
 }

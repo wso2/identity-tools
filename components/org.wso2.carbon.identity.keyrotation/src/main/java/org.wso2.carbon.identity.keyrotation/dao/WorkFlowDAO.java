@@ -83,7 +83,7 @@ public class WorkFlowDAO {
                 throw new KeyRotationException("Error while retrieving requests from WF_REQUEST.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to DB.", e);
+            throw new KeyRotationException("Error while connecting to identity DB.", e);
         }
         return wfRequestList;
     }
@@ -115,7 +115,7 @@ public class WorkFlowDAO {
                 throw new KeyRotationException("Error while updating requests from WF_REQUEST.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to DB.", e);
+            throw new KeyRotationException("Error while connecting to identity DB.", e);
         }
     }
 
@@ -151,5 +151,4 @@ public class WorkFlowDAO {
         objectOutputStream.close();
         return byteArrayOutputStream.toByteArray();
     }
-
 }

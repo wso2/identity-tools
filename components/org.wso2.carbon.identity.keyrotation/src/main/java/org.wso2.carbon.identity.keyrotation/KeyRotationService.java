@@ -18,11 +18,13 @@
 package org.wso2.carbon.identity.keyrotation;
 
 import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
+import org.wso2.carbon.identity.keyrotation.service.ConfigFileKeyRotator;
 import org.wso2.carbon.identity.keyrotation.service.DBKeyRotator;
+import org.wso2.carbon.identity.keyrotation.service.SyncedDataKeyRotator;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 
 /**
- * Class that calls the key-rotation service.
+ * Class that calls the symmetric key-rotation service.
  */
 public class KeyRotationService {
 
@@ -30,5 +32,7 @@ public class KeyRotationService {
 
         KeyRotationConfig configs = KeyRotationConfig.loadConfigs();
         DBKeyRotator.getInstance().dbReEncryptor(configs);
+        ConfigFileKeyRotator.getInstance().configFileReEncryptor(configs);
+        SyncedDataKeyRotator.getInstance().syncedDataReEncryptor(configs);
     }
 }

@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.keyrotation.model;
 
 /**
- * Class to hold the TOTP secrets stored in IDN_IDENTITY_USER_DATA.
+ * Class to hold the data stored in IDN_IDENTITY_USER_DATA.
  */
 public class TOTPSecret {
 
@@ -75,5 +75,4 @@ public class TOTPSecret {
 
         this.dataValue = dataValue;
     }
-
 }

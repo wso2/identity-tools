@@ -75,11 +75,10 @@ public class BPSProfileDAO {
                             resultSet.getString("PASSWORD")));
                 }
             } catch (SQLException e) {
-                throw new KeyRotationException("Error while retrieving passwords from WF_BPS_PROFILE.",
-                        e);
+                throw new KeyRotationException("Error while retrieving passwords from WF_BPS_PROFILE.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to DB.", e);
+            throw new KeyRotationException("Error while connecting to identity DB.", e);
         }
         return bpsPasswordList;
     }
@@ -112,7 +111,7 @@ public class BPSProfileDAO {
                 throw new KeyRotationException("Error while updating passwords from WF_BPS_PROFILE.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to DB.", e);
+            throw new KeyRotationException("Error while connecting to identity DB.", e);
         }
     }
 }

@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.keyrotation.util;
 
 /**
- * Class that holds constants needed for the key rotation functionality.
+ * Class that hold constants needed for the key rotation functionality.
  */
 public class KeyRotationConstants {
 
@@ -28,7 +28,9 @@ public class KeyRotationConstants {
     public static final String PROPERTIES_FILE_PATH = System.getProperty("user.dir") +
             "/components/org.wso2.carbon.identity.keyrotation/src/main/resources/properties.yaml";
     public static final String USERSTORES = "userstores";
-    public static final String SUPERTENANT_USERSTORE_PATH = "/repository/deployment/server/userstores";
-    public static final String TEANANT_USERSTORE_PATH = "/repository/tenants/";
-    public static final String EVENT_PUBLISHERS_PATH = "/repository/deployment/server/";
+    public static final String REPOSITORY = "repository";
+    public static final String TEANANTS = "tenants";
+    public static final String DEPLOYMENT = "deployment";
+    public static final String SERVER = "server";
+    public static final String EVENT_PUBLISHERS = "eventpublishers";
 }

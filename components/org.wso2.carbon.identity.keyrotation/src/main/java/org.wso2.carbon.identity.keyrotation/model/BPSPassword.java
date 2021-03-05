@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.keyrotation.model;
 
 /**
- * Class to hold the BPS profile passwords stored in WF_BPS_PROFILE.
+ * Class to hold the data stored in WF_BPS_PROFILE.
  */
 public class BPSPassword {
 

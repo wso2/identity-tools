@@ -1,4 +1,4 @@
-# Path details needed for the re-encryption.
+# Configurations needed for the key-rotation task.
 
 oldSecretKey: AFA27B44D43B02A9FEA41D13CEDC2E40
 newSecretKey: AFA27B44D43B02A9FEA41D13CEDC2E40

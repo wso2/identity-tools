@@ -15,25 +15,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.identity.keyrotation.util;
+
+package org.wso2.carbon.identity.keyrotation.model;
 
 /**
- * The exception which will be thrown if something unexpected happens during key-rotation.
+ * Class to hold the data stored in REG_PROPERTY.
  */
-public class KeyRotationException extends Exception {
+public class KeyStorePassword {
 
-    public KeyRotationException() {
-
-        super();
-    }
-
-    public KeyRotationException(String message) {
-
-        super(message);
-    }
-
-    public KeyRotationException(String message, Throwable e) {
-
-        super(message, e);
-    }
 }

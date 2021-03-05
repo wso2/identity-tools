@@ -84,7 +84,7 @@ public class OAuthDAO {
                         e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to DB.", e);
+            throw new KeyRotationException("Error while connecting to identity DB.", e);
         }
         return oAuthCodeList;
     }
@@ -117,9 +117,8 @@ public class OAuthDAO {
                         e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to DB.", e);
+            throw new KeyRotationException("Error while connecting to identity DB.", e);
         }
-
     }
 
     /**
@@ -150,7 +149,7 @@ public class OAuthDAO {
                 throw new KeyRotationException("Error while retrieving auth tokens from IDN_OAUTH2_ACCESS_TOKEN.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to DB.", e);
+            throw new KeyRotationException("Error while connecting to identity DB.", e);
         }
         return oAuthTokenList;
     }
@@ -180,13 +179,11 @@ public class OAuthDAO {
                 connection.commit();
             } catch (SQLException e) {
                 connection.rollback();
-                throw new KeyRotationException(
-                        "Error while updating access tokens from IDN_OAUTH2_ACCESS_TOKEN.", e);
+                throw new KeyRotationException("Error while updating access tokens from IDN_OAUTH2_ACCESS_TOKEN.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to DB.", e);
+            throw new KeyRotationException("Error while connecting to identity DB.", e);
         }
-
     }
 
     /**
@@ -217,7 +214,7 @@ public class OAuthDAO {
                 throw new KeyRotationException("Error while retrieving secrets from IDN_OAUTH_CONSUMER_APPS.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to DB.", e);
+            throw new KeyRotationException("Error while connecting to identity DB.", e);
         }
         return oAuthSecretList;
     }
@@ -226,7 +223,7 @@ public class OAuthDAO {
      * To reEncrypt the secrets in IDN_OAUTH_CONSUMER_APPS using the new key.
      *
      * @param updateOAuthSecretList The list containing records that should be re-encrypted.
-     * @param keyRotationConfig      Configuration data needed to perform the task.
+     * @param keyRotationConfig     Configuration data needed to perform the task.
      * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
      */
     public void updateOAuthSecretChunks(List<OAuthSecret> updateOAuthSecretList, KeyRotationConfig keyRotationConfig)
@@ -250,7 +247,7 @@ public class OAuthDAO {
                 throw new KeyRotationException("Error while updating OAuth secrets from IDN_OAUTH_CONSUMER_APPS.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to DB.", e);
+            throw new KeyRotationException("Error while connecting to identity DB.", e);
         }
     }
 }

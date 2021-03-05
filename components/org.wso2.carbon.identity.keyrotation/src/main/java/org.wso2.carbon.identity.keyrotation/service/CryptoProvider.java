@@ -19,6 +19,7 @@ package org.wso2.carbon.identity.keyrotation.service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import org.apache.axiom.om.util.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
@@ -64,8 +65,8 @@ public class CryptoProvider {
      */
     public byte[] encrypt(byte[] cleartext, KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
-        if (cleartext == null) {
-            throw new KeyRotationException("Plaintext can't be null.");
+        if (cleartext == null || cleartext.length == 0) {
+            throw new KeyRotationException("Cleartext bytes cannot be empty.");
         }
         Cipher cipher;
         byte[] cipherText;
@@ -106,8 +107,8 @@ public class CryptoProvider {
      **/
     public byte[] decrypt(byte[] cipherText, KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
-        if (cipherText == null && cipherText.length == 0) {
-            throw new KeyRotationException("Plaintext cannot be empty.");
+        if (cipherText == null || cipherText.length == 0) {
+            throw new KeyRotationException("Ciphertext bytes cannot be empty.");
         }
         Cipher cipher;
         try {
@@ -142,8 +143,7 @@ public class CryptoProvider {
      */
     private SecretKeySpec getSecretKey(String secretKey) {
 
-        return new SecretKeySpec(secretKey.getBytes(), 0, secretKey.getBytes().length,
-                ALGORITHM);
+        return new SecretKeySpec(secretKey.getBytes(), 0, secretKey.getBytes().length, ALGORITHM);
     }
 
     /**
@@ -196,12 +196,16 @@ public class CryptoProvider {
      * @param cipherText The ciphertext.
      * @return Refactored cipher The refactored ciphertext.
      */
-    public byte[] reFactorCipherText(byte[] cipherText) {
+    public byte[] reFactorCipherText(byte[] cipherText) throws KeyRotationException {
 
-        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-        String cipherStr = new String(cipherText, Charset.defaultCharset());
-        CipherMetaData cipherMetaData = gson.fromJson(cipherStr, CipherMetaData.class);
-        cipherText = cipherMetaData.getCipherBase64Decoded();
+        try {
+            Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+            String cipherStr = new String(cipherText, Charset.defaultCharset());
+            CipherMetaData cipherMetaData = gson.fromJson(cipherStr, CipherMetaData.class);
+            cipherText = cipherMetaData.getCipherBase64Decoded();
+        } catch (JsonSyntaxException e) {
+            throw new KeyRotationException("Error occurred while converting JSON to a Java object, ", e);
+        }
         return cipherText;
     }
 }

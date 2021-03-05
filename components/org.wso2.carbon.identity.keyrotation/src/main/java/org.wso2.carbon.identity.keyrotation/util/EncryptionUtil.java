@@ -32,7 +32,7 @@ public class EncryptionUtil {
      *
      * @param cipher            The ciphertext needed to perform re-encryption on.
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @return Decrypted from old key and encrypted from new key.
+     * @return Ciphertext that gets decrypted from the old key and encrypted using the new key.
      * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
      */
     public static String reEncryptor(String cipher, KeyRotationConfig keyRotationConfig)
@@ -44,5 +44,4 @@ public class EncryptionUtil {
         byte[] cipherText = cryptoProvider.encrypt(plainText, keyRotationConfig);
         return Base64.encode(cipherText);
     }
-
 }

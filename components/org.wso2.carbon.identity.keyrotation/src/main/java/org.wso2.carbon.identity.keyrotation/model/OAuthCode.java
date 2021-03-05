@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.keyrotation.model;
 
 /**
- * Class to hold the authorization codes stored in IDN_OAUTH2_AUTHORIZATION_CODE.
+ * Class to hold the data stored in IDN_OAUTH2_AUTHORIZATION_CODE.
  */
 public class OAuthCode {
 
@@ -63,5 +63,4 @@ public class OAuthCode {
 
         this.consumerKeyId = consumerKeyId;
     }
-
 }
