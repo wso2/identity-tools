@@ -59,10 +59,10 @@ public class ConfigFileUtil {
      * Get all the files inside the base path.
      *
      * @param isHome The absolute path of newISHome.
-     * @param paths  The absolute path segments of the base path.
+     * @param paths  A list of path segments.
      * @return List of files in path.
      */
-    public static File[] getFilePaths(String isHome, String... paths) {
+    public static File[] getFilePaths(String isHome, String[] paths) {
 
         String path = Paths.get(isHome, paths).toString();
         File[] files = new File(path).listFiles();
@@ -73,18 +73,18 @@ public class ConfigFileUtil {
     }
 
     /**
-     * Get all the folder paths inside the base path.
+     * Get all the folder paths inside the tenant base path.
      *
      * @param isHome The absolute path of newISHome.
-     * @param paths  The absolute path segments of the base path.
-     * @return List of folder paths inside the base path.
+     * @return List of tenants inside the tenant base path.
      */
-    public static List<String> getFolderPaths(String isHome, String... paths) {
+    public static List<String> getFolderPaths(String isHome) {
 
+        String[] paths = new String[]{KeyRotationConstants.REPOSITORY, KeyRotationConstants.TENANTS};
         File[] listOfFolders = getFilePaths(isHome, paths);
         List<String> folderPaths = new ArrayList<>();
         for (File folder : listOfFolders) {
-            folderPaths.add(folder.getPath() + FileSystems.getDefault().getSeparator());
+            folderPaths.add(folder.getName() + FileSystems.getDefault().getSeparator());
         }
         return folderPaths;
     }
@@ -92,7 +92,10 @@ public class ConfigFileUtil {
     /**
      * Update the configuration file with the new re-encrypted value.
      *
-     * @param filename The absolute path of the configuration file.
+     * @param filename          The absolute path of the configuration file.
+     * @param keyRotationConfig Configuration data needed to perform the task.
+     * @param property          The property value to identify the corresponding config file.
+     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
      */
     public static void updateConfigFile(File filename, KeyRotationConfig keyRotationConfig, String property)
             throws KeyRotationException {
@@ -112,13 +115,9 @@ public class ConfigFileUtil {
             if (data.getLength() == 1) {
                 log.info("Re-encryption in " + filename + " configuration file.");
                 String encryptedValue = data.item(0).getNodeValue();
-                if (log.isDebugEnabled()) {
-                    log.debug("Encrypted value " + encryptedValue);
-                }
+                log.info("Encrypted value " + encryptedValue);
                 String reEncryptedValue = reEncryptor(encryptedValue, keyRotationConfig);
-                if (log.isDebugEnabled()) {
-                    log.debug("Re-encrypted value " + reEncryptedValue);
-                }
+                log.info("Re-encrypted value " + reEncryptedValue);
                 if (StringUtils.isNotEmpty(reEncryptedValue)) {
                     data.item(0).setNodeValue(reEncryptedValue);
                 }

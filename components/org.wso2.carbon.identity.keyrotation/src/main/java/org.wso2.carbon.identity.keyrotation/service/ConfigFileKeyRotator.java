@@ -21,6 +21,7 @@ package org.wso2.carbon.identity.keyrotation.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
+import org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 
 import java.io.File;
@@ -29,12 +30,6 @@ import java.util.List;
 import static org.wso2.carbon.identity.keyrotation.util.ConfigFileUtil.getFilePaths;
 import static org.wso2.carbon.identity.keyrotation.util.ConfigFileUtil.getFolderPaths;
 import static org.wso2.carbon.identity.keyrotation.util.ConfigFileUtil.updateConfigFile;
-import static org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants.DEPLOYMENT;
-import static org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants.EVENT_PUBLISHERS;
-import static org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants.REPOSITORY;
-import static org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants.SERVER;
-import static org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants.TEANANTS;
-import static org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants.USERSTORES;
 
 /**
  * Config file reEncryption service.
@@ -82,6 +77,43 @@ public class ConfigFileKeyRotator {
     }
 
     /**
+     * ReEncryption of the passwords in configuration files.
+     *
+     * @param keyRotationConfig Configuration data needed to perform the task.
+     * @param newIsHomePath     New Is Home absolute path.
+     * @param tenant            The tenant folder.
+     * @param config            The property value to identify the corresponding config file.
+     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     */
+    private void getConfigsAndUpdate(KeyRotationConfig keyRotationConfig, String newIsHomePath, String tenant,
+                                     String config) throws KeyRotationException {
+
+        String[] paths = null;
+        String property = null;
+        switch (config) {
+            case KeyRotationConstants.SUPER_TENANT:
+                paths = new String[]{KeyRotationConstants.REPOSITORY, KeyRotationConstants.DEPLOYMENT,
+                        KeyRotationConstants.SERVER, KeyRotationConstants.USERSTORES};
+                property = userstoreProperty;
+                break;
+            case KeyRotationConstants.TENANT:
+                paths = new String[]{KeyRotationConstants.REPOSITORY, KeyRotationConstants.TENANTS, tenant,
+                        KeyRotationConstants.USERSTORES};
+                property = userstoreProperty;
+                break;
+            case KeyRotationConstants.EVENT_PUBLISHER:
+                paths = new String[]{KeyRotationConstants.REPOSITORY, KeyRotationConstants.DEPLOYMENT,
+                        KeyRotationConstants.SERVER, KeyRotationConstants.EVENT_PUBLISHERS};
+                property = publisherProperty;
+                break;
+        }
+        File[] configFiles = getFilePaths(newIsHomePath, paths);
+        for (File file : configFiles) {
+            updateConfigFile(file, keyRotationConfig, property);
+        }
+    }
+
+    /**
      * ReEncryption of the super tenant user store passwords in configuration files.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
@@ -89,11 +121,8 @@ public class ConfigFileKeyRotator {
      */
     private void reEncryptSuperTenantUserStore(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
-        File[] superTenantUserStoreFiles =
-                getFilePaths(keyRotationConfig.getNewISHome(), REPOSITORY, DEPLOYMENT, SERVER, USERSTORES);
-        for (File file : superTenantUserStoreFiles) {
-            updateConfigFile(file, keyRotationConfig, userstoreProperty);
-        }
+        getConfigsAndUpdate(keyRotationConfig, keyRotationConfig.getNewISHome(), null,
+                KeyRotationConstants.SUPER_TENANT);
     }
 
     /**
@@ -105,12 +134,10 @@ public class ConfigFileKeyRotator {
     private void reEncryptTenantUserStore(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
         List<String> tenants =
-                getFolderPaths(keyRotationConfig.getNewISHome(), REPOSITORY, TEANANTS);
-        for (String folder : tenants) {
-            File[] tenantUserStoreFiles = getFilePaths(folder + USERSTORES);
-            for (File file : tenantUserStoreFiles) {
-                updateConfigFile(file, keyRotationConfig, userstoreProperty);
-            }
+                getFolderPaths(keyRotationConfig.getNewISHome());
+        for (String tenant : tenants) {
+            getConfigsAndUpdate(keyRotationConfig, keyRotationConfig.getNewISHome(), tenant,
+                    KeyRotationConstants.TENANT);
         }
     }
 
@@ -122,10 +149,7 @@ public class ConfigFileKeyRotator {
      */
     private void reEncryptEventPublishers(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
-        File[] eventPublisherFiles =
-                getFilePaths(keyRotationConfig.getNewISHome() + REPOSITORY + DEPLOYMENT + SERVER + EVENT_PUBLISHERS);
-        for (File file : eventPublisherFiles) {
-            updateConfigFile(file, keyRotationConfig, publisherProperty);
-        }
+        getConfigsAndUpdate(keyRotationConfig, keyRotationConfig.getNewISHome(), null,
+                KeyRotationConstants.EVENT_PUBLISHER);
     }
 }

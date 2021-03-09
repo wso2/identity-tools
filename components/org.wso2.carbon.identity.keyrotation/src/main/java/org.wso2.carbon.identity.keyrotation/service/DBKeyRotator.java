@@ -18,10 +18,12 @@
 
 package org.wso2.carbon.identity.keyrotation.service;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.dao.BPSProfileDAO;
+import org.wso2.carbon.identity.keyrotation.dao.DBConstants;
 import org.wso2.carbon.identity.keyrotation.dao.IdentityDAO;
 import org.wso2.carbon.identity.keyrotation.dao.OAuthDAO;
 import org.wso2.carbon.identity.keyrotation.dao.WorkFlowDAO;
@@ -36,12 +38,6 @@ import org.wso2.carbon.identity.workflow.mgt.dto.WorkflowRequest;
 
 import java.util.List;
 
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.CHUNK_SIZE;
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.CREDENTIAL;
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.DATA_KEY;
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.TEST_APP_NAME;
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.TEST_CONSUMER_KEY_ID;
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.TEST_USERNAME;
 import static org.wso2.carbon.identity.keyrotation.util.EncryptionUtil.reEncryptor;
 
 /**
@@ -87,21 +83,17 @@ public class DBKeyRotator {
         int startIndex = 0;
         List<TOTPSecret> chunkList =
                 IdentityDAO.getInstance().getTOTPSecretsChunks(startIndex, keyRotationConfig);
-        while (chunkList.size() > 0) {
+        while (CollectionUtils.isNotEmpty(chunkList)) {
             for (TOTPSecret totpSecret : chunkList) {
-                if (totpSecret.getDataKey().equals(DATA_KEY)) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Encrypted value " + totpSecret.getDataValue());
-                    }
+                if (totpSecret.getDataKey().equals(DBConstants.DATA_KEY)) {
+                    log.info("Encrypted value " + totpSecret.getDataValue());
                     String reEncryptedValue = reEncryptor(totpSecret.getDataValue(), keyRotationConfig);
                     totpSecret.setDataValue(reEncryptedValue);
-                    if (log.isDebugEnabled()) {
-                        log.debug("Re-encrypted value " + totpSecret.getDataValue());
-                    }
+                    log.info("Re-encrypted value " + totpSecret.getDataValue());
                 }
             }
             IdentityDAO.getInstance().updateTOTPSecretsChunks(chunkList, keyRotationConfig);
-            startIndex = startIndex + CHUNK_SIZE;
+            startIndex = startIndex + DBConstants.CHUNK_SIZE;
             chunkList = IdentityDAO.getInstance().getTOTPSecretsChunks(startIndex, keyRotationConfig);
         }
     }
@@ -118,23 +110,19 @@ public class DBKeyRotator {
         int startIndex = 0;
         List<OAuthCode> chunkList =
                 OAuthDAO.getInstance().getOAuthCodeChunks(startIndex, keyRotationConfig);
-        while (chunkList.size() > 0) {
+        while (CollectionUtils.isNotEmpty(chunkList)) {
             for (OAuthCode oAuthCode : chunkList) {
                 //this condition is only for testing purposes
-                if (oAuthCode.getConsumerKeyId().equals(TEST_CONSUMER_KEY_ID)) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Encrypted value " + oAuthCode.getAuthorizationCode());
-                    }
+                if (oAuthCode.getConsumerKeyId().equals(DBConstants.TEST_CONSUMER_KEY_ID)) {
+                    log.info("Encrypted value " + oAuthCode.getAuthorizationCode());
                     String reEncryptedValue = reEncryptor(oAuthCode.getAuthorizationCode(),
                             keyRotationConfig);
                     oAuthCode.setAuthorizationCode(reEncryptedValue);
-                    if (log.isDebugEnabled()) {
-                        log.debug("Re-encrypted value " + oAuthCode.getAuthorizationCode());
-                    }
+                    log.info("Re-encrypted value " + oAuthCode.getAuthorizationCode());
                 }
             }
             OAuthDAO.getInstance().updateOAuthCodeChunks(chunkList, keyRotationConfig);
-            startIndex = startIndex + CHUNK_SIZE;
+            startIndex = startIndex + DBConstants.CHUNK_SIZE;
             chunkList = OAuthDAO.getInstance().getOAuthCodeChunks(startIndex, keyRotationConfig);
         }
     }
@@ -151,23 +139,19 @@ public class DBKeyRotator {
         int startIndex = 0;
         List<OAuthToken> chunkList =
                 OAuthDAO.getInstance().getOAuthTokenChunks(startIndex, keyRotationConfig);
-        while (chunkList.size() > 0) {
+        while (CollectionUtils.isNotEmpty(chunkList)) {
             for (OAuthToken oAuthToken : chunkList) {
                 //this condition is only for testing purposes
-                if (oAuthToken.getConsumerKeyId().equals(TEST_CONSUMER_KEY_ID)) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Encrypted value " + oAuthToken.getAccessToken());
-                    }
+                if (oAuthToken.getConsumerKeyId().equals(DBConstants.TEST_CONSUMER_KEY_ID)) {
+                    log.info("Encrypted value " + oAuthToken.getAccessToken());
                     String reEncryptedValue = reEncryptor(oAuthToken.getAccessToken(),
                             keyRotationConfig);
                     oAuthToken.setAccessToken(reEncryptedValue);
-                    if (log.isDebugEnabled()) {
-                        log.debug("Re-encrypted value " + oAuthToken.getAccessToken());
-                    }
+                    log.info("Re-encrypted value " + oAuthToken.getAccessToken());
                 }
             }
             OAuthDAO.getInstance().updateOAuthTokenChunks(chunkList, keyRotationConfig);
-            startIndex = startIndex + CHUNK_SIZE;
+            startIndex = startIndex + DBConstants.CHUNK_SIZE;
             chunkList = OAuthDAO.getInstance().getOAuthTokenChunks(startIndex, keyRotationConfig);
         }
     }
@@ -184,24 +168,20 @@ public class DBKeyRotator {
         int startIndex = 0;
         List<OAuthSecret> chunkList =
                 OAuthDAO.getInstance().getOAuthSecretChunks(startIndex, keyRotationConfig);
-        while (chunkList.size() > 0) {
+        while (CollectionUtils.isNotEmpty(chunkList)) {
             for (OAuthSecret oAuthSecret : chunkList) {
                 //this condition is only for testing purposes
-                if (oAuthSecret.getAppName().equals(TEST_APP_NAME)) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Encrypted value " + oAuthSecret.getConsumerSecret());
-                    }
+                if (oAuthSecret.getAppName().equals(DBConstants.TEST_APP_NAME)) {
+                    log.info("Encrypted value " + oAuthSecret.getConsumerSecret());
                     String reEncryptedValue = reEncryptor(oAuthSecret.getConsumerSecret(),
                             keyRotationConfig);
                     oAuthSecret.setConsumerSecret(reEncryptedValue);
-                    if (log.isDebugEnabled()) {
-                        log.debug("Re-encrypted value " + oAuthSecret.getConsumerSecret());
-                    }
+                    log.info("Re-encrypted value " + oAuthSecret.getConsumerSecret());
 
                 }
             }
             OAuthDAO.getInstance().updateOAuthSecretChunks(chunkList, keyRotationConfig);
-            startIndex = startIndex + CHUNK_SIZE;
+            startIndex = startIndex + DBConstants.CHUNK_SIZE;
             chunkList = OAuthDAO.getInstance().getOAuthSecretChunks(startIndex, keyRotationConfig);
         }
     }
@@ -218,24 +198,20 @@ public class DBKeyRotator {
         int startIndex = 0;
         List<BPSPassword> chunkList =
                 BPSProfileDAO.getInstance().getBpsPasswordChunks(startIndex, keyRotationConfig);
-        while (chunkList.size() > 0) {
+        while (CollectionUtils.isNotEmpty(chunkList)) {
             for (BPSPassword bpsPassword : chunkList) {
                 //this condition is only for testing purposes
-                if (bpsPassword.getUsername().equals(TEST_USERNAME)) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Encrypted value " + bpsPassword.getPassword());
-                    }
+                if (bpsPassword.getUsername().equals(DBConstants.TEST_USERNAME)) {
+                    log.info("Encrypted value " + bpsPassword.getPassword());
                     String reEncryptedValue = reEncryptor(bpsPassword.getPassword(), keyRotationConfig);
                     bpsPassword.setPassword(reEncryptedValue);
-                    if (log.isDebugEnabled()) {
-                        log.debug("Re-encrypted value " + bpsPassword.getPassword());
-                    }
+                    log.info("Re-encrypted value " + bpsPassword.getPassword());
 
                 }
 
             }
             BPSProfileDAO.getInstance().updateBpsPasswordChunks(chunkList, keyRotationConfig);
-            startIndex = startIndex + CHUNK_SIZE;
+            startIndex = startIndex + DBConstants.CHUNK_SIZE;
             chunkList = BPSProfileDAO.getInstance().getBpsPasswordChunks(startIndex, keyRotationConfig);
         }
     }
@@ -252,23 +228,19 @@ public class DBKeyRotator {
         int startIndex = 0;
         List<WorkflowRequest> chunkList =
                 WorkFlowDAO.getInstance().getWFRequestChunks(startIndex, keyRotationConfig);
-        while (chunkList.size() > 0) {
+        while (CollectionUtils.isNotEmpty(chunkList)) {
             for (WorkflowRequest wfRequest : chunkList) {
                 for (RequestParameter parameter : wfRequest.getRequestParameters()) {
-                    if (CREDENTIAL.equals(parameter.getName())) {
-                        if (log.isDebugEnabled()) {
-                            log.debug("Encrypted value " + parameter.getValue().toString());
-                        }
+                    if (DBConstants.CREDENTIAL.equals(parameter.getName())) {
+                        log.info("Encrypted value " + parameter.getValue().toString());
                         String reEncryptedValue = reEncryptor(parameter.getValue().toString(), keyRotationConfig);
                         parameter.setValue(reEncryptedValue);
-                        if (log.isDebugEnabled()) {
-                            log.debug("Re-encrypted value " + parameter.getValue().toString());
-                        }
+                        log.info("Re-encrypted value " + parameter.getValue().toString());
                     }
                 }
             }
             WorkFlowDAO.getInstance().updateWFRequestChunks(chunkList, keyRotationConfig);
-            startIndex = startIndex + CHUNK_SIZE;
+            startIndex = startIndex + DBConstants.CHUNK_SIZE;
             chunkList = WorkFlowDAO.getInstance().getWFRequestChunks(startIndex, keyRotationConfig);
         }
     }

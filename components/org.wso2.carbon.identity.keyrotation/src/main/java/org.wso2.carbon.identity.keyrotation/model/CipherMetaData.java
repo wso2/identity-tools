@@ -19,7 +19,7 @@ package org.wso2.carbon.identity.keyrotation.model;
 
 import org.apache.axiom.om.util.Base64;
 
-import static org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants.TRANSFORMATION;
+import org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants;
 
 /**
  * Class to hold the cipher, transformation and initialization vector metadata.
@@ -27,7 +27,7 @@ import static org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants.TRA
 public class CipherMetaData {
 
     private String c;
-    private String t = TRANSFORMATION;
+    private String t = KeyRotationConstants.TRANSFORMATION;
     private String iv;
 
     /**

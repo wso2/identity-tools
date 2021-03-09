@@ -31,20 +31,20 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.CHUNK_SIZE;
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.GET_OAUTH_ACCESS_TOKEN;
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.GET_OAUTH_AUTHORIZATION_CODE;
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.GET_OAUTH_SECRET;
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.UPDATE_OAUTH_ACCESS_TOKEN;
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.UPDATE_OAUTH_AUTHORIZATION_CODE;
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.UPDATE_OAUTH_SECRET;
-
 /**
  * Class to reEncrypt the OAuth data in DB.
  */
 public class OAuthDAO {
 
     private static final OAuthDAO instance = new OAuthDAO();
+    private static final String CODE_ID = "CODE_ID";
+    private static final String AUTHORIZATION_CODE = "AUTHORIZATION_CODE";
+    private static final String CONSUMER_KEY_ID = "CONSUMER_KEY_ID";
+    private static final String TOKEN_ID = "TOKEN_ID";
+    private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
+    private static final String ID = "ID";
+    private static final String CONSUMER_SECRET = "CONSUMER_SECRET";
+    private static final String APP_NAME = "APP_NAME";
 
     public OAuthDAO() {
 
@@ -70,14 +70,15 @@ public class OAuthDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
                         keyRotationConfig.getIdnPassword())) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(GET_OAUTH_AUTHORIZATION_CODE)) {
+            try (PreparedStatement preparedStatement =
+                         connection.prepareStatement(DBConstants.GET_OAUTH_AUTHORIZATION_CODE)) {
                 preparedStatement.setInt(1, startIndex);
-                preparedStatement.setInt(2, CHUNK_SIZE);
+                preparedStatement.setInt(2, DBConstants.CHUNK_SIZE);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-                    oAuthCodeList.add(new OAuthCode(resultSet.getString("CODE_ID"),
-                            resultSet.getString("AUTHORIZATION_CODE"),
-                            resultSet.getString("CONSUMER_KEY_ID")));
+                    oAuthCodeList.add(new OAuthCode(resultSet.getString(CODE_ID),
+                            resultSet.getString(AUTHORIZATION_CODE),
+                            resultSet.getString(CONSUMER_KEY_ID)));
                 }
             } catch (SQLException e) {
                 throw new KeyRotationException("Error while retrieving auth codes from IDN_OAUTH2_AUTHORIZATION_CODE.",
@@ -103,7 +104,8 @@ public class OAuthDAO {
                 .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
                         keyRotationConfig.getIdnPassword())) {
             connection.setAutoCommit(false);
-            try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_OAUTH_AUTHORIZATION_CODE)) {
+            try (PreparedStatement preparedStatement =
+                         connection.prepareStatement(DBConstants.UPDATE_OAUTH_AUTHORIZATION_CODE)) {
                 for (OAuthCode oAuthCode : updateAuthCodeList) {
                     preparedStatement.setString(1, oAuthCode.getAuthorizationCode());
                     preparedStatement.setString(2, oAuthCode.getCodeId());
@@ -136,14 +138,15 @@ public class OAuthDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
                         keyRotationConfig.getIdnPassword())) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(GET_OAUTH_ACCESS_TOKEN)) {
+            try (PreparedStatement preparedStatement =
+                         connection.prepareStatement(DBConstants.GET_OAUTH_ACCESS_TOKEN)) {
                 preparedStatement.setInt(1, startIndex);
-                preparedStatement.setInt(2, CHUNK_SIZE);
+                preparedStatement.setInt(2, DBConstants.CHUNK_SIZE);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-                    oAuthTokenList.add(new OAuthToken(resultSet.getString("TOKEN_ID"),
-                            resultSet.getString("ACCESS_TOKEN"),
-                            resultSet.getString("CONSUMER_KEY_ID")));
+                    oAuthTokenList.add(new OAuthToken(resultSet.getString(TOKEN_ID),
+                            resultSet.getString(ACCESS_TOKEN),
+                            resultSet.getString(CONSUMER_KEY_ID)));
                 }
             } catch (SQLException e) {
                 throw new KeyRotationException("Error while retrieving auth tokens from IDN_OAUTH2_ACCESS_TOKEN.", e);
@@ -169,7 +172,8 @@ public class OAuthDAO {
                 .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
                         keyRotationConfig.getIdnPassword())) {
             connection.setAutoCommit(false);
-            try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_OAUTH_ACCESS_TOKEN)) {
+            try (PreparedStatement preparedStatement =
+                         connection.prepareStatement(DBConstants.UPDATE_OAUTH_ACCESS_TOKEN)) {
                 for (OAuthToken oAuthToken : updateAuthTokensList) {
                     preparedStatement.setString(1, oAuthToken.getAccessToken());
                     preparedStatement.setString(2, oAuthToken.getTokenId());
@@ -201,14 +205,14 @@ public class OAuthDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
                         keyRotationConfig.getIdnPassword())) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(GET_OAUTH_SECRET)) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.GET_OAUTH_SECRET)) {
                 preparedStatement.setInt(1, startIndex);
-                preparedStatement.setInt(2, CHUNK_SIZE);
+                preparedStatement.setInt(2, DBConstants.CHUNK_SIZE);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-                    oAuthSecretList.add(new OAuthSecret(resultSet.getString("ID"),
-                            resultSet.getString("CONSUMER_SECRET"),
-                            resultSet.getString("APP_NAME")));
+                    oAuthSecretList.add(new OAuthSecret(resultSet.getString(ID),
+                            resultSet.getString(CONSUMER_SECRET),
+                            resultSet.getString(APP_NAME)));
                 }
             } catch (SQLException e) {
                 throw new KeyRotationException("Error while retrieving secrets from IDN_OAUTH_CONSUMER_APPS.", e);
@@ -234,7 +238,7 @@ public class OAuthDAO {
                 .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
                         keyRotationConfig.getIdnPassword())) {
             connection.setAutoCommit(false);
-            try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_OAUTH_SECRET)) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_OAUTH_SECRET)) {
                 for (OAuthSecret oAuthSecret : updateOAuthSecretList) {
                     preparedStatement.setString(1, oAuthSecret.getConsumerSecret());
                     preparedStatement.setString(2, oAuthSecret.getId());

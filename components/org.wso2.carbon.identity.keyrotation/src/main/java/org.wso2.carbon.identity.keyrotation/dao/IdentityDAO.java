@@ -39,6 +39,10 @@ import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.UPDATE_TOTP_S
 public class IdentityDAO {
 
     private static final IdentityDAO instance = new IdentityDAO();
+    private static final String TENANT_ID = "TENANT_ID";
+    private static final String USER_NAME = "USER_NAME";
+    private static final String DATA_KEY = "DATA_KEY";
+    private static final String DATA_VALUE = "DATA_VALUE";
 
     public IdentityDAO() {
 
@@ -70,10 +74,10 @@ public class IdentityDAO {
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     totpSecretList
-                            .add(new TOTPSecret(resultSet.getString("TENANT_ID"),
-                                    resultSet.getString("USER_NAME"),
-                                    resultSet.getString("DATA_KEY"),
-                                    resultSet.getString("DATA_VALUE")));
+                            .add(new TOTPSecret(resultSet.getString(TENANT_ID),
+                                    resultSet.getString(USER_NAME),
+                                    resultSet.getString(DATA_KEY),
+                                    resultSet.getString(DATA_VALUE)));
                 }
             } catch (SQLException e) {
                 throw new KeyRotationException("Error while retrieving TOTP secrets from IDN_IDENTITY_USER_DATA.", e);

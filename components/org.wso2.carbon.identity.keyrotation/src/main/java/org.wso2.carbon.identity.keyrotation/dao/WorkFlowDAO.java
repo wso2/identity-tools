@@ -34,11 +34,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.CHUNK_SIZE;
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.GET_WF_REQUEST;
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.REQUEST;
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.UPDATE_WF_REQUEST;
-
 /**
  * Class to reEncrypt the WorkFlow data in DB.
  */
@@ -70,12 +65,12 @@ public class WorkFlowDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
                         keyRotationConfig.getIdnPassword())) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(GET_WF_REQUEST)) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.GET_WF_REQUEST)) {
                 preparedStatement.setInt(1, startIndex);
-                preparedStatement.setInt(2, CHUNK_SIZE);
+                preparedStatement.setInt(2, DBConstants.CHUNK_SIZE);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-                    byte[] requestBytes = resultSet.getBytes(REQUEST);
+                    byte[] requestBytes = resultSet.getBytes(DBConstants.REQUEST);
                     WorkflowRequest wfRequest = deserializeWFRequest(requestBytes);
                     wfRequestList.add(wfRequest);
                 }
@@ -102,7 +97,7 @@ public class WorkFlowDAO {
                 .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
                         keyRotationConfig.getIdnPassword())) {
             connection.setAutoCommit(false);
-            try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_WF_REQUEST)) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_WF_REQUEST)) {
                 for (WorkflowRequest wfRequest : updateWfRequestList) {
                     preparedStatement.setBytes(1, serializeWFRequest(wfRequest));
                     preparedStatement.setString(2, wfRequest.getUuid());

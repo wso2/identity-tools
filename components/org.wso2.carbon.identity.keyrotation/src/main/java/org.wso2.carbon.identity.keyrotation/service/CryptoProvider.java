@@ -24,6 +24,7 @@ import org.apache.axiom.om.util.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.model.CipherMetaData;
+import org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationServiceUtils;
 import org.wso2.carbon.uuid.generator.UUIDGeneratorManager;
@@ -43,9 +44,6 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import static org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants.ALGORITHM;
-import static org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants.TRANSFORMATION;
 
 /**
  * Class that implements the encryption and decryption tasks.
@@ -75,7 +73,7 @@ public class CryptoProvider {
         try {
             //Add the BC security provider for better security instead of the default provider.
             Security.addProvider(new BouncyCastleProvider());
-            cipher = Cipher.getInstance(TRANSFORMATION, JAVA_SECURITY_API_PROVIDER);
+            cipher = Cipher.getInstance(KeyRotationConstants.TRANSFORMATION, JAVA_SECURITY_API_PROVIDER);
             cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(keyRotationConfig.getNewSecretKey()),
                     new IvParameterSpec(iv));
             cipherText = cipher.doFinal(cleartext);
@@ -83,15 +81,15 @@ public class CryptoProvider {
 
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | NoSuchProviderException e) {
             String errorMessage = String.format("Error occurred while instantiating Cipher object" +
-                    " with algorithm: '%s'.", TRANSFORMATION);
+                    " with algorithm: '%s'.", KeyRotationConstants.TRANSFORMATION);
             throw new KeyRotationException(errorMessage, e);
         } catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
             String errorMessage = String.format("Error occurred while initializing Cipher object" +
-                    " with algorithm: '%s'.", TRANSFORMATION);
+                    " with algorithm: '%s'.", KeyRotationConstants.TRANSFORMATION);
             throw new KeyRotationException(errorMessage, e);
         } catch (IllegalBlockSizeException | BadPaddingException e) {
             String errorMessage = String.format("Error occurred while encrypting using Cipher object" +
-                    " with algorithm: '%s'.", TRANSFORMATION);
+                    " with algorithm: '%s'.", KeyRotationConstants.TRANSFORMATION);
             throw new KeyRotationException(errorMessage, e);
         }
         return cipherText;
@@ -115,22 +113,22 @@ public class CryptoProvider {
             //Add the BC security provider for better security instead of the default provider.
             Security.addProvider(new BouncyCastleProvider());
             CipherMetaData cipherMetaData = createCipherMetaData(cipherText);
-            cipher = Cipher.getInstance(TRANSFORMATION, JAVA_SECURITY_API_PROVIDER);
+            cipher = Cipher.getInstance(KeyRotationConstants.TRANSFORMATION, JAVA_SECURITY_API_PROVIDER);
             cipher.init(Cipher.DECRYPT_MODE,
                     getSecretKey(keyRotationConfig.getOldSecretKey()),
                     new IvParameterSpec(cipherMetaData.getIvBase64Decoded()));
             return cipher.doFinal(cipherMetaData.getCipherBase64Decoded());
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | NoSuchProviderException e) {
             String errorMessage = String.format("Error occurred while instantiating Cipher object" +
-                    " with algorithm: '%s'.", TRANSFORMATION);
+                    " with algorithm: '%s'.", KeyRotationConstants.TRANSFORMATION);
             throw new KeyRotationException(errorMessage, e);
         } catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
             String errorMessage = String.format("Error occurred while initializing Cipher object" +
-                    " with algorithm: '%s'.", TRANSFORMATION);
+                    " with algorithm: '%s'.", KeyRotationConstants.TRANSFORMATION);
             throw new KeyRotationException(errorMessage, e);
         } catch (IllegalBlockSizeException | BadPaddingException e) {
             String errorMessage = String.format("Error occurred while encrypting using Cipher object" +
-                    " with algorithm: '%s'.", TRANSFORMATION);
+                    " with algorithm: '%s'.", KeyRotationConstants.TRANSFORMATION);
             throw new KeyRotationException(errorMessage, e);
         }
     }
@@ -143,7 +141,7 @@ public class CryptoProvider {
      */
     private SecretKeySpec getSecretKey(String secretKey) {
 
-        return new SecretKeySpec(secretKey.getBytes(), 0, secretKey.getBytes().length, ALGORITHM);
+        return new SecretKeySpec(secretKey.getBytes(), 0, secretKey.getBytes().length, KeyRotationConstants.ALGORITHM);
     }
 
     /**
@@ -173,7 +171,7 @@ public class CryptoProvider {
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         CipherMetaData cipherMetaData = new CipherMetaData();
         cipherMetaData.setCipherText(KeyRotationServiceUtils.getSelfContainedCiphertextWithIv(cipherText, iv));
-        cipherMetaData.setTransformation(TRANSFORMATION);
+        cipherMetaData.setTransformation(KeyRotationConstants.TRANSFORMATION);
         cipherMetaData.setIv(Base64.encode(iv));
         String cipherWithMetadataStr = gson.toJson(cipherMetaData);
         return cipherWithMetadataStr.getBytes(Charset.defaultCharset());

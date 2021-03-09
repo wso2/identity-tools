@@ -15,11 +15,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.identity.keyrotation.config;
+
+package org.wso2.carbon.identity.keyrotation.dao;
 
 /**
- * Class to reEncrypt the event publisher configuration files.
+ * Class to re-encrypt keystore passwords within REG_PROPERTY in DB.
  */
-public class EventPublisherKeyMigrator {
+public class KeyStoreDAO {
 
 }

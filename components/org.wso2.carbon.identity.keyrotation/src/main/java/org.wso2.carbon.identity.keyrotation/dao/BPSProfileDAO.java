@@ -29,16 +29,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.CHUNK_SIZE;
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.GET_BPS_PASSWORD;
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.UPDATE_BPS_PASSWORD;
-
 /**
  * Class to reEncrypt the BPS Profile data in DB.
  */
 public class BPSProfileDAO {
 
     private static final BPSProfileDAO instance = new BPSProfileDAO();
+    private static final String PROFILE_NAME = "PROFILE_NAME";
+    private static final String USERNAME = "USERNAME";
+    private static final String TENANT_ID = "TENANT_ID";
+    private static final String PASSWORD = "PASSWORD";
 
     public BPSProfileDAO() {
 
@@ -64,15 +64,15 @@ public class BPSProfileDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
                         keyRotationConfig.getIdnPassword())) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(GET_BPS_PASSWORD)) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.GET_BPS_PASSWORD)) {
                 preparedStatement.setInt(1, startIndex);
-                preparedStatement.setInt(2, CHUNK_SIZE);
+                preparedStatement.setInt(2, DBConstants.CHUNK_SIZE);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-                    bpsPasswordList.add(new BPSPassword(resultSet.getString("PROFILE_NAME"),
-                            resultSet.getString("USERNAME"),
-                            resultSet.getString("TENANT_ID"),
-                            resultSet.getString("PASSWORD")));
+                    bpsPasswordList.add(new BPSPassword(resultSet.getString(PROFILE_NAME),
+                            resultSet.getString(USERNAME),
+                            resultSet.getString(TENANT_ID),
+                            resultSet.getString(PASSWORD)));
                 }
             } catch (SQLException e) {
                 throw new KeyRotationException("Error while retrieving passwords from WF_BPS_PROFILE.", e);
@@ -97,7 +97,7 @@ public class BPSProfileDAO {
                 .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
                         keyRotationConfig.getIdnPassword())) {
             connection.setAutoCommit(false);
-            try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_BPS_PASSWORD)) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_BPS_PASSWORD)) {
                 for (BPSPassword bpsPassword : updateBPSPasswordsList) {
                     preparedStatement.setString(1, bpsPassword.getPassword());
                     preparedStatement.setString(2, bpsPassword.getProfileName());

@@ -28,11 +28,19 @@ import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
  */
 public class KeyRotationService {
 
+    private static final String TRUE = "true";
+
     public static void main(String[] args) throws KeyRotationException {
 
-        KeyRotationConfig configs = KeyRotationConfig.loadConfigs();
-        DBKeyRotator.getInstance().dbReEncryptor(configs);
-        ConfigFileKeyRotator.getInstance().configFileReEncryptor(configs);
-        SyncedDataKeyRotator.getInstance().syncedDataReEncryptor(configs);
+        KeyRotationConfig configs = KeyRotationConfig.getInstance().loadConfigs(args);
+        if (configs.getEnableDBMigrator().equals(TRUE)) {
+            DBKeyRotator.getInstance().dbReEncryptor(configs);
+        }
+        if (configs.getEnableConfigMigrator().equals(TRUE)) {
+            ConfigFileKeyRotator.getInstance().configFileReEncryptor(configs);
+        }
+        if (configs.getEnableSyncMigrator().equals(TRUE)) {
+            SyncedDataKeyRotator.getInstance().syncedDataReEncryptor(configs);
+        }
     }
 }

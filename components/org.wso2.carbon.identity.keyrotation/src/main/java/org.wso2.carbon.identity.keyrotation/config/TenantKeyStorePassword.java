@@ -15,11 +15,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.wso2.carbon.identity.keyrotation.config;
 
 /**
- * Class to reEncrypt the secondary and tenant userstore configuration files.
+ * Class to re-encrypt the tenant key store password.
  */
-public class SecondaryUserStore {
+public class TenantKeyStorePassword {
 
 }
