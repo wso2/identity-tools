@@ -27,6 +27,13 @@ public class OAuthToken {
     private String accessToken;
     private String consumerKeyId;
 
+    /**
+     * OAuthToken class constructor.
+     *
+     * @param tokenId       Token id field in IDN_OAUTH2_ACCESS_TOKEN table.
+     * @param accessToken   Access token field in IDN_OAUTH2_ACCESS_TOKEN table.
+     * @param consumerKeyId Consumer key id field in IDN_OAUTH2_ACCESS_TOKEN table.
+     */
     public OAuthToken(String tokenId, String accessToken, String consumerKeyId) {
 
         this.tokenId = tokenId;
@@ -34,31 +41,61 @@ public class OAuthToken {
         this.consumerKeyId = consumerKeyId;
     }
 
+    /**
+     * Getter to get the token id.
+     *
+     * @return Token id.
+     */
     public String getTokenId() {
 
         return tokenId;
     }
 
+    /**
+     * Setter to set the tenant id.
+     *
+     * @param tokenId Token id.
+     */
     public void setTokenId(String tokenId) {
 
         this.tokenId = tokenId;
     }
 
+    /**
+     * Getter to get the access token.
+     *
+     * @return Access token.
+     */
     public String getAccessToken() {
 
         return accessToken;
     }
 
+    /**
+     * Setter to set the access token.
+     *
+     * @param accessToken Access token.
+     */
     public void setAccessToken(String accessToken) {
 
         this.accessToken = accessToken;
     }
 
+    /**
+     * Getter to get the consumer key id.
+     *
+     * @return Consumer key id.
+     */
     public String getConsumerKeyId() {
 
         return consumerKeyId;
     }
 
+    /**
+     * Setter to set the consumer key id.
+     *
+     * @param consumerKeyId Consumer key id.
+     */
     public void setConsumerKeyId(String consumerKeyId) {
 
         this.consumerKeyId = consumerKeyId;

@@ -54,26 +54,11 @@ public class ConfigFileKeyRotator {
      */
     public void configFileReEncryptor(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
-        checkNewISHomePathValid(keyRotationConfig);
         log.info("Re-encrypting configuration file data...");
         reEncryptSuperTenantUserStore(keyRotationConfig);
         reEncryptTenantUserStore(keyRotationConfig);
         reEncryptEventPublishers(keyRotationConfig);
         log.info("Re-encrypting configuration file data completed...\n");
-    }
-
-    /**
-     * To check whether the loaded new IS home path exists.
-     *
-     * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
-     */
-    private void checkNewISHomePathValid(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
-
-        File file = new File(keyRotationConfig.getNewISHome());
-        if (!file.exists()) {
-            throw new KeyRotationException("Error occurred while finding new IS home path");
-        }
     }
 
     /**

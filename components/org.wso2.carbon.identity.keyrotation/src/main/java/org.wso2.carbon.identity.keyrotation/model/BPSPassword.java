@@ -28,6 +28,14 @@ public class BPSPassword {
     private String password;
     private String username;
 
+    /**
+     * BPSPassword class constructor.
+     *
+     * @param profileName Profile name field in WF_BPS_PROFILE table.
+     * @param username    Username field in WF_BPS_PROFILE table.
+     * @param tenantId    Tenant id field in WF_BPS_PROFILE table.
+     * @param password    Password field in WF_BPS_PROFILE table.
+     */
     public BPSPassword(String profileName, String username, String tenantId, String password) {
 
         this.profileName = profileName;
@@ -37,41 +45,81 @@ public class BPSPassword {
 
     }
 
+    /**
+     * Getter to get the profile name.
+     *
+     * @return Profile name.
+     */
     public String getProfileName() {
 
         return profileName;
     }
 
+    /**
+     * Setter to set the profile name.
+     *
+     * @param profileName Profile name.
+     */
     public void setProfileName(String profileName) {
 
         this.profileName = profileName;
     }
 
+    /**
+     * Getter to get the tenant id.
+     *
+     * @return Tenant id.
+     */
     public String getTenantId() {
 
         return tenantId;
     }
 
+    /**
+     * Setter to set the tenant id.
+     *
+     * @param tenantId Tenant id.
+     */
     public void setTenantId(String tenantId) {
 
         this.tenantId = tenantId;
     }
 
+    /**
+     * Getter to get the password.
+     *
+     * @return Password.
+     */
     public String getPassword() {
 
         return password;
     }
 
+    /**
+     * Setter to set the password.
+     *
+     * @param password Password.
+     */
     public void setPassword(String password) {
 
         this.password = password;
     }
 
+    /**
+     * Getter to get the username.
+     *
+     * @return Username.
+     */
     public String getUsername() {
 
         return username;
     }
 
+    /**
+     * Setter to set the username.
+     *
+     * @param username Username.
+     */
     public void setUsername(String username) {
 
         this.username = username;

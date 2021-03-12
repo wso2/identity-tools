@@ -26,6 +26,8 @@ public class DBConstants {
     public static final String TEST_CONSUMER_KEY_ID = "39";
     public static final String TEST_APP_NAME = "dispatch";
     public static final String TEST_USERNAME = "mytest";
+    public static final String TEST_REG_TENANT_ID = "35";
+    public static final String TEST_REG_ID = "5913";
     public static final String CREDENTIAL = "Credential";
     public static final String REQUEST = "REQUEST";
     public static final String DATA_KEY = "http://wso2.org/claims/identity/secretkey";
@@ -50,4 +52,8 @@ public class DBConstants {
             "TENANT_ID=?";
     public static final String GET_WF_REQUEST = "SELECT UUID, REQUEST FROM WF_REQUEST ORDER BY UUID LIMIT ?, ?";
     public static final String UPDATE_WF_REQUEST = "UPDATE WF_REQUEST SET REQUEST=? WHERE UUID=?";
+    public static final String GET_REG_PROPERTY_DATA = "SELECT REG_ID, REG_NAME, REG_VALUE, REG_TENANT_ID " +
+            "FROM REG_PROPERTY WHERE REG_NAME=? ORDER BY REG_ID, REG_TENANT_ID LIMIT ?, ?";
+    public static final String UPDATE_REG_PROPERTY_DATA =
+            "UPDATE REG_PROPERTY SET REG_VALUE=? WHERE REG_ID=? AND REG_TENANT_ID=?";
 }

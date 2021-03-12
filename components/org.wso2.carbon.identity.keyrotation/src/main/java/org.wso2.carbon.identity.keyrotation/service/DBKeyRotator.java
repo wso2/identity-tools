@@ -26,11 +26,13 @@ import org.wso2.carbon.identity.keyrotation.dao.BPSProfileDAO;
 import org.wso2.carbon.identity.keyrotation.dao.DBConstants;
 import org.wso2.carbon.identity.keyrotation.dao.IdentityDAO;
 import org.wso2.carbon.identity.keyrotation.dao.OAuthDAO;
+import org.wso2.carbon.identity.keyrotation.dao.RegistryDAO;
 import org.wso2.carbon.identity.keyrotation.dao.WorkFlowDAO;
 import org.wso2.carbon.identity.keyrotation.model.BPSPassword;
 import org.wso2.carbon.identity.keyrotation.model.OAuthCode;
 import org.wso2.carbon.identity.keyrotation.model.OAuthSecret;
 import org.wso2.carbon.identity.keyrotation.model.OAuthToken;
+import org.wso2.carbon.identity.keyrotation.model.RegistryProperty;
 import org.wso2.carbon.identity.keyrotation.model.TOTPSecret;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 import org.wso2.carbon.identity.workflow.mgt.bean.RequestParameter;
@@ -47,6 +49,9 @@ public class DBKeyRotator {
 
     private static final Log log = LogFactory.getLog(DBKeyRotator.class);
     private static final DBKeyRotator instance = new DBKeyRotator();
+    private static final String password = "password";
+    private static final String privatekeyPass = "privatekeyPass";
+    private static final String subscriberPassword = "subscriberPassword";
 
     public static DBKeyRotator getInstance() {
 
@@ -68,6 +73,10 @@ public class DBKeyRotator {
         reEncryptOauthConsumerData(keyRotationConfig);
         reEncryptBPSData(keyRotationConfig);
         reEncryptWFRequestData(keyRotationConfig);
+        reEncryptKeystorePasswordData(keyRotationConfig);
+        reEncryptKeystorePrivatekeyPassData(keyRotationConfig);
+        reEncryptSubscriberPasswordData(keyRotationConfig);
+        reEncryptKerberosData(keyRotationConfig);
         log.info("Re-encrypting DB data completed...\n");
     }
 
@@ -243,5 +252,102 @@ public class DBKeyRotator {
             startIndex = startIndex + DBConstants.CHUNK_SIZE;
             chunkList = WorkFlowDAO.getInstance().getWFRequestChunks(startIndex, keyRotationConfig);
         }
+    }
+
+    /**
+     * ReEncryption of keystore password in REG_PROPERTY table.
+     *
+     * @param keyRotationConfig Configuration data needed to perform the task.
+     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     */
+    private void reEncryptKeystorePasswordData(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
+
+        log.info("Re-encryption of the keystore password property data...");
+        int startIndex = 0;
+        List<RegistryProperty> chunkList =
+                RegistryDAO.getInstance().getRegPropertyDataChunks(startIndex, keyRotationConfig, password);
+        while (CollectionUtils.isNotEmpty(chunkList)) {
+            for (RegistryProperty regProperty : chunkList) {
+                //this condition is only for testing purposes
+                if (DBConstants.TEST_REG_TENANT_ID.equals(regProperty.getRegTenantId())) {
+                    log.info("Encrypted value " + regProperty.getRegValue());
+                    String reEncryptedValue = reEncryptor(regProperty.getRegValue(), keyRotationConfig);
+                    regProperty.setRegValue(reEncryptedValue);
+                    log.info("Re-encrypted value " + regProperty.getRegValue());
+                }
+            }
+            RegistryDAO.getInstance().updateRegPropertyDataChunks(chunkList, keyRotationConfig, password);
+            startIndex = startIndex + DBConstants.CHUNK_SIZE;
+            chunkList = RegistryDAO.getInstance().getRegPropertyDataChunks(startIndex, keyRotationConfig, password);
+        }
+    }
+
+    /**
+     * ReEncryption of keystore privatekeyPass in REG_PROPERTY table.
+     *
+     * @param keyRotationConfig Configuration data needed to perform the task.
+     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     */
+    private void reEncryptKeystorePrivatekeyPassData(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
+
+        log.info("Re-encryption of the keystore privatekeyPass property data...");
+        int startIndex = 0;
+        List<RegistryProperty> chunkList =
+                RegistryDAO.getInstance().getRegPropertyDataChunks(startIndex, keyRotationConfig, privatekeyPass);
+        while (CollectionUtils.isNotEmpty(chunkList)) {
+            for (RegistryProperty regProperty : chunkList) {
+                //this condition is only for testing purposes
+                if (DBConstants.TEST_REG_TENANT_ID.equals(regProperty.getRegTenantId())) {
+                    log.info("Encrypted value " + regProperty.getRegValue());
+                    String reEncryptedValue = reEncryptor(regProperty.getRegValue(), keyRotationConfig);
+                    regProperty.setRegValue(reEncryptedValue);
+                    log.info("Re-encrypted value " + regProperty.getRegValue());
+                }
+            }
+            RegistryDAO.getInstance().updateRegPropertyDataChunks(chunkList, keyRotationConfig, privatekeyPass);
+            startIndex = startIndex + DBConstants.CHUNK_SIZE;
+            chunkList =
+                    RegistryDAO.getInstance().getRegPropertyDataChunks(startIndex, keyRotationConfig, privatekeyPass);
+        }
+    }
+
+    /**
+     * ReEncryption of subscriber password in REG_PROPERTY table.
+     *
+     * @param keyRotationConfig Configuration data needed to perform the task.
+     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     */
+    private void reEncryptSubscriberPasswordData(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
+
+        log.info("Re-encryption of the subscriber password property data...");
+        int startIndex = 0;
+        List<RegistryProperty> chunkList =
+                RegistryDAO.getInstance().getRegPropertyDataChunks(startIndex, keyRotationConfig, subscriberPassword);
+        while (CollectionUtils.isNotEmpty(chunkList)) {
+            for (RegistryProperty regProperty : chunkList) {
+                if (DBConstants.TEST_REG_ID.equals(regProperty.getRegId())) {
+                    log.info("Encrypted value " + regProperty.getRegValue());
+                    String reEncryptedValue = reEncryptor(regProperty.getRegValue(), keyRotationConfig);
+                    regProperty.setRegValue(reEncryptedValue);
+                    log.info("Re-encrypted value " + regProperty.getRegValue());
+                }
+            }
+            RegistryDAO.getInstance().updateRegPropertyDataChunks(chunkList, keyRotationConfig, subscriberPassword);
+            startIndex = startIndex + DBConstants.CHUNK_SIZE;
+            chunkList =
+                    RegistryDAO.getInstance()
+                            .getRegPropertyDataChunks(startIndex, keyRotationConfig, subscriberPassword);
+        }
+    }
+
+    /**
+     * ReEncryption of kerberos password in REG_PROPERTY table.
+     *
+     * @param keyRotationConfig Configuration data needed to perform the task.
+     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     */
+    private void reEncryptKerberosData(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
+
+        log.info("Re-encryption of the kerberos password property data...");
     }
 }

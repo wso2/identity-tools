@@ -27,6 +27,13 @@ public class OAuthSecret {
     private String consumerSecret;
     private String appName;
 
+    /**
+     * OAuthSecret class constructor.
+     *
+     * @param id             Id field in IDN_OAUTH_CONSUMER_APPS table.
+     * @param consumerSecret Consumer secret field in IDN_OAUTH_CONSUMER_APPS table.
+     * @param appName        App name field in IDN_OAUTH_CONSUMER_APPS table.
+     */
     public OAuthSecret(String id, String consumerSecret, String appName) {
 
         this.id = id;
@@ -34,31 +41,61 @@ public class OAuthSecret {
         this.appName = appName;
     }
 
+    /**
+     * Getter to get the id.
+     *
+     * @return Id.
+     */
     public String getId() {
 
         return id;
     }
 
+    /**
+     * Setter to set the id.
+     *
+     * @param id Id.
+     */
     public void setId(String id) {
 
         this.id = id;
     }
 
+    /**
+     * Getter to get the consumer secret.
+     *
+     * @return Consumer secret.
+     */
     public String getConsumerSecret() {
 
         return consumerSecret;
     }
 
+    /**
+     * Setter to set the consumer secret.
+     *
+     * @param consumerSecret Consumer secret.
+     */
     public void setConsumerSecret(String consumerSecret) {
 
         this.consumerSecret = consumerSecret;
     }
 
+    /**
+     * Getter to get the app name.
+     *
+     * @return App name.
+     */
     public String getAppName() {
 
         return appName;
     }
 
+    /**
+     * Setter to set the app name.
+     *
+     * @param appName App name.
+     */
     public void setAppName(String appName) {
 
         this.appName = appName;

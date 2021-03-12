@@ -29,10 +29,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.CHUNK_SIZE;
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.GET_TOTP_SECRET;
-import static org.wso2.carbon.identity.keyrotation.dao.DBConstants.UPDATE_TOTP_SECRET;
-
 /**
  * Class to reEncrypt the TOTP data in DB.
  */
@@ -68,9 +64,9 @@ public class IdentityDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
                         keyRotationConfig.getIdnPassword())) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(GET_TOTP_SECRET)) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.GET_TOTP_SECRET)) {
                 preparedStatement.setInt(1, startIndex);
-                preparedStatement.setInt(2, CHUNK_SIZE);
+                preparedStatement.setInt(2, DBConstants.CHUNK_SIZE);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     totpSecretList
@@ -102,7 +98,7 @@ public class IdentityDAO {
                 .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
                         keyRotationConfig.getIdnPassword())) {
             connection.setAutoCommit(false);
-            try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_TOTP_SECRET)) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_TOTP_SECRET)) {
                 for (TOTPSecret totpSecret : updateTOTPSecretList) {
                     preparedStatement.setString(1, totpSecret.getDataValue());
                     preparedStatement.setString(2, totpSecret.getTenantId());

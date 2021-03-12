@@ -27,6 +27,13 @@ public class OAuthCode {
     private String authorizationCode;
     private String consumerKeyId;
 
+    /**
+     * OAuthCode class constructor.
+     *
+     * @param codeId            Code id field in IDN_OAUTH2_AUTHORIZATION_CODE table.
+     * @param authorizationCode Authorization code field in IDN_OAUTH2_AUTHORIZATION_CODE table.
+     * @param consumerKeyId     Consumer key id field in IDN_OAUTH2_AUTHORIZATION_CODE table.
+     */
     public OAuthCode(String codeId, String authorizationCode, String consumerKeyId) {
 
         this.codeId = codeId;
@@ -34,31 +41,61 @@ public class OAuthCode {
         this.consumerKeyId = consumerKeyId;
     }
 
+    /**
+     * Getter to get the code id.
+     *
+     * @return Code id.
+     */
     public String getCodeId() {
 
         return codeId;
     }
 
+    /**
+     * Setter to set the code id.
+     *
+     * @param codeId Code id.
+     */
     public void setCodeId(String codeId) {
 
         this.codeId = codeId;
     }
 
+    /**
+     * Getter to get the authorization code.
+     *
+     * @return Authorization code.
+     */
     public String getAuthorizationCode() {
 
         return authorizationCode;
     }
 
+    /**
+     * Setter to set the authorization code.
+     *
+     * @param authorizationCode Authorization code.
+     */
     public void setAuthorizationCode(String authorizationCode) {
 
         this.authorizationCode = authorizationCode;
     }
 
+    /**
+     * Getter to get the consumer key id.
+     *
+     * @return Consumer key id.
+     */
     public String getConsumerKeyId() {
 
         return consumerKeyId;
     }
 
+    /**
+     * Setter to set the consumer key id.
+     *
+     * @param consumerKeyId Consumer key id.
+     */
     public void setConsumerKeyId(String consumerKeyId) {
 
         this.consumerKeyId = consumerKeyId;
