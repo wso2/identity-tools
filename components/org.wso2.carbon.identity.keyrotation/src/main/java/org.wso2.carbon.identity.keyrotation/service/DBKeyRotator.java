@@ -40,6 +40,7 @@ import org.wso2.carbon.identity.workflow.mgt.dto.WorkflowRequest;
 
 import java.util.List;
 
+import static org.wso2.carbon.identity.keyrotation.util.EncryptionUtil.checkPlainText;
 import static org.wso2.carbon.identity.keyrotation.util.EncryptionUtil.reEncryptor;
 
 /**
@@ -76,7 +77,6 @@ public class DBKeyRotator {
         reEncryptKeystorePasswordData(keyRotationConfig);
         reEncryptKeystorePrivatekeyPassData(keyRotationConfig);
         reEncryptSubscriberPasswordData(keyRotationConfig);
-        reEncryptKerberosData(keyRotationConfig);
         log.info("Re-encrypting DB data completed...\n");
     }
 
@@ -88,13 +88,14 @@ public class DBKeyRotator {
      */
     private void reEncryptIdentityTOTPData(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
-        log.info("Re-encryption of the Identity data...");
+        log.info("Re-encryption of the TOTP data...");
         int startIndex = 0;
         List<TOTPSecret> chunkList =
                 IdentityDAO.getInstance().getTOTPSecretsChunks(startIndex, keyRotationConfig);
         while (CollectionUtils.isNotEmpty(chunkList)) {
             for (TOTPSecret totpSecret : chunkList) {
-                if (totpSecret.getDataKey().equals(DBConstants.DATA_KEY)) {
+                if (totpSecret.getDataKey().equals(DBConstants.DATA_KEY) &&
+                        !checkPlainText(totpSecret.getDataValue())) {
                     log.info("Encrypted value " + totpSecret.getDataValue());
                     String reEncryptedValue = reEncryptor(totpSecret.getDataValue(), keyRotationConfig);
                     totpSecret.setDataValue(reEncryptedValue);
@@ -121,8 +122,7 @@ public class DBKeyRotator {
                 OAuthDAO.getInstance().getOAuthCodeChunks(startIndex, keyRotationConfig);
         while (CollectionUtils.isNotEmpty(chunkList)) {
             for (OAuthCode oAuthCode : chunkList) {
-                //this condition is only for testing purposes
-                if (oAuthCode.getConsumerKeyId().equals(DBConstants.TEST_CONSUMER_KEY_ID)) {
+                if (!checkPlainText(oAuthCode.getAuthorizationCode())) {
                     log.info("Encrypted value " + oAuthCode.getAuthorizationCode());
                     String reEncryptedValue = reEncryptor(oAuthCode.getAuthorizationCode(),
                             keyRotationConfig);
@@ -144,19 +144,25 @@ public class DBKeyRotator {
      */
     private void reEncryptOauthTokenData(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
-        log.info("Re-encryption of the Oauth2 access token data...");
+        log.info("Re-encryption of the Oauth2 access and refresh tokens data...");
         int startIndex = 0;
         List<OAuthToken> chunkList =
                 OAuthDAO.getInstance().getOAuthTokenChunks(startIndex, keyRotationConfig);
         while (CollectionUtils.isNotEmpty(chunkList)) {
             for (OAuthToken oAuthToken : chunkList) {
-                //this condition is only for testing purposes
-                if (oAuthToken.getConsumerKeyId().equals(DBConstants.TEST_CONSUMER_KEY_ID)) {
-                    log.info("Encrypted value " + oAuthToken.getAccessToken());
-                    String reEncryptedValue = reEncryptor(oAuthToken.getAccessToken(),
+                if (!checkPlainText(oAuthToken.getAccessToken())) {
+                    log.info("Encrypted access token value " + oAuthToken.getAccessToken());
+                    String accessTokenReEncryptedValue = reEncryptor(oAuthToken.getAccessToken(),
                             keyRotationConfig);
-                    oAuthToken.setAccessToken(reEncryptedValue);
+                    oAuthToken.setAccessToken(accessTokenReEncryptedValue);
                     log.info("Re-encrypted value " + oAuthToken.getAccessToken());
+                }
+                if (!checkPlainText(oAuthToken.getRefreshToken())) {
+                    log.info("Encrypted refresh token value " + oAuthToken.getRefreshToken());
+                    String refreshTokenReEncryptedValue = reEncryptor(oAuthToken.getRefreshToken(),
+                            keyRotationConfig);
+                    oAuthToken.setRefreshToken(refreshTokenReEncryptedValue);
+                    log.info("Re-encrypted value " + oAuthToken.getRefreshToken());
                 }
             }
             OAuthDAO.getInstance().updateOAuthTokenChunks(chunkList, keyRotationConfig);
@@ -173,20 +179,18 @@ public class DBKeyRotator {
      */
     private void reEncryptOauthConsumerData(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
-        log.info("Re-encryption of the Oauth consumer data...");
+        log.info("Re-encryption of the Oauth consumer secret data...");
         int startIndex = 0;
         List<OAuthSecret> chunkList =
                 OAuthDAO.getInstance().getOAuthSecretChunks(startIndex, keyRotationConfig);
         while (CollectionUtils.isNotEmpty(chunkList)) {
             for (OAuthSecret oAuthSecret : chunkList) {
-                //this condition is only for testing purposes
-                if (oAuthSecret.getAppName().equals(DBConstants.TEST_APP_NAME)) {
+                if (!checkPlainText(oAuthSecret.getConsumerSecret())) {
                     log.info("Encrypted value " + oAuthSecret.getConsumerSecret());
                     String reEncryptedValue = reEncryptor(oAuthSecret.getConsumerSecret(),
                             keyRotationConfig);
                     oAuthSecret.setConsumerSecret(reEncryptedValue);
                     log.info("Re-encrypted value " + oAuthSecret.getConsumerSecret());
-
                 }
             }
             OAuthDAO.getInstance().updateOAuthSecretChunks(chunkList, keyRotationConfig);
@@ -209,15 +213,12 @@ public class DBKeyRotator {
                 BPSProfileDAO.getInstance().getBpsPasswordChunks(startIndex, keyRotationConfig);
         while (CollectionUtils.isNotEmpty(chunkList)) {
             for (BPSPassword bpsPassword : chunkList) {
-                //this condition is only for testing purposes
-                if (bpsPassword.getUsername().equals(DBConstants.TEST_USERNAME)) {
+                if (!checkPlainText(bpsPassword.getPassword())) {
                     log.info("Encrypted value " + bpsPassword.getPassword());
                     String reEncryptedValue = reEncryptor(bpsPassword.getPassword(), keyRotationConfig);
                     bpsPassword.setPassword(reEncryptedValue);
                     log.info("Re-encrypted value " + bpsPassword.getPassword());
-
                 }
-
             }
             BPSProfileDAO.getInstance().updateBpsPasswordChunks(chunkList, keyRotationConfig);
             startIndex = startIndex + DBConstants.CHUNK_SIZE;
@@ -240,7 +241,8 @@ public class DBKeyRotator {
         while (CollectionUtils.isNotEmpty(chunkList)) {
             for (WorkflowRequest wfRequest : chunkList) {
                 for (RequestParameter parameter : wfRequest.getRequestParameters()) {
-                    if (DBConstants.CREDENTIAL.equals(parameter.getName())) {
+                    if (DBConstants.CREDENTIAL.equals(parameter.getName()) &&
+                            !checkPlainText(parameter.getValue().toString())) {
                         log.info("Encrypted value " + parameter.getValue().toString());
                         String reEncryptedValue = reEncryptor(parameter.getValue().toString(), keyRotationConfig);
                         parameter.setValue(reEncryptedValue);
@@ -268,8 +270,7 @@ public class DBKeyRotator {
                 RegistryDAO.getInstance().getRegPropertyDataChunks(startIndex, keyRotationConfig, password);
         while (CollectionUtils.isNotEmpty(chunkList)) {
             for (RegistryProperty regProperty : chunkList) {
-                //this condition is only for testing purposes
-                if (DBConstants.TEST_REG_TENANT_ID.equals(regProperty.getRegTenantId())) {
+                if (!checkPlainText(regProperty.getRegValue())) {
                     log.info("Encrypted value " + regProperty.getRegValue());
                     String reEncryptedValue = reEncryptor(regProperty.getRegValue(), keyRotationConfig);
                     regProperty.setRegValue(reEncryptedValue);
@@ -296,8 +297,7 @@ public class DBKeyRotator {
                 RegistryDAO.getInstance().getRegPropertyDataChunks(startIndex, keyRotationConfig, privatekeyPass);
         while (CollectionUtils.isNotEmpty(chunkList)) {
             for (RegistryProperty regProperty : chunkList) {
-                //this condition is only for testing purposes
-                if (DBConstants.TEST_REG_TENANT_ID.equals(regProperty.getRegTenantId())) {
+                if (!checkPlainText(regProperty.getRegValue())) {
                     log.info("Encrypted value " + regProperty.getRegValue());
                     String reEncryptedValue = reEncryptor(regProperty.getRegValue(), keyRotationConfig);
                     regProperty.setRegValue(reEncryptedValue);
@@ -325,7 +325,7 @@ public class DBKeyRotator {
                 RegistryDAO.getInstance().getRegPropertyDataChunks(startIndex, keyRotationConfig, subscriberPassword);
         while (CollectionUtils.isNotEmpty(chunkList)) {
             for (RegistryProperty regProperty : chunkList) {
-                if (DBConstants.TEST_REG_ID.equals(regProperty.getRegId())) {
+                if (!checkPlainText(regProperty.getRegValue())) {
                     log.info("Encrypted value " + regProperty.getRegValue());
                     String reEncryptedValue = reEncryptor(regProperty.getRegValue(), keyRotationConfig);
                     regProperty.setRegValue(reEncryptedValue);
@@ -338,16 +338,5 @@ public class DBKeyRotator {
                     RegistryDAO.getInstance()
                             .getRegPropertyDataChunks(startIndex, keyRotationConfig, subscriberPassword);
         }
-    }
-
-    /**
-     * ReEncryption of kerberos password in REG_PROPERTY table.
-     *
-     * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
-     */
-    private void reEncryptKerberosData(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
-
-        log.info("Re-encryption of the kerberos password property data...");
     }
 }

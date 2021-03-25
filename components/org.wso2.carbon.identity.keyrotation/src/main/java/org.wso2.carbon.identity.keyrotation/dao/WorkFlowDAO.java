@@ -62,12 +62,23 @@ public class WorkFlowDAO {
             KeyRotationException {
 
         List<WorkflowRequest> wfRequestList = new ArrayList<>();
+        String query = DBConstants.GET_WF_REQUEST;
+        int firstIndex = startIndex;
+        int secIndex = DBConstants.CHUNK_SIZE;
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
-                        keyRotationConfig.getIdnPassword())) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.GET_WF_REQUEST)) {
-                preparedStatement.setInt(1, startIndex);
-                preparedStatement.setInt(2, DBConstants.CHUNK_SIZE);
+                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
+                        keyRotationConfig.getNewIdnPassword())) {
+            if (connection.getMetaData().getDriverName().contains("PostgreSQL")) {
+                query = DBConstants.GET_WF_REQUEST_POSTGRE;
+                firstIndex = DBConstants.CHUNK_SIZE;
+                secIndex = startIndex;
+            } else if (connection.getMetaData().getDriverName().contains("SQL Server") ||
+                    connection.getMetaData().getDriverName().contains("Oracle")) {
+                query = DBConstants.GET_WF_REQUEST_OTHER;
+            }
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, firstIndex);
+                preparedStatement.setInt(2, secIndex);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     byte[] requestBytes = resultSet.getBytes(DBConstants.REQUEST);
@@ -78,7 +89,7 @@ public class WorkFlowDAO {
                 throw new KeyRotationException("Error while retrieving requests from WF_REQUEST.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to identity DB.", e);
+            throw new KeyRotationException("Error while connecting to new identity DB.", e);
         }
         return wfRequestList;
     }
@@ -94,8 +105,8 @@ public class WorkFlowDAO {
             throws KeyRotationException {
 
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
-                        keyRotationConfig.getIdnPassword())) {
+                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
+                        keyRotationConfig.getNewIdnPassword())) {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_WF_REQUEST)) {
                 for (WorkflowRequest wfRequest : updateWfRequestList) {
@@ -110,7 +121,7 @@ public class WorkFlowDAO {
                 throw new KeyRotationException("Error while updating requests from WF_REQUEST.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to identity DB.", e);
+            throw new KeyRotationException("Error while connecting to new identity DB.", e);
         }
     }
 

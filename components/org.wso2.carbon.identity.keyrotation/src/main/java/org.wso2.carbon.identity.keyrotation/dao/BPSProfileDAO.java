@@ -61,12 +61,23 @@ public class BPSProfileDAO {
             KeyRotationException {
 
         List<BPSPassword> bpsPasswordList = new ArrayList<>();
+        String query = DBConstants.GET_BPS_PASSWORD;
+        int firstIndex = startIndex;
+        int secIndex = DBConstants.CHUNK_SIZE;
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
-                        keyRotationConfig.getIdnPassword())) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.GET_BPS_PASSWORD)) {
-                preparedStatement.setInt(1, startIndex);
-                preparedStatement.setInt(2, DBConstants.CHUNK_SIZE);
+                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
+                        keyRotationConfig.getNewIdnPassword())) {
+            if (connection.getMetaData().getDriverName().contains("PostgreSQL")) {
+                query = DBConstants.GET_BPS_PASSWORD_POSTGRE;
+                firstIndex = DBConstants.CHUNK_SIZE;
+                secIndex = startIndex;
+            } else if (connection.getMetaData().getDriverName().contains("SQL Server") ||
+                    connection.getMetaData().getDriverName().contains("Oracle")) {
+                query = DBConstants.GET_BPS_PASSWORD_OTHER;
+            }
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, firstIndex);
+                preparedStatement.setInt(2, secIndex);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     bpsPasswordList.add(new BPSPassword(resultSet.getString(PROFILE_NAME),
@@ -78,7 +89,7 @@ public class BPSProfileDAO {
                 throw new KeyRotationException("Error while retrieving passwords from WF_BPS_PROFILE.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to identity DB.", e);
+            throw new KeyRotationException("Error while connecting to new identity DB.", e);
         }
         return bpsPasswordList;
     }
@@ -94,14 +105,14 @@ public class BPSProfileDAO {
             throws KeyRotationException {
 
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
-                        keyRotationConfig.getIdnPassword())) {
+                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
+                        keyRotationConfig.getNewIdnPassword())) {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_BPS_PASSWORD)) {
                 for (BPSPassword bpsPassword : updateBPSPasswordsList) {
                     preparedStatement.setString(1, bpsPassword.getPassword());
                     preparedStatement.setString(2, bpsPassword.getProfileName());
-                    preparedStatement.setString(3, bpsPassword.getTenantId());
+                    preparedStatement.setInt(3, Integer.parseInt(bpsPassword.getTenantId()));
                     preparedStatement.addBatch();
                 }
                 preparedStatement.executeBatch();
@@ -111,7 +122,7 @@ public class BPSProfileDAO {
                 throw new KeyRotationException("Error while updating passwords from WF_BPS_PROFILE.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to identity DB.", e);
+            throw new KeyRotationException("Error while connecting to new identity DB.", e);
         }
     }
 }

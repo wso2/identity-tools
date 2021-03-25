@@ -42,6 +42,7 @@ public class OAuthDAO {
     private static final String CONSUMER_KEY_ID = "CONSUMER_KEY_ID";
     private static final String TOKEN_ID = "TOKEN_ID";
     private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
+    private static final String REFRESH_TOKEN = "REFRESH_TOKEN";
     private static final String ID = "ID";
     private static final String CONSUMER_SECRET = "CONSUMER_SECRET";
     private static final String APP_NAME = "APP_NAME";
@@ -67,13 +68,23 @@ public class OAuthDAO {
             KeyRotationException {
 
         List<OAuthCode> oAuthCodeList = new ArrayList<>();
+        String query = DBConstants.GET_OAUTH_AUTHORIZATION_CODE;
+        int firstIndex = startIndex;
+        int secIndex = DBConstants.CHUNK_SIZE;
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
-                        keyRotationConfig.getIdnPassword())) {
-            try (PreparedStatement preparedStatement =
-                         connection.prepareStatement(DBConstants.GET_OAUTH_AUTHORIZATION_CODE)) {
-                preparedStatement.setInt(1, startIndex);
-                preparedStatement.setInt(2, DBConstants.CHUNK_SIZE);
+                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
+                        keyRotationConfig.getNewIdnPassword())) {
+            if (connection.getMetaData().getDriverName().contains("PostgreSQL")) {
+                query = DBConstants.GET_OAUTH_AUTHORIZATION_CODE_POSTGRE;
+                firstIndex = DBConstants.CHUNK_SIZE;
+                secIndex = startIndex;
+            } else if (connection.getMetaData().getDriverName().contains("SQL Server") ||
+                    connection.getMetaData().getDriverName().contains("Oracle")) {
+                query = DBConstants.GET_OAUTH_AUTHORIZATION_CODE_OTHER;
+            }
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, firstIndex);
+                preparedStatement.setInt(2, secIndex);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     oAuthCodeList.add(new OAuthCode(resultSet.getString(CODE_ID),
@@ -85,7 +96,7 @@ public class OAuthDAO {
                         e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to identity DB.", e);
+            throw new KeyRotationException("Error while connecting to new identity DB.", e);
         }
         return oAuthCodeList;
     }
@@ -101,8 +112,8 @@ public class OAuthDAO {
             throws KeyRotationException {
 
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
-                        keyRotationConfig.getIdnPassword())) {
+                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
+                        keyRotationConfig.getNewIdnPassword())) {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement =
                          connection.prepareStatement(DBConstants.UPDATE_OAUTH_AUTHORIZATION_CODE)) {
@@ -119,7 +130,7 @@ public class OAuthDAO {
                         e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to identity DB.", e);
+            throw new KeyRotationException("Error while connecting to new identity DB.", e);
         }
     }
 
@@ -135,30 +146,40 @@ public class OAuthDAO {
             KeyRotationException {
 
         List<OAuthToken> oAuthTokenList = new ArrayList<>();
+        String query = DBConstants.GET_OAUTH_ACCESS_TOKEN;
+        int firstIndex = startIndex;
+        int secIndex = DBConstants.CHUNK_SIZE;
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
-                        keyRotationConfig.getIdnPassword())) {
-            try (PreparedStatement preparedStatement =
-                         connection.prepareStatement(DBConstants.GET_OAUTH_ACCESS_TOKEN)) {
-                preparedStatement.setInt(1, startIndex);
-                preparedStatement.setInt(2, DBConstants.CHUNK_SIZE);
+                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
+                        keyRotationConfig.getNewIdnPassword())) {
+            if (connection.getMetaData().getDriverName().contains("PostgreSQL")) {
+                query = DBConstants.GET_OAUTH_ACCESS_TOKEN_POSTGRE;
+                firstIndex = DBConstants.CHUNK_SIZE;
+                secIndex = startIndex;
+            } else if (connection.getMetaData().getDriverName().contains("SQL Server") ||
+                    connection.getMetaData().getDriverName().contains("Oracle")) {
+                query = DBConstants.GET_OAUTH_ACCESS_TOKEN_OTHER;
+            }
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, firstIndex);
+                preparedStatement.setInt(2, secIndex);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     oAuthTokenList.add(new OAuthToken(resultSet.getString(TOKEN_ID),
-                            resultSet.getString(ACCESS_TOKEN),
+                            resultSet.getString(ACCESS_TOKEN), resultSet.getString(REFRESH_TOKEN),
                             resultSet.getString(CONSUMER_KEY_ID)));
                 }
             } catch (SQLException e) {
                 throw new KeyRotationException("Error while retrieving auth tokens from IDN_OAUTH2_ACCESS_TOKEN.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to identity DB.", e);
+            throw new KeyRotationException("Error while connecting to new identity DB.", e);
         }
         return oAuthTokenList;
     }
 
     /**
-     * To reEncrypt the access tokens in IDN_OAUTH2_ACCESS_TOKEN using the new key.
+     * To reEncrypt the access and refresh tokens in IDN_OAUTH2_ACCESS_TOKEN using the new key.
      *
      * @param updateAuthTokensList The list containing records that should be re-encrypted.
      * @param keyRotationConfig    Configuration data needed to perform the task.
@@ -169,24 +190,26 @@ public class OAuthDAO {
             KeyRotationException {
 
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
-                        keyRotationConfig.getIdnPassword())) {
+                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
+                        keyRotationConfig.getNewIdnPassword())) {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement =
                          connection.prepareStatement(DBConstants.UPDATE_OAUTH_ACCESS_TOKEN)) {
                 for (OAuthToken oAuthToken : updateAuthTokensList) {
                     preparedStatement.setString(1, oAuthToken.getAccessToken());
-                    preparedStatement.setString(2, oAuthToken.getTokenId());
+                    preparedStatement.setString(2, oAuthToken.getRefreshToken());
+                    preparedStatement.setString(3, oAuthToken.getTokenId());
                     preparedStatement.addBatch();
                 }
                 preparedStatement.executeBatch();
                 connection.commit();
             } catch (SQLException e) {
                 connection.rollback();
-                throw new KeyRotationException("Error while updating access tokens from IDN_OAUTH2_ACCESS_TOKEN.", e);
+                throw new KeyRotationException(
+                        "Error while updating access and refresh tokens from IDN_OAUTH2_ACCESS_TOKEN.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to identity DB.", e);
+            throw new KeyRotationException("Error while connecting to new identity DB.", e);
         }
     }
 
@@ -202,12 +225,23 @@ public class OAuthDAO {
             KeyRotationException {
 
         List<OAuthSecret> oAuthSecretList = new ArrayList<>();
+        String query = DBConstants.GET_OAUTH_SECRET;
+        int firstIndex = startIndex;
+        int secIndex = DBConstants.CHUNK_SIZE;
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
-                        keyRotationConfig.getIdnPassword())) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.GET_OAUTH_SECRET)) {
-                preparedStatement.setInt(1, startIndex);
-                preparedStatement.setInt(2, DBConstants.CHUNK_SIZE);
+                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
+                        keyRotationConfig.getNewIdnPassword())) {
+            if (connection.getMetaData().getDriverName().contains("PostgreSQL")) {
+                query = DBConstants.GET_OAUTH_SECRET_POSTGRE;
+                firstIndex = DBConstants.CHUNK_SIZE;
+                secIndex = startIndex;
+            } else if (connection.getMetaData().getDriverName().contains("SQL Server") ||
+                    connection.getMetaData().getDriverName().contains("Oracle")) {
+                query = DBConstants.GET_OAUTH_SECRET_OTHER;
+            }
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, firstIndex);
+                preparedStatement.setInt(2, secIndex);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     oAuthSecretList.add(new OAuthSecret(resultSet.getString(ID),
@@ -218,7 +252,7 @@ public class OAuthDAO {
                 throw new KeyRotationException("Error while retrieving secrets from IDN_OAUTH_CONSUMER_APPS.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to identity DB.", e);
+            throw new KeyRotationException("Error while connecting to new identity DB.", e);
         }
         return oAuthSecretList;
     }
@@ -235,13 +269,13 @@ public class OAuthDAO {
             KeyRotationException {
 
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
-                        keyRotationConfig.getIdnPassword())) {
+                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
+                        keyRotationConfig.getNewIdnPassword())) {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_OAUTH_SECRET)) {
                 for (OAuthSecret oAuthSecret : updateOAuthSecretList) {
                     preparedStatement.setString(1, oAuthSecret.getConsumerSecret());
-                    preparedStatement.setString(2, oAuthSecret.getId());
+                    preparedStatement.setInt(2, Integer.parseInt(oAuthSecret.getId()));
                     preparedStatement.addBatch();
                 }
                 preparedStatement.executeBatch();
@@ -251,7 +285,7 @@ public class OAuthDAO {
                 throw new KeyRotationException("Error while updating OAuth secrets from IDN_OAUTH_CONSUMER_APPS.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to identity DB.", e);
+            throw new KeyRotationException("Error while connecting to new identity DB.", e);
         }
     }
 }

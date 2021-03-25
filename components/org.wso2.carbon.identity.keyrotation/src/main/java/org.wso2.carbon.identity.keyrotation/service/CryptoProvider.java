@@ -21,6 +21,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import org.apache.axiom.om.util.Base64;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.model.CipherMetaData;
@@ -50,6 +53,7 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class CryptoProvider {
 
+    private static final Log log = LogFactory.getLog(CryptoProvider.class);
     public static final int GCM_IV_LENGTH = 16;
     public static final String JAVA_SECURITY_API_PROVIDER = "BC";
 
@@ -63,8 +67,8 @@ public class CryptoProvider {
      */
     public byte[] encrypt(byte[] cleartext, KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
-        if (cleartext == null || cleartext.length == 0) {
-            throw new KeyRotationException("Cleartext bytes cannot be empty.");
+        if (cleartext == null) {
+            throw new KeyRotationException("Cleartext bytes cannot be null.");
         }
         Cipher cipher;
         byte[] cipherText;
@@ -105,14 +109,19 @@ public class CryptoProvider {
      **/
     public byte[] decrypt(byte[] cipherText, KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
-        if (cipherText == null || cipherText.length == 0) {
-            throw new KeyRotationException("Ciphertext bytes cannot be empty.");
+        if (cipherText == null) {
+            throw new KeyRotationException("Ciphertext bytes cannot be null.");
         }
         Cipher cipher;
         try {
             //Add the BC security provider for better security instead of the default provider.
             Security.addProvider(new BouncyCastleProvider());
             CipherMetaData cipherMetaData = createCipherMetaData(cipherText);
+            //This check is for empty bytes of data that was encrypted and stored.
+            if (cipherMetaData.getCipherBase64Decoded().length == 0) {
+                log.info("Bytes of length 0 found for cipher within the cipherMetaData.");
+                return StringUtils.EMPTY.getBytes();
+            }
             cipher = Cipher.getInstance(KeyRotationConstants.TRANSFORMATION, JAVA_SECURITY_API_PROVIDER);
             cipher.init(Cipher.DECRYPT_MODE,
                     getSecretKey(keyRotationConfig.getOldSecretKey()),
@@ -141,7 +150,8 @@ public class CryptoProvider {
      */
     private SecretKeySpec getSecretKey(String secretKey) {
 
-        return new SecretKeySpec(secretKey.getBytes(), 0, secretKey.getBytes().length, KeyRotationConstants.ALGORITHM);
+        return new SecretKeySpec(secretKey.getBytes(), 0, secretKey.getBytes().length,
+                KeyRotationConstants.ALGORITHM);
     }
 
     /**

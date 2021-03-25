@@ -18,9 +18,15 @@
 
 package org.wso2.carbon.identity.keyrotation.util;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
 import org.apache.axiom.om.util.Base64;
 import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
+import org.wso2.carbon.identity.keyrotation.model.CipherMetaData;
 import org.wso2.carbon.identity.keyrotation.service.CryptoProvider;
+
+import java.nio.charset.Charset;
 
 /**
  * The class that calls the reEncryption mechanism.
@@ -43,5 +49,28 @@ public class EncryptionUtil {
         byte[] plainText = cryptoProvider.decrypt(refactoredCipher, keyRotationConfig);
         byte[] cipherText = cryptoProvider.encrypt(plainText, keyRotationConfig);
         return Base64.encode(cipherText);
+    }
+
+    /**
+     * To check if stored field value is encrypted or not.
+     *
+     * @param cipher The ciphertext needed to perform re-encryption on.
+     * @return Boolean value.
+     */
+    public static boolean checkPlainText(String cipher) {
+
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        String cipherStr = new String(Base64.decode(cipher), Charset.defaultCharset());
+        try {
+            CipherMetaData cipherMetaData = gson.fromJson(cipherStr, CipherMetaData.class);
+            if (cipherMetaData == null) {
+                //To capture plaintext data stored in the db through this condition.
+                return true;
+            }
+        } catch (JsonParseException e) {
+            //To capture plaintext data stored in the db through this exception.
+            return true;
+        }
+        return false;
     }
 }

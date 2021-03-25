@@ -62,13 +62,24 @@ public class RegistryDAO {
                                                            String property) throws KeyRotationException {
 
         List<RegistryProperty> regPropertyList = new ArrayList<>();
+        String query = DBConstants.GET_REG_PROPERTY_DATA;
+        int firstIndex = startIndex;
+        int secIndex = DBConstants.CHUNK_SIZE;
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getRegDBUrl(), keyRotationConfig.getRegUsername(),
-                        keyRotationConfig.getRegPassword())) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.GET_REG_PROPERTY_DATA)) {
+                .getConnection(keyRotationConfig.getNewRegDBUrl(), keyRotationConfig.getNewRegUsername(),
+                        keyRotationConfig.getNewRegPassword())) {
+            if (connection.getMetaData().getDriverName().contains("PostgreSQL")) {
+                query = DBConstants.GET_REG_PROPERTY_DATA_POSTGRE;
+                firstIndex = DBConstants.CHUNK_SIZE;
+                secIndex = startIndex;
+            } else if (connection.getMetaData().getDriverName().contains("SQL Server") ||
+                    connection.getMetaData().getDriverName().contains("Oracle")) {
+                query = DBConstants.GET_REG_PROPERTY_DATA_OTHER;
+            }
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, property);
-                preparedStatement.setInt(2, startIndex);
-                preparedStatement.setInt(3, DBConstants.CHUNK_SIZE);
+                preparedStatement.setInt(2, firstIndex);
+                preparedStatement.setInt(3, secIndex);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     regPropertyList
@@ -82,7 +93,7 @@ public class RegistryDAO {
                         "REG_PROPERTY.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to registry DB.", e);
+            throw new KeyRotationException("Error while connecting to new registry DB.", e);
         }
         return regPropertyList;
     }
@@ -99,15 +110,15 @@ public class RegistryDAO {
             throws KeyRotationException {
 
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getRegDBUrl(), keyRotationConfig.getRegUsername(),
-                        keyRotationConfig.getRegPassword())) {
+                .getConnection(keyRotationConfig.getNewRegDBUrl(), keyRotationConfig.getNewRegUsername(),
+                        keyRotationConfig.getNewRegPassword())) {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection
                     .prepareStatement(DBConstants.UPDATE_REG_PROPERTY_DATA)) {
                 for (RegistryProperty regProperty : updateRegPropertyList) {
                     preparedStatement.setString(1, regProperty.getRegValue());
-                    preparedStatement.setString(2, regProperty.getRegId());
-                    preparedStatement.setString(3, regProperty.getRegTenantId());
+                    preparedStatement.setInt(2, Integer.parseInt(regProperty.getRegId()));
+                    preparedStatement.setInt(3, Integer.parseInt(regProperty.getRegTenantId()));
                     preparedStatement.addBatch();
                 }
                 preparedStatement.executeBatch();
@@ -118,7 +129,7 @@ public class RegistryDAO {
                         "REG_PROPERTY.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to registry DB.", e);
+            throw new KeyRotationException("Error while connecting to new registry DB.", e);
         }
     }
 }

@@ -25,6 +25,7 @@ public class OAuthToken {
 
     private String tokenId;
     private String accessToken;
+    private String refreshToken;
     private String consumerKeyId;
 
     /**
@@ -32,12 +33,14 @@ public class OAuthToken {
      *
      * @param tokenId       Token id field in IDN_OAUTH2_ACCESS_TOKEN table.
      * @param accessToken   Access token field in IDN_OAUTH2_ACCESS_TOKEN table.
+     * @param refreshToken  Refresh token field in IDN_OAUTH2_ACCESS_TOKEN table.
      * @param consumerKeyId Consumer key id field in IDN_OAUTH2_ACCESS_TOKEN table.
      */
-    public OAuthToken(String tokenId, String accessToken, String consumerKeyId) {
+    public OAuthToken(String tokenId, String accessToken, String refreshToken, String consumerKeyId) {
 
         this.tokenId = tokenId;
         this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
         this.consumerKeyId = consumerKeyId;
     }
 
@@ -52,7 +55,7 @@ public class OAuthToken {
     }
 
     /**
-     * Setter to set the tenant id.
+     * Setter to set the token id.
      *
      * @param tokenId Token id.
      */
@@ -79,6 +82,26 @@ public class OAuthToken {
     public void setAccessToken(String accessToken) {
 
         this.accessToken = accessToken;
+    }
+
+    /**
+     * Getter to get the refresh token.
+     *
+     * @return Refresh token.
+     */
+    public String getRefreshToken() {
+
+        return refreshToken;
+    }
+
+    /**
+     * Setter to set the refresh token.
+     *
+     * @param refreshToken Refresh token.
+     */
+    public void setRefreshToken(String refreshToken) {
+
+        this.refreshToken = refreshToken;
     }
 
     /**
