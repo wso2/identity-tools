@@ -24,7 +24,7 @@ import org.wso2.carbon.identity.keyrotation.service.SyncedDataKeyRotator;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 
 /**
- * Class that calls the symmetric key-rotation service.
+ * Class that calls the symmetric key rotation service.
  */
 public class KeyRotationService {
 
@@ -33,13 +33,13 @@ public class KeyRotationService {
     public static void main(String[] args) throws KeyRotationException {
 
         KeyRotationConfig configs = KeyRotationConfig.getInstance().loadConfigs(args);
-        if (configs.getEnableDBMigrator().equals(TRUE)) {
+        if (TRUE.equals(configs.getEnableDBMigrator())) {
             DBKeyRotator.getInstance().dbReEncryptor(configs);
         }
-        if (configs.getEnableConfigMigrator().equals(TRUE)) {
+        if (TRUE.equals(configs.getEnableConfigMigrator())) {
             ConfigFileKeyRotator.getInstance().configFileReEncryptor(configs);
         }
-        if (configs.getEnableSyncMigrator().equals(TRUE)) {
+        if (TRUE.equals(configs.getEnableSyncMigrator())) {
             SyncedDataKeyRotator.getInstance().syncedDataReEncryptor(configs);
         }
     }

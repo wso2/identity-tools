@@ -56,6 +56,7 @@ public class CryptoProvider {
     private static final Log log = LogFactory.getLog(CryptoProvider.class);
     public static final int GCM_IV_LENGTH = 16;
     public static final String JAVA_SECURITY_API_PROVIDER = "BC";
+    private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
     /**
      * Computes and returns the ciphertext of the given cleartext.
@@ -178,7 +179,6 @@ public class CryptoProvider {
      */
     private byte[] createSelfContainedCiphertext(byte[] cipherText, byte[] iv) {
 
-        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         CipherMetaData cipherMetaData = new CipherMetaData();
         cipherMetaData.setCipherText(KeyRotationServiceUtils.getSelfContainedCiphertextWithIv(cipherText, iv));
         cipherMetaData.setTransformation(KeyRotationConstants.TRANSFORMATION);
@@ -207,7 +207,6 @@ public class CryptoProvider {
     public byte[] reFactorCipherText(byte[] cipherText) throws KeyRotationException {
 
         try {
-            Gson gson = new GsonBuilder().disableHtmlEscaping().create();
             String cipherStr = new String(cipherText, Charset.defaultCharset());
             CipherMetaData cipherMetaData = gson.fromJson(cipherStr, CipherMetaData.class);
             cipherText = cipherMetaData.getCipherBase64Decoded();

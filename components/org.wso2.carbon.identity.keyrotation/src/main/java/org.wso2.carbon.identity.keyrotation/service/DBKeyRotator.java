@@ -94,7 +94,7 @@ public class DBKeyRotator {
                 IdentityDAO.getInstance().getTOTPSecretsChunks(startIndex, keyRotationConfig);
         while (CollectionUtils.isNotEmpty(chunkList)) {
             for (TOTPSecret totpSecret : chunkList) {
-                if (totpSecret.getDataKey().equals(DBConstants.DATA_KEY) &&
+                if (DBConstants.DATA_KEY.equals(totpSecret.getDataKey()) &&
                         !checkPlainText(totpSecret.getDataValue())) {
                     log.info("Encrypted value " + totpSecret.getDataValue());
                     String reEncryptedValue = reEncryptor(totpSecret.getDataValue(), keyRotationConfig);

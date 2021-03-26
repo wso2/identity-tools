@@ -35,9 +35,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Class to store the key-rotation utility methods.
+ * Class to store the key rotation utility methods.
  */
 public class KeyRotationServiceUtils {
+
+    private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
     /**
      * Creates and returns a self contained cipherText with IV.
@@ -48,7 +50,6 @@ public class KeyRotationServiceUtils {
      */
     public static String getSelfContainedCiphertextWithIv(byte[] cipherText, byte[] iv) {
 
-        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         CipherInitializationVector cipherInitializationVector = new CipherInitializationVector();
         cipherInitializationVector.setCipher(Base64.encode(cipherText));
         cipherInitializationVector.setInitializationVector(Base64.encode(iv));
@@ -64,7 +65,6 @@ public class KeyRotationServiceUtils {
      */
     public static CipherMetaData setIvAndOriginalCipherText(byte[] cipherText) {
 
-        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         String cipherStr = new String(cipherText, Charset.defaultCharset());
         CipherInitializationVector cipherInitializationVector =
                 gson.fromJson(cipherStr, CipherInitializationVector.class);

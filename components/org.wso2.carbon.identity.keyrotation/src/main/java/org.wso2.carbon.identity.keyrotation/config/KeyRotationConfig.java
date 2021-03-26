@@ -96,7 +96,7 @@ public class KeyRotationConfig {
                     throw new KeyRotationException(
                             "Error occurred, null value found in property, " + props[i].getName());
                 }
-                if (props[i].getName().equals("oldISHome") || props[i].getName().equals("newISHome")) {
+                if ("oldISHome".equals(props[i].getName()) || "newISHome".equals(props[i].getName())) {
                     File file = new File(props[i].get(keyRotationConfig).toString());
                     if (!file.exists()) {
                         throw new KeyRotationException(

@@ -33,6 +33,9 @@ import java.nio.charset.Charset;
  */
 public class EncryptionUtil {
 
+
+    private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+
     /**
      * ReEncryption mechanism needed for the key rotation task.
      *
@@ -59,7 +62,6 @@ public class EncryptionUtil {
      */
     public static boolean checkPlainText(String fieldValue) {
 
-        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         String fieldValueStr = new String(Base64.decode(fieldValue), Charset.defaultCharset());
         try {
             CipherMetaData cipherMetaData = gson.fromJson(fieldValueStr, CipherMetaData.class);
