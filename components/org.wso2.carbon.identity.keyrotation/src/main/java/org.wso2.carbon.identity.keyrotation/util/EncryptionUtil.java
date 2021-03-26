@@ -54,15 +54,15 @@ public class EncryptionUtil {
     /**
      * To check if stored field value is encrypted or not.
      *
-     * @param cipher The ciphertext needed to perform re-encryption on.
+     * @param fieldValue The field value that needs to be checked whether it is encrypted or not.
      * @return Boolean value.
      */
-    public static boolean checkPlainText(String cipher) {
+    public static boolean checkPlainText(String fieldValue) {
 
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-        String cipherStr = new String(Base64.decode(cipher), Charset.defaultCharset());
+        String fieldValueStr = new String(Base64.decode(fieldValue), Charset.defaultCharset());
         try {
-            CipherMetaData cipherMetaData = gson.fromJson(cipherStr, CipherMetaData.class);
+            CipherMetaData cipherMetaData = gson.fromJson(fieldValueStr, CipherMetaData.class);
             if (cipherMetaData == null) {
                 //To capture plaintext data stored in the db through this condition.
                 return true;

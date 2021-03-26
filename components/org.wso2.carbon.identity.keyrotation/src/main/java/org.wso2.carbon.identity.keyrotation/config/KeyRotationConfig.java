@@ -73,7 +73,7 @@ public class KeyRotationConfig {
             throw new KeyRotationException(
                     "Error occurred, properties.yaml file not found in provided path, " + propertiesFilePath);
         }
-        log.info("Loading Key Rotation Configs from absolute path: " + propertiesFilePath);
+        log.info("Loading Key Rotation Configs from path: " + propertiesFilePath);
         KeyRotationConfig keyRotationConfig =
                 KeyRotationServiceUtils.loadKeyRotationConfig(propertiesFilePath);
         checkKeyRotationConfigs(keyRotationConfig);

@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.identity.keyrotation.util;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
@@ -73,7 +72,7 @@ public class ConfigFileUtil {
     }
 
     /**
-     * Get all the folder paths inside the tenant base path.
+     * Get all the tenants inside the tenant base path.
      *
      * @param isHome The absolute path of newISHome.
      * @return List of tenants inside the tenant base path.
@@ -118,9 +117,7 @@ public class ConfigFileUtil {
                 log.info("Encrypted value " + encryptedValue);
                 String reEncryptedValue = reEncryptor(encryptedValue, keyRotationConfig);
                 log.info("Re-encrypted value " + reEncryptedValue);
-                if (StringUtils.isNotEmpty(reEncryptedValue)) {
-                    data.item(0).setNodeValue(reEncryptedValue);
-                }
+                data.item(0).setNodeValue(reEncryptedValue);
                 Transformer transformer = TransformerFactory.newInstance().newTransformer();
                 transformer.transform(new DOMSource(document), new StreamResult(filename.getPath()));
             }

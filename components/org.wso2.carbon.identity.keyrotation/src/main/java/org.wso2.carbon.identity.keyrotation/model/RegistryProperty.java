@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.keyrotation.model;
 
 /**
- * Class to hold the keystore properties stored in REG_PROPERTY.
+ * Class to hold the registry properties stored in REG_PROPERTY.
  */
 public class RegistryProperty {
 

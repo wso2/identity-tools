@@ -68,12 +68,12 @@ public class RegistryDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewRegDBUrl(), keyRotationConfig.getNewRegUsername(),
                         keyRotationConfig.getNewRegPassword())) {
-            if (connection.getMetaData().getDriverName().contains("PostgreSQL")) {
+            if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_REG_PROPERTY_DATA_POSTGRE;
                 firstIndex = DBConstants.CHUNK_SIZE;
                 secIndex = startIndex;
-            } else if (connection.getMetaData().getDriverName().contains("SQL Server") ||
-                    connection.getMetaData().getDriverName().contains("Oracle")) {
+            } else if (connection.getMetaData().getDriverName().contains(DBConstants.MSSQL) ||
+                    connection.getMetaData().getDriverName().contains(DBConstants.ORACLE)) {
                 query = DBConstants.GET_REG_PROPERTY_DATA_OTHER;
             }
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {

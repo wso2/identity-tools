@@ -60,14 +60,14 @@ public class DBKeyRotator {
     }
 
     /**
-     * ReEncryption of the DB data.
+     * ReEncryption of the identity and registry DB data.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
      */
     public void dbReEncryptor(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
-        log.info("Re-encrypting DB data...");
+        log.info("Re-encrypting identity and registry DB data...");
         reEncryptIdentityTOTPData(keyRotationConfig);
         reEncryptOauthAuthData(keyRotationConfig);
         reEncryptOauthTokenData(keyRotationConfig);
@@ -77,7 +77,7 @@ public class DBKeyRotator {
         reEncryptKeystorePasswordData(keyRotationConfig);
         reEncryptKeystorePrivatekeyPassData(keyRotationConfig);
         reEncryptSubscriberPasswordData(keyRotationConfig);
-        log.info("Re-encrypting DB data completed...\n");
+        log.info("Re-encrypting identity and registry DB data completed...\n");
     }
 
     /**

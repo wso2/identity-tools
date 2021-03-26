@@ -67,12 +67,12 @@ public class IdentityDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
                         keyRotationConfig.getNewIdnPassword())) {
-            if (connection.getMetaData().getDriverName().contains("PostgreSQL")) {
+            if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_TOTP_SECRET_POSTGRE;
                 firstIndex = DBConstants.CHUNK_SIZE;
                 secIndex = startIndex;
-            } else if (connection.getMetaData().getDriverName().contains("SQL Server") ||
-                    connection.getMetaData().getDriverName().contains("Oracle")) {
+            } else if (connection.getMetaData().getDriverName().contains(DBConstants.MSSQL) ||
+                    connection.getMetaData().getDriverName().contains(DBConstants.ORACLE)) {
                 query = DBConstants.GET_TOTP_SECRET_OTHER;
             }
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -87,8 +87,7 @@ public class IdentityDAO {
                                     resultSet.getString(DATA_VALUE)));
                 }
             } catch (SQLException e) {
-                throw new KeyRotationException("Error while retrieving TOTP secrets from IDN_IDENTITY_USER_DATA.",
-                        e);
+                throw new KeyRotationException("Error while retrieving TOTP secrets from IDN_IDENTITY_USER_DATA.", e);
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to new identity DB.", e);

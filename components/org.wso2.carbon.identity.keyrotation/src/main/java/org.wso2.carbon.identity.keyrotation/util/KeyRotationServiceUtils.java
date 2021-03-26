@@ -44,7 +44,7 @@ public class KeyRotationServiceUtils {
      *
      * @param cipherText The ciphertext.
      * @param iv         The Initialization Vector.
-     * @return The Base64 encoded cipherWithMetaDataStr as a byte array.
+     * @return The Base64 encoded cipherWithMetaDataStr.
      */
     public static String getSelfContainedCiphertextWithIv(byte[] cipherText, byte[] iv) {
 
@@ -60,14 +60,14 @@ public class KeyRotationServiceUtils {
      * Set ciphertext and IV within the CipherMetaData object.
      *
      * @param cipherText The ciphertext.
-     * @return The CipherMetaData object containing the ciphertext  and IV.
+     * @return The CipherMetaData object containing the ciphertext, IV and transformation.
      */
     public static CipherMetaData setIvAndOriginalCipherText(byte[] cipherText) {
 
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         String cipherStr = new String(cipherText, Charset.defaultCharset());
-        CipherInitializationVector cipherInitializationVector = gson.fromJson(cipherStr,
-                CipherInitializationVector.class);
+        CipherInitializationVector cipherInitializationVector =
+                gson.fromJson(cipherStr, CipherInitializationVector.class);
         CipherMetaData cipherMetaData = new CipherMetaData();
         cipherMetaData.setIv(cipherInitializationVector.getInitializationVector());
         cipherMetaData.setCipherText(cipherInitializationVector.getCipher());
@@ -75,24 +75,20 @@ public class KeyRotationServiceUtils {
     }
 
     /**
-     * To load the configurations of the properties.yaml file inside the resources directory.
+     * To load the configurations of the properties.yaml file of the provided path.
      *
-     * @param configFilePath Properties.yaml file absolute path.
+     * @param configFilePath Properties.yaml file path.
      * @return An object of the KeyRotationConfig class.
      */
     public static KeyRotationConfig loadKeyRotationConfig(String configFilePath) throws KeyRotationException {
 
         Path path = Paths.get(configFilePath);
-        if (Files.exists(path)) {
-            try {
-                Reader reader = new InputStreamReader(Files.newInputStream(path), StandardCharsets.UTF_8);
-                Yaml yaml = new Yaml();
-                return yaml.loadAs(reader, KeyRotationConfig.class);
-            } catch (IOException e) {
-                throw new KeyRotationException("Error occurred while loading the yaml file: ", e);
-            }
-        } else {
-            throw new KeyRotationException("File does not exist at: " + configFilePath);
+        try {
+            Reader reader = new InputStreamReader(Files.newInputStream(path), StandardCharsets.UTF_8);
+            Yaml yaml = new Yaml();
+            return yaml.loadAs(reader, KeyRotationConfig.class);
+        } catch (IOException e) {
+            throw new KeyRotationException("Error occurred while loading the yaml file: ", e);
         }
     }
 }

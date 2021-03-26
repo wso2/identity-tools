@@ -74,12 +74,12 @@ public class OAuthDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
                         keyRotationConfig.getNewIdnPassword())) {
-            if (connection.getMetaData().getDriverName().contains("PostgreSQL")) {
+            if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_OAUTH_AUTHORIZATION_CODE_POSTGRE;
                 firstIndex = DBConstants.CHUNK_SIZE;
                 secIndex = startIndex;
-            } else if (connection.getMetaData().getDriverName().contains("SQL Server") ||
-                    connection.getMetaData().getDriverName().contains("Oracle")) {
+            } else if (connection.getMetaData().getDriverName().contains(DBConstants.MSSQL) ||
+                    connection.getMetaData().getDriverName().contains(DBConstants.ORACLE)) {
                 query = DBConstants.GET_OAUTH_AUTHORIZATION_CODE_OTHER;
             }
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -102,7 +102,7 @@ public class OAuthDAO {
     }
 
     /**
-     * To reEncrypt the auth code in IDN_OAUTH2_AUTHORIZATION_CODE using the new key.
+     * To reEncrypt the OAuth code in IDN_OAUTH2_AUTHORIZATION_CODE using the new key.
      *
      * @param updateAuthCodeList The list containing records that should be re-encrypted.
      * @param keyRotationConfig  Configuration data needed to perform the task.
@@ -152,12 +152,12 @@ public class OAuthDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
                         keyRotationConfig.getNewIdnPassword())) {
-            if (connection.getMetaData().getDriverName().contains("PostgreSQL")) {
+            if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_OAUTH_ACCESS_TOKEN_POSTGRE;
                 firstIndex = DBConstants.CHUNK_SIZE;
                 secIndex = startIndex;
-            } else if (connection.getMetaData().getDriverName().contains("SQL Server") ||
-                    connection.getMetaData().getDriverName().contains("Oracle")) {
+            } else if (connection.getMetaData().getDriverName().contains(DBConstants.MSSQL) ||
+                    connection.getMetaData().getDriverName().contains(DBConstants.ORACLE)) {
                 query = DBConstants.GET_OAUTH_ACCESS_TOKEN_OTHER;
             }
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -186,8 +186,7 @@ public class OAuthDAO {
      * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
      */
     public void updateOAuthTokenChunks(List<OAuthToken> updateAuthTokensList, KeyRotationConfig keyRotationConfig)
-            throws
-            KeyRotationException {
+            throws KeyRotationException {
 
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
@@ -231,12 +230,12 @@ public class OAuthDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
                         keyRotationConfig.getNewIdnPassword())) {
-            if (connection.getMetaData().getDriverName().contains("PostgreSQL")) {
+            if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_OAUTH_SECRET_POSTGRE;
                 firstIndex = DBConstants.CHUNK_SIZE;
                 secIndex = startIndex;
-            } else if (connection.getMetaData().getDriverName().contains("SQL Server") ||
-                    connection.getMetaData().getDriverName().contains("Oracle")) {
+            } else if (connection.getMetaData().getDriverName().contains(DBConstants.MSSQL) ||
+                    connection.getMetaData().getDriverName().contains(DBConstants.ORACLE)) {
                 query = DBConstants.GET_OAUTH_SECRET_OTHER;
             }
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {

@@ -84,15 +84,15 @@ public class CryptoProvider {
             cipherText = createSelfContainedCiphertext(cipherText, iv);
 
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | NoSuchProviderException e) {
-            String errorMessage = String.format("Error occurred while instantiating Cipher object" +
+            String errorMessage = String.format("Error occurred while instantiating cipher object" +
                     " with algorithm: '%s'.", KeyRotationConstants.TRANSFORMATION);
             throw new KeyRotationException(errorMessage, e);
         } catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
-            String errorMessage = String.format("Error occurred while initializing Cipher object" +
+            String errorMessage = String.format("Error occurred while initializing cipher object" +
                     " with algorithm: '%s'.", KeyRotationConstants.TRANSFORMATION);
             throw new KeyRotationException(errorMessage, e);
         } catch (IllegalBlockSizeException | BadPaddingException e) {
-            String errorMessage = String.format("Error occurred while encrypting using Cipher object" +
+            String errorMessage = String.format("Error occurred while encrypting using cipher object" +
                     " with algorithm: '%s'.", KeyRotationConstants.TRANSFORMATION);
             throw new KeyRotationException(errorMessage, e);
         }
@@ -128,15 +128,15 @@ public class CryptoProvider {
                     new IvParameterSpec(cipherMetaData.getIvBase64Decoded()));
             return cipher.doFinal(cipherMetaData.getCipherBase64Decoded());
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | NoSuchProviderException e) {
-            String errorMessage = String.format("Error occurred while instantiating Cipher object" +
+            String errorMessage = String.format("Error occurred while instantiating cipher object" +
                     " with algorithm: '%s'.", KeyRotationConstants.TRANSFORMATION);
             throw new KeyRotationException(errorMessage, e);
         } catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
-            String errorMessage = String.format("Error occurred while initializing Cipher object" +
+            String errorMessage = String.format("Error occurred while initializing cipher object" +
                     " with algorithm: '%s'.", KeyRotationConstants.TRANSFORMATION);
             throw new KeyRotationException(errorMessage, e);
         } catch (IllegalBlockSizeException | BadPaddingException e) {
-            String errorMessage = String.format("Error occurred while encrypting using Cipher object" +
+            String errorMessage = String.format("Error occurred while encrypting using cipher object" +
                     " with algorithm: '%s'.", KeyRotationConstants.TRANSFORMATION);
             throw new KeyRotationException(errorMessage, e);
         }

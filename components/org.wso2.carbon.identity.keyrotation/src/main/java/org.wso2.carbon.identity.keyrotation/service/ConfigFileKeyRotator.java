@@ -118,8 +118,7 @@ public class ConfigFileKeyRotator {
      */
     private void reEncryptTenantUserStore(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
-        List<String> tenants =
-                getFolderPaths(keyRotationConfig.getNewISHome());
+        List<String> tenants = getFolderPaths(keyRotationConfig.getNewISHome());
         for (String tenant : tenants) {
             getConfigsAndUpdate(keyRotationConfig, keyRotationConfig.getNewISHome(), tenant,
                     KeyRotationConstants.TENANT);

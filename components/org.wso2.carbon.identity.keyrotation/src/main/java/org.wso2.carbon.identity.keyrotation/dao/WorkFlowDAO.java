@@ -68,12 +68,12 @@ public class WorkFlowDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
                         keyRotationConfig.getNewIdnPassword())) {
-            if (connection.getMetaData().getDriverName().contains("PostgreSQL")) {
+            if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_WF_REQUEST_POSTGRE;
                 firstIndex = DBConstants.CHUNK_SIZE;
                 secIndex = startIndex;
-            } else if (connection.getMetaData().getDriverName().contains("SQL Server") ||
-                    connection.getMetaData().getDriverName().contains("Oracle")) {
+            } else if (connection.getMetaData().getDriverName().contains(DBConstants.MSSQL) ||
+                    connection.getMetaData().getDriverName().contains(DBConstants.ORACLE)) {
                 query = DBConstants.GET_WF_REQUEST_OTHER;
             }
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {

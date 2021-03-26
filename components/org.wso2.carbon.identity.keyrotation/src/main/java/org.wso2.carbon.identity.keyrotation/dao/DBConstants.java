@@ -26,6 +26,9 @@ public class DBConstants {
     public static final int SYNC_CHUNK_SIZE = 1;
     public static final String CREDENTIAL = "Credential";
     public static final String REQUEST = "REQUEST";
+    public static final String POSTGRESQL = "PostgreSQL";
+    public static final String MSSQL = "SQL Server";
+    public static final String ORACLE = "Oracle";
     public static final String DATA_KEY = "http://wso2.org/claims/identity/secretkey";
     public static final String GET_TOTP_SECRET = "SELECT TENANT_ID, USER_NAME, DATA_KEY, DATA_VALUE " +
             "FROM IDN_IDENTITY_USER_DATA ORDER BY TENANT_ID, USER_NAME, DATA_KEY LIMIT ?, ?";
