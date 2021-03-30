@@ -19,8 +19,7 @@
 package org.wso2.carbon.identity.keyrotation.service;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.dao.BPSProfileDAO;
 import org.wso2.carbon.identity.keyrotation.dao.DBConstants;
@@ -41,14 +40,14 @@ import org.wso2.carbon.identity.workflow.mgt.dto.WorkflowRequest;
 import java.util.List;
 
 import static org.wso2.carbon.identity.keyrotation.util.EncryptionUtil.checkPlainText;
-import static org.wso2.carbon.identity.keyrotation.util.EncryptionUtil.reEncryptor;
+import static org.wso2.carbon.identity.keyrotation.util.EncryptionUtil.symmetricReEncryption;
 
 /**
  * DB reEncryption service.
  */
 public class DBKeyRotator {
 
-    private static final Log log = LogFactory.getLog(DBKeyRotator.class);
+    private static final Logger log = Logger.getLogger(DBKeyRotator.class);
     private static final DBKeyRotator instance = new DBKeyRotator();
     private static final String password = "password";
     private static final String privatekeyPass = "privatekeyPass";
@@ -97,7 +96,7 @@ public class DBKeyRotator {
                 if (DBConstants.DATA_KEY.equals(totpSecret.getDataKey()) &&
                         !checkPlainText(totpSecret.getDataValue())) {
                     log.info("Encrypted value " + totpSecret.getDataValue());
-                    String reEncryptedValue = reEncryptor(totpSecret.getDataValue(), keyRotationConfig);
+                    String reEncryptedValue = symmetricReEncryption(totpSecret.getDataValue(), keyRotationConfig);
                     totpSecret.setDataValue(reEncryptedValue);
                     log.info("Re-encrypted value " + totpSecret.getDataValue());
                 }
@@ -124,7 +123,7 @@ public class DBKeyRotator {
             for (OAuthCode oAuthCode : chunkList) {
                 if (!checkPlainText(oAuthCode.getAuthorizationCode())) {
                     log.info("Encrypted value " + oAuthCode.getAuthorizationCode());
-                    String reEncryptedValue = reEncryptor(oAuthCode.getAuthorizationCode(),
+                    String reEncryptedValue = symmetricReEncryption(oAuthCode.getAuthorizationCode(),
                             keyRotationConfig);
                     oAuthCode.setAuthorizationCode(reEncryptedValue);
                     log.info("Re-encrypted value " + oAuthCode.getAuthorizationCode());
@@ -152,14 +151,14 @@ public class DBKeyRotator {
             for (OAuthToken oAuthToken : chunkList) {
                 if (!checkPlainText(oAuthToken.getAccessToken())) {
                     log.info("Encrypted access token value " + oAuthToken.getAccessToken());
-                    String accessTokenReEncryptedValue = reEncryptor(oAuthToken.getAccessToken(),
+                    String accessTokenReEncryptedValue = symmetricReEncryption(oAuthToken.getAccessToken(),
                             keyRotationConfig);
                     oAuthToken.setAccessToken(accessTokenReEncryptedValue);
                     log.info("Re-encrypted value " + oAuthToken.getAccessToken());
                 }
                 if (!checkPlainText(oAuthToken.getRefreshToken())) {
                     log.info("Encrypted refresh token value " + oAuthToken.getRefreshToken());
-                    String refreshTokenReEncryptedValue = reEncryptor(oAuthToken.getRefreshToken(),
+                    String refreshTokenReEncryptedValue = symmetricReEncryption(oAuthToken.getRefreshToken(),
                             keyRotationConfig);
                     oAuthToken.setRefreshToken(refreshTokenReEncryptedValue);
                     log.info("Re-encrypted value " + oAuthToken.getRefreshToken());
@@ -187,7 +186,7 @@ public class DBKeyRotator {
             for (OAuthSecret oAuthSecret : chunkList) {
                 if (!checkPlainText(oAuthSecret.getConsumerSecret())) {
                     log.info("Encrypted value " + oAuthSecret.getConsumerSecret());
-                    String reEncryptedValue = reEncryptor(oAuthSecret.getConsumerSecret(),
+                    String reEncryptedValue = symmetricReEncryption(oAuthSecret.getConsumerSecret(),
                             keyRotationConfig);
                     oAuthSecret.setConsumerSecret(reEncryptedValue);
                     log.info("Re-encrypted value " + oAuthSecret.getConsumerSecret());
@@ -215,7 +214,7 @@ public class DBKeyRotator {
             for (BPSPassword bpsPassword : chunkList) {
                 if (!checkPlainText(bpsPassword.getPassword())) {
                     log.info("Encrypted value " + bpsPassword.getPassword());
-                    String reEncryptedValue = reEncryptor(bpsPassword.getPassword(), keyRotationConfig);
+                    String reEncryptedValue = symmetricReEncryption(bpsPassword.getPassword(), keyRotationConfig);
                     bpsPassword.setPassword(reEncryptedValue);
                     log.info("Re-encrypted value " + bpsPassword.getPassword());
                 }
@@ -244,7 +243,8 @@ public class DBKeyRotator {
                     if (DBConstants.CREDENTIAL.equals(parameter.getName()) &&
                             !checkPlainText(parameter.getValue().toString())) {
                         log.info("Encrypted value " + parameter.getValue().toString());
-                        String reEncryptedValue = reEncryptor(parameter.getValue().toString(), keyRotationConfig);
+                        String reEncryptedValue = symmetricReEncryption(parameter.getValue().toString(),
+                                keyRotationConfig);
                         parameter.setValue(reEncryptedValue);
                         log.info("Re-encrypted value " + parameter.getValue().toString());
                     }
@@ -272,7 +272,7 @@ public class DBKeyRotator {
             for (RegistryProperty regProperty : chunkList) {
                 if (!checkPlainText(regProperty.getRegValue())) {
                     log.info("Encrypted value " + regProperty.getRegValue());
-                    String reEncryptedValue = reEncryptor(regProperty.getRegValue(), keyRotationConfig);
+                    String reEncryptedValue = symmetricReEncryption(regProperty.getRegValue(), keyRotationConfig);
                     regProperty.setRegValue(reEncryptedValue);
                     log.info("Re-encrypted value " + regProperty.getRegValue());
                 }
@@ -299,7 +299,7 @@ public class DBKeyRotator {
             for (RegistryProperty regProperty : chunkList) {
                 if (!checkPlainText(regProperty.getRegValue())) {
                     log.info("Encrypted value " + regProperty.getRegValue());
-                    String reEncryptedValue = reEncryptor(regProperty.getRegValue(), keyRotationConfig);
+                    String reEncryptedValue = symmetricReEncryption(regProperty.getRegValue(), keyRotationConfig);
                     regProperty.setRegValue(reEncryptedValue);
                     log.info("Re-encrypted value " + regProperty.getRegValue());
                 }
@@ -327,7 +327,7 @@ public class DBKeyRotator {
             for (RegistryProperty regProperty : chunkList) {
                 if (!checkPlainText(regProperty.getRegValue())) {
                     log.info("Encrypted value " + regProperty.getRegValue());
-                    String reEncryptedValue = reEncryptor(regProperty.getRegValue(), keyRotationConfig);
+                    String reEncryptedValue = symmetricReEncryption(regProperty.getRegValue(), keyRotationConfig);
                     regProperty.setRegValue(reEncryptedValue);
                     log.info("Re-encrypted value " + regProperty.getRegValue());
                 }

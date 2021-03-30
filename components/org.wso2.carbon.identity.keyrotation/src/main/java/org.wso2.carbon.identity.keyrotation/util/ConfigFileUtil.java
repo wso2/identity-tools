@@ -18,8 +18,7 @@
 
 package org.wso2.carbon.identity.keyrotation.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
@@ -45,14 +44,14 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import static org.wso2.carbon.identity.keyrotation.util.EncryptionUtil.reEncryptor;
+import static org.wso2.carbon.identity.keyrotation.util.EncryptionUtil.symmetricReEncryption;
 
 /**
  * The class that holds utility methods to update the configuration files.
  */
 public class ConfigFileUtil {
 
-    private static final Log log = LogFactory.getLog(ConfigFileUtil.class);
+    private static final Logger log = Logger.getLogger(ConfigFileUtil.class);
 
     /**
      * Get all the files inside the base path.
@@ -115,7 +114,7 @@ public class ConfigFileUtil {
                 log.info("Re-encryption in " + filename + " configuration file.");
                 String encryptedValue = data.item(0).getNodeValue();
                 log.info("Encrypted value " + encryptedValue);
-                String reEncryptedValue = reEncryptor(encryptedValue, keyRotationConfig);
+                String reEncryptedValue = symmetricReEncryption(encryptedValue, keyRotationConfig);
                 log.info("Re-encrypted value " + reEncryptedValue);
                 data.item(0).setNodeValue(reEncryptedValue);
                 Transformer transformer = TransformerFactory.newInstance().newTransformer();
@@ -123,12 +122,8 @@ public class ConfigFileUtil {
             }
         } catch (SAXException | IOException e) {
             throw new KeyRotationException("Error occurred while parsing the xml file, " + e);
-        } catch (TransformerException e) {
+        } catch (TransformerException | ParserConfigurationException | XPathExpressionException e) {
             throw new KeyRotationException("Error occurred while updating configuration file, " + e);
-        } catch (ParserConfigurationException e) {
-            throw new KeyRotationException("Error occurred while creating a new instance of DocumentBuilder, " + e);
-        } catch (XPathExpressionException e) {
-            throw new KeyRotationException("Error occurred in xPath expression, " + e);
         }
     }
 }

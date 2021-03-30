@@ -33,7 +33,6 @@ import java.nio.charset.Charset;
  */
 public class EncryptionUtil {
 
-
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
     /**
@@ -44,7 +43,7 @@ public class EncryptionUtil {
      * @return Ciphertext that gets decrypted from the old key and encrypted using the new key.
      * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
      */
-    public static String reEncryptor(String cipher, KeyRotationConfig keyRotationConfig)
+    public static String symmetricReEncryption(String cipher, KeyRotationConfig keyRotationConfig)
             throws KeyRotationException {
 
         CryptoProvider cryptoProvider = new CryptoProvider();
@@ -66,11 +65,11 @@ public class EncryptionUtil {
         try {
             CipherMetaData cipherMetaData = gson.fromJson(fieldValueStr, CipherMetaData.class);
             if (cipherMetaData == null) {
-                //To capture plaintext data stored in the db through this condition.
+                // To capture plaintext data stored in the db through this condition.
                 return true;
             }
         } catch (JsonParseException e) {
-            //To capture plaintext data stored in the db through this exception.
+            // To capture plaintext data stored in the db through this exception.
             return true;
         }
         return false;
