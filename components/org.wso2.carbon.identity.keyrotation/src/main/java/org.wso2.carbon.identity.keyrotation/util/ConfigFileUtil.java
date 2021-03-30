@@ -52,6 +52,8 @@ import static org.wso2.carbon.identity.keyrotation.util.EncryptionUtil.symmetric
 public class ConfigFileUtil {
 
     private static final Logger log = Logger.getLogger(ConfigFileUtil.class);
+    public static int updateCount = 0;
+    public static int failedCount = 0;
 
     /**
      * Get all the files inside the base path.
@@ -107,8 +109,9 @@ public class ConfigFileUtil {
                     (NodeList) xpath.compile("//" + property + "[@encrypted='true'][@name='password']/text()")
                             .evaluate(document, XPathConstants.NODESET);
             if (data.getLength() != 1 && data.getLength() != 0) {
-                throw new KeyRotationException("Error occurred while updating config file having multiple encrypted " +
-                        "properties");
+                log.error("Error occurred while updating config file having multiple encrypted properties in " +
+                        filename);
+                failedCount++;
             }
             if (data.getLength() == 1) {
                 log.info("Re-encryption in " + filename + " configuration file.");
@@ -119,11 +122,14 @@ public class ConfigFileUtil {
                 data.item(0).setNodeValue(reEncryptedValue);
                 Transformer transformer = TransformerFactory.newInstance().newTransformer();
                 transformer.transform(new DOMSource(document), new StreamResult(filename.getPath()));
+                updateCount++;
             }
         } catch (SAXException | IOException e) {
-            throw new KeyRotationException("Error occurred while parsing the xml file, " + e);
+            log.error("Error occurred while parsing the xml file, " + e);
+            failedCount++;
         } catch (TransformerException | ParserConfigurationException | XPathExpressionException e) {
-            throw new KeyRotationException("Error occurred while updating configuration file, " + e);
+            log.error("Error occurred while updating configuration file, " + e);
+            failedCount++;
         }
     }
 }

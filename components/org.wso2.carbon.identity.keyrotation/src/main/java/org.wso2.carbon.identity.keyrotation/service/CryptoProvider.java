@@ -22,8 +22,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import org.apache.axiom.om.util.Base64;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.model.CipherMetaData;
@@ -53,7 +52,7 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class CryptoProvider {
 
-    private static final Log log = LogFactory.getLog(CryptoProvider.class);
+    private static final Logger log = Logger.getLogger(CryptoProvider.class);
     public static final int GCM_IV_LENGTH = 16;
     public static final String JAVA_SECURITY_API_PROVIDER = "BC";
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
@@ -76,7 +75,7 @@ public class CryptoProvider {
         byte[] iv = getInitializationVector();
 
         try {
-            //Add the BC security provider for better security instead of the default provider.
+            // Add the BC security provider for better security instead of the default provider.
             Security.addProvider(new BouncyCastleProvider());
             cipher = Cipher.getInstance(KeyRotationConstants.TRANSFORMATION, JAVA_SECURITY_API_PROVIDER);
             cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(keyRotationConfig.getNewSecretKey()),
@@ -115,10 +114,10 @@ public class CryptoProvider {
         }
         Cipher cipher;
         try {
-            //Add the BC security provider for better security instead of the default provider.
+            // Add the BC security provider for better security instead of the default provider.
             Security.addProvider(new BouncyCastleProvider());
             CipherMetaData cipherMetaData = createCipherMetaData(cipherText);
-            //This check is for empty bytes of data that was encrypted and stored.
+            // This check is for empty bytes of data that was encrypted and stored.
             if (cipherMetaData.getCipherBase64Decoded().length == 0) {
                 log.info("Bytes of length 0 found for cipher within the cipherMetaData.");
                 return StringUtils.EMPTY.getBytes();

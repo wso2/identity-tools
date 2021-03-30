@@ -17,6 +17,7 @@
  */
 package org.wso2.carbon.identity.keyrotation.dao;
 
+import org.apache.log4j.Logger;
 import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.model.BPSPassword;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
@@ -34,11 +35,14 @@ import java.util.List;
  */
 public class BPSProfileDAO {
 
+    private static final Logger log = Logger.getLogger(BPSProfileDAO.class);
     private static final BPSProfileDAO instance = new BPSProfileDAO();
     private static final String PROFILE_NAME = "PROFILE_NAME";
     private static final String USERNAME = "USERNAME";
     private static final String TENANT_ID = "TENANT_ID";
     private static final String PASSWORD = "PASSWORD";
+    public static int updateCount = 0;
+    public static int failedCount = 0;
 
     public BPSProfileDAO() {
 
@@ -117,9 +121,29 @@ public class BPSProfileDAO {
                 }
                 preparedStatement.executeBatch();
                 connection.commit();
+                updateCount += updateBPSPasswordsList.size();
             } catch (SQLException e) {
                 connection.rollback();
-                throw new KeyRotationException("Error while updating passwords from WF_BPS_PROFILE.", e);
+                BPSPassword faulty = updateBPSPasswordsList.get(0);
+                log.error("Error while updating passwords from WF_BPS_PROFILE, trying the chunk row by row " +
+                        "again. ", e);
+                PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_BPS_PASSWORD);
+                for (BPSPassword bpsPassword : updateBPSPasswordsList) {
+                    try {
+                        faulty = bpsPassword;
+                        preparedStatement.setString(1, bpsPassword.getPassword());
+                        preparedStatement.setString(2, bpsPassword.getProfileName());
+                        preparedStatement.setInt(3, Integer.parseInt(bpsPassword.getTenantId()));
+                        preparedStatement.executeUpdate();
+                        connection.commit();
+                        updateCount++;
+                    } catch (SQLException err) {
+                        connection.rollback();
+                        log.error("Error while updating password from WF_BPS_PROFILE of record with profile name: " +
+                                faulty.getProfileName() + " , tenant id: " + faulty.getTenantId() + " ," + err);
+                        failedCount++;
+                    }
+                }
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to new identity DB.", e);

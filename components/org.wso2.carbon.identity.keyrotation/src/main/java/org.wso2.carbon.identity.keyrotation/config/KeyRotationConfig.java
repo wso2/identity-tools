@@ -18,8 +18,7 @@
 package org.wso2.carbon.identity.keyrotation.config;
 
 import org.apache.axiom.om.util.Base64;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationServiceUtils;
 
@@ -47,7 +46,7 @@ public class KeyRotationConfig {
     private String enableDBMigrator;
     private String enableConfigMigrator;
     private String enableSyncMigrator;
-    private static final Log log = LogFactory.getLog(KeyRotationConfig.class);
+    private static final Logger log = Logger.getLogger(KeyRotationConfig.class);
     private static final KeyRotationConfig instance = new KeyRotationConfig();
 
     public static KeyRotationConfig getInstance() {

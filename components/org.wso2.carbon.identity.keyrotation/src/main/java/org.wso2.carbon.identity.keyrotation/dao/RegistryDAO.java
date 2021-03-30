@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.identity.keyrotation.dao;
 
+import org.apache.log4j.Logger;
 import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.model.RegistryProperty;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
@@ -35,11 +36,14 @@ import java.util.List;
  */
 public class RegistryDAO {
 
+    private static final Logger log = Logger.getLogger(RegistryDAO.class);
     private static final RegistryDAO instance = new RegistryDAO();
     private static final String REG_ID = "REG_ID";
     private static final String REG_NAME = "REG_NAME";
     private static final String REG_VALUE = "REG_VALUE";
     private static final String REG_TENANT_ID = "REG_TENANT_ID";
+    public static int updateCount = 0;
+    public static int failedCount = 0;
 
     public RegistryDAO() {
 
@@ -123,10 +127,31 @@ public class RegistryDAO {
                 }
                 preparedStatement.executeBatch();
                 connection.commit();
+                updateCount += updateRegPropertyList.size();
             } catch (SQLException e) {
                 connection.rollback();
-                throw new KeyRotationException("Error while updating registry property " + property + " from " +
-                        "REG_PROPERTY.", e);
+                RegistryProperty faulty = updateRegPropertyList.get(0);
+                log.error(
+                        "Error while updating registry property: " + property + " from REG_PROPERTY, trying the chunk" +
+                                " row by row again. ", e);
+                PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_REG_PROPERTY_DATA);
+                for (RegistryProperty regProperty : updateRegPropertyList) {
+                    try {
+                        faulty = regProperty;
+                        preparedStatement.setString(1, regProperty.getRegValue());
+                        preparedStatement.setInt(2, Integer.parseInt(regProperty.getRegId()));
+                        preparedStatement.setInt(3, Integer.parseInt(regProperty.getRegTenantId()));
+                        preparedStatement.executeUpdate();
+                        connection.commit();
+                        updateCount++;
+                    } catch (SQLException err) {
+                        connection.rollback();
+                        log.error("Error while updating registry property: " + property + " from REG_PROPERTY of " +
+                                "record with reg id: " + faulty.getRegId() + " reg tenant id: " +
+                                faulty.getRegTenantId() + " ," + err);
+                        failedCount++;
+                    }
+                }
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to new registry DB.", e);

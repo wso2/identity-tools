@@ -17,6 +17,8 @@
  */
 package org.wso2.carbon.identity.keyrotation.dao;
 
+import org.apache.log4j.Logger;
+
 import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.model.TOTPSecret;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
@@ -34,11 +36,14 @@ import java.util.List;
  */
 public class IdentityDAO {
 
+    private static final Logger log = Logger.getLogger(IdentityDAO.class);
     private static final IdentityDAO instance = new IdentityDAO();
     private static final String TENANT_ID = "TENANT_ID";
     private static final String USER_NAME = "USER_NAME";
     private static final String DATA_KEY = "DATA_KEY";
     private static final String DATA_VALUE = "DATA_VALUE";
+    public static int updateCount = 0;
+    public static int failedCount = 0;
 
     public IdentityDAO() {
 
@@ -119,9 +124,32 @@ public class IdentityDAO {
                 }
                 preparedStatement.executeBatch();
                 connection.commit();
+                updateCount += updateTOTPSecretList.size();
             } catch (SQLException e) {
                 connection.rollback();
-                throw new KeyRotationException("Error while updating TOTP secrets from IDN_IDENTITY_USER_DATA.", e);
+                TOTPSecret faulty = updateTOTPSecretList.get(0);
+                log.error(
+                        "Error while updating TOTP secrets from IDN_IDENTITY_USER_DATA, trying the chunk row by row " +
+                                "again. ", e);
+                PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_TOTP_SECRET);
+                for (TOTPSecret totpSecret : updateTOTPSecretList) {
+                    try {
+                        faulty = totpSecret;
+                        preparedStatement.setString(1, totpSecret.getDataValue());
+                        preparedStatement.setInt(2, Integer.parseInt(totpSecret.getTenantId()));
+                        preparedStatement.setString(3, totpSecret.getUsername());
+                        preparedStatement.setString(4, totpSecret.getDataKey());
+                        preparedStatement.executeUpdate();
+                        connection.commit();
+                        updateCount++;
+                    } catch (SQLException err) {
+                        connection.rollback();
+                        log.error("Error while updating TOTP secret from IDN_IDENTITY_USER_DATA of record with tenant" +
+                                " id: " + faulty.getTenantId() + " username: " + faulty.getUsername() + " data key: " +
+                                faulty.getDataKey() + " ," + err);
+                        failedCount++;
+                    }
+                }
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to new identity DB.", e);

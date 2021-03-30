@@ -17,6 +17,7 @@
  */
 package org.wso2.carbon.identity.keyrotation.dao;
 
+import org.apache.log4j.Logger;
 import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.model.OAuthCode;
 import org.wso2.carbon.identity.keyrotation.model.OAuthSecret;
@@ -36,6 +37,7 @@ import java.util.List;
  */
 public class OAuthDAO {
 
+    private static final Logger log = Logger.getLogger(OAuthDAO.class);
     private static final OAuthDAO instance = new OAuthDAO();
     private static final String CODE_ID = "CODE_ID";
     private static final String AUTHORIZATION_CODE = "AUTHORIZATION_CODE";
@@ -46,6 +48,13 @@ public class OAuthDAO {
     private static final String ID = "ID";
     private static final String CONSUMER_SECRET = "CONSUMER_SECRET";
     private static final String APP_NAME = "APP_NAME";
+    public static int updateCodeCount = 0;
+    public static int updateTokenCount = 0;
+    public static int updateSecretCount = 0;
+    public static int failedCodeCount = 0;
+    public static int failedTokenCount = 0;
+    public static int failedSecretCount = 0;
+
 
     public OAuthDAO() {
 
@@ -124,10 +133,30 @@ public class OAuthDAO {
                 }
                 preparedStatement.executeBatch();
                 connection.commit();
+                updateCodeCount += updateAuthCodeList.size();
             } catch (SQLException e) {
                 connection.rollback();
-                throw new KeyRotationException("Error while updating auth codes from IDN_OAUTH2_AUTHORIZATION_CODE.",
-                        e);
+                OAuthCode faulty = updateAuthCodeList.get(0);
+                log.error(
+                        "Error while updating auth codes from IDN_OAUTH2_AUTHORIZATION_CODE, trying the " +
+                                "chunk row by row again. ", e);
+                PreparedStatement preparedStatement =
+                        connection.prepareStatement(DBConstants.UPDATE_OAUTH_AUTHORIZATION_CODE);
+                for (OAuthCode oAuthCode : updateAuthCodeList) {
+                    try {
+                        faulty = oAuthCode;
+                        preparedStatement.setString(1, oAuthCode.getAuthorizationCode());
+                        preparedStatement.setString(2, oAuthCode.getCodeId());
+                        preparedStatement.executeUpdate();
+                        connection.commit();
+                        updateCodeCount++;
+                    } catch (SQLException err) {
+                        connection.rollback();
+                        log.error("Error while updating auth code from IDN_OAUTH2_AUTHORIZATION_CODE of record with " +
+                                "code id: " + faulty.getCodeId() + " ," + err);
+                        failedCodeCount++;
+                    }
+                }
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to new identity DB.", e);
@@ -202,10 +231,31 @@ public class OAuthDAO {
                 }
                 preparedStatement.executeBatch();
                 connection.commit();
+                updateTokenCount += updateAuthTokensList.size();
             } catch (SQLException e) {
                 connection.rollback();
-                throw new KeyRotationException(
-                        "Error while updating access and refresh tokens from IDN_OAUTH2_ACCESS_TOKEN.", e);
+                OAuthToken faulty = updateAuthTokensList.get(0);
+                log.error(
+                        "Error while updating access and refresh tokens from IDN_OAUTH2_ACCESS_TOKEN, trying " +
+                                "the chunk row by row again. ", e);
+                PreparedStatement preparedStatement =
+                        connection.prepareStatement(DBConstants.UPDATE_OAUTH_ACCESS_TOKEN);
+                for (OAuthToken oAuthToken : updateAuthTokensList) {
+                    try {
+                        faulty = oAuthToken;
+                        preparedStatement.setString(1, oAuthToken.getAccessToken());
+                        preparedStatement.setString(2, oAuthToken.getRefreshToken());
+                        preparedStatement.setString(3, oAuthToken.getTokenId());
+                        preparedStatement.executeUpdate();
+                        connection.commit();
+                        updateTokenCount++;
+                    } catch (SQLException err) {
+                        connection.rollback();
+                        log.error("Error while updating access and refresh tokens from IDN_OAUTH2_ACCESS_TOKEN of " +
+                                "record with token id: " + faulty.getTokenId() + " ," + err);
+                        failedTokenCount++;
+                    }
+                }
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to new identity DB.", e);
@@ -279,9 +329,29 @@ public class OAuthDAO {
                 }
                 preparedStatement.executeBatch();
                 connection.commit();
+                updateSecretCount += updateOAuthSecretList.size();
             } catch (SQLException e) {
                 connection.rollback();
-                throw new KeyRotationException("Error while updating OAuth secrets from IDN_OAUTH_CONSUMER_APPS.", e);
+                OAuthSecret faulty = updateOAuthSecretList.get(0);
+                log.error(
+                        "Error while updating OAuth secrets from IDN_OAUTH_CONSUMER_APPS, trying the chunk " +
+                                "row by row again. ", e);
+                PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_OAUTH_SECRET);
+                for (OAuthSecret oAuthSecret : updateOAuthSecretList) {
+                    try {
+                        faulty = oAuthSecret;
+                        preparedStatement.setString(1, oAuthSecret.getConsumerSecret());
+                        preparedStatement.setInt(2, Integer.parseInt(oAuthSecret.getId()));
+                        preparedStatement.executeUpdate();
+                        connection.commit();
+                        updateSecretCount++;
+                    } catch (SQLException err) {
+                        connection.rollback();
+                        log.error("Error while updating OAuth secrets from IDN_OAUTH_CONSUMER_APPS of " +
+                                "record with id: " + faulty.getId() + " ," + err);
+                        failedSecretCount++;
+                    }
+                }
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to new identity DB.", e);

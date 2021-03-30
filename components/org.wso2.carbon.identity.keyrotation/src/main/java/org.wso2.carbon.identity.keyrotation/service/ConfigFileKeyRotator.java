@@ -18,9 +18,9 @@
 
 package org.wso2.carbon.identity.keyrotation.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
+import org.wso2.carbon.identity.keyrotation.util.ConfigFileUtil;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 
@@ -36,7 +36,7 @@ import static org.wso2.carbon.identity.keyrotation.util.ConfigFileUtil.updateCon
  */
 public class ConfigFileKeyRotator {
 
-    private static final Log log = LogFactory.getLog(ConfigFileKeyRotator.class);
+    private static final Logger log = Logger.getLogger(ConfigFileKeyRotator.class);
     private static final ConfigFileKeyRotator instance = new ConfigFileKeyRotator();
     private static final String userstoreProperty = "Property";
     private static final String publisherProperty = "property";
@@ -56,8 +56,14 @@ public class ConfigFileKeyRotator {
 
         log.info("Re-encrypting configuration file data...");
         reEncryptSuperTenantUserStore(keyRotationConfig);
+        log.info("Updated super tenant secondary userstore configuration files: " + ConfigFileUtil.updateCount);
+        log.info("Failed super tenant secondary userstore configuration files: " + ConfigFileUtil.failedCount);
         reEncryptTenantUserStore(keyRotationConfig);
+        log.info("Updated tenant secondary userstore configuration files: " + ConfigFileUtil.updateCount);
+        log.info("Failed tenant secondary userstore configuration files: " + ConfigFileUtil.failedCount);
         reEncryptEventPublishers(keyRotationConfig);
+        log.info("Updated event publisher configuration files: " + ConfigFileUtil.updateCount);
+        log.info("Failed event publisher configuration files: " + ConfigFileUtil.failedCount);
         log.info("Re-encrypting configuration file data completed...\n");
     }
 
@@ -106,6 +112,8 @@ public class ConfigFileKeyRotator {
      */
     private void reEncryptSuperTenantUserStore(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
+        ConfigFileUtil.updateCount = 0;
+        ConfigFileUtil.failedCount = 0;
         getConfigsAndUpdate(keyRotationConfig, keyRotationConfig.getNewISHome(), null,
                 KeyRotationConstants.SUPER_TENANT);
     }
@@ -118,6 +126,8 @@ public class ConfigFileKeyRotator {
      */
     private void reEncryptTenantUserStore(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
+        ConfigFileUtil.updateCount = 0;
+        ConfigFileUtil.failedCount = 0;
         List<String> tenants = getFolderPaths(keyRotationConfig.getNewISHome());
         for (String tenant : tenants) {
             getConfigsAndUpdate(keyRotationConfig, keyRotationConfig.getNewISHome(), tenant,
@@ -133,6 +143,8 @@ public class ConfigFileKeyRotator {
      */
     private void reEncryptEventPublishers(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
+        ConfigFileUtil.updateCount = 0;
+        ConfigFileUtil.failedCount = 0;
         getConfigsAndUpdate(keyRotationConfig, keyRotationConfig.getNewISHome(), null,
                 KeyRotationConstants.EVENT_PUBLISHER);
     }
