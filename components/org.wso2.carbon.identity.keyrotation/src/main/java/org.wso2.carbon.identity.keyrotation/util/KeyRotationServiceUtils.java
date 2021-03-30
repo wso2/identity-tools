@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.wso2.carbon.identity.keyrotation.util;
 
 import com.google.gson.Gson;
@@ -35,7 +36,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Class to store the key rotation utility methods.
+ * This class hold the key rotation utility methods.
  */
 public class KeyRotationServiceUtils {
 

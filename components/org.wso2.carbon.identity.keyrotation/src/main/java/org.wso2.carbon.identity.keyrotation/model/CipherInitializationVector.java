@@ -15,10 +15,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.wso2.carbon.identity.keyrotation.model;
 
 /**
- * Class to hold the cipher and initialization vector metadata.
+ * This class holds the cipher and initialization vector metadata.
  */
 public class CipherInitializationVector {
 

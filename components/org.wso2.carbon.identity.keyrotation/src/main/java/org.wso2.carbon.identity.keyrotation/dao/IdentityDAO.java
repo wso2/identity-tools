@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.wso2.carbon.identity.keyrotation.dao;
 
 import org.apache.log4j.Logger;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class to reEncrypt the TOTP data in DB.
+ * This class holds implementations needed to re-encrypt the TOTP data in DB.
  */
 public class IdentityDAO {
 
@@ -168,12 +169,23 @@ public class IdentityDAO {
             throws KeyRotationException {
 
         List<TOTPSecret> totpSecretList = new ArrayList<>();
+        String query = DBConstants.GET_TEMP_TOTP_SECRET;
+        int firstIndex = startIndex;
+        int secIndex = DBConstants.SYNC_CHUNK_SIZE;
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getOldIdnDBUrl(), keyRotationConfig.getOldIdnUsername(),
                         keyRotationConfig.getOldIdnPassword())) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.GET_TEMP_TOTP_SECRET)) {
-                preparedStatement.setInt(1, startIndex);
-                preparedStatement.setInt(2, DBConstants.SYNC_CHUNK_SIZE);
+            if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
+                query = DBConstants.GET_TEMP_TOTP_SECRET_POSTGRE;
+                firstIndex = DBConstants.SYNC_CHUNK_SIZE;
+                secIndex = startIndex;
+            } else if (connection.getMetaData().getDriverName().contains(DBConstants.MSSQL) ||
+                    connection.getMetaData().getDriverName().contains(DBConstants.ORACLE)) {
+                query = DBConstants.GET_TEMP_TOTP_SECRET_OTHER;
+            }
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, firstIndex);
+                preparedStatement.setInt(2, secIndex);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     totpSecretList

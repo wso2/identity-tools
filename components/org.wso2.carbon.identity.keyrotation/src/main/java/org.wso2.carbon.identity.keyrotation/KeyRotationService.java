@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.wso2.carbon.identity.keyrotation;
 
 import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
@@ -24,7 +25,7 @@ import org.wso2.carbon.identity.keyrotation.service.SyncedDataKeyRotator;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 
 /**
- * Class that calls the symmetric key rotation service.
+ * This class holds the symmetric key rotation service.
  */
 public class KeyRotationService {
 

@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.keyrotation.model;
 
 /**
- * Class to hold the registry properties stored in REG_PROPERTY.
+ * This class holds the registry properties stored in REG_PROPERTY.
  */
 public class RegistryProperty {
 
@@ -45,7 +45,7 @@ public class RegistryProperty {
     }
 
     /**
-     * Getter to get the registry id.
+     * Getter for the registry id.
      *
      * @return Registry id.
      */
@@ -55,7 +55,7 @@ public class RegistryProperty {
     }
 
     /**
-     * Setter to set the registry id.
+     * Setter for the registry id.
      *
      * @param regId Registry id.
      */
@@ -65,7 +65,7 @@ public class RegistryProperty {
     }
 
     /**
-     * Getter to get the registry name.
+     * Getter for the registry name.
      *
      * @return Registry name.
      */
@@ -75,7 +75,7 @@ public class RegistryProperty {
     }
 
     /**
-     * Setter to set the registry name.
+     * Setter for the registry name.
      *
      * @param regName Registry name.
      */
@@ -85,7 +85,7 @@ public class RegistryProperty {
     }
 
     /**
-     * Getter to get the registry value.
+     * Getter for the registry value.
      *
      * @return Registry value.
      */
@@ -95,7 +95,7 @@ public class RegistryProperty {
     }
 
     /**
-     * Setter to set the registry value.
+     * Setter for the registry value.
      *
      * @param regValue Registry value.
      */
@@ -105,7 +105,7 @@ public class RegistryProperty {
     }
 
     /**
-     * Getter to get the registry tenant id.
+     * Getter for the registry tenant id.
      *
      * @return Registry tenant id.
      */
@@ -115,7 +115,7 @@ public class RegistryProperty {
     }
 
     /**
-     * Setter to set the registry tenant id.
+     * Setter for the registry tenant id.
      *
      * @param regTenantId Registry tenant id.
      */

@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.keyrotation.model;
 
 /**
- * Class to hold the data stored in WF_BPS_PROFILE.
+ * This class holds the data stored in WF_BPS_PROFILE.
  */
 public class BPSPassword {
 
@@ -46,7 +46,7 @@ public class BPSPassword {
     }
 
     /**
-     * Getter to get the profile name.
+     * Getter for the profile name.
      *
      * @return Profile name.
      */
@@ -56,7 +56,7 @@ public class BPSPassword {
     }
 
     /**
-     * Setter to set the profile name.
+     * Setter for the profile name.
      *
      * @param profileName Profile name.
      */
@@ -66,7 +66,7 @@ public class BPSPassword {
     }
 
     /**
-     * Getter to get the tenant id.
+     * Getter for the tenant id.
      *
      * @return Tenant id.
      */
@@ -76,7 +76,7 @@ public class BPSPassword {
     }
 
     /**
-     * Setter to set the tenant id.
+     * Setter for the tenant id.
      *
      * @param tenantId Tenant id.
      */
@@ -86,7 +86,7 @@ public class BPSPassword {
     }
 
     /**
-     * Getter to get the password.
+     * Getter for the password.
      *
      * @return Password.
      */
@@ -96,7 +96,7 @@ public class BPSPassword {
     }
 
     /**
-     * Setter to set the password.
+     * Setter for the password.
      *
      * @param password Password.
      */
@@ -106,7 +106,7 @@ public class BPSPassword {
     }
 
     /**
-     * Getter to get the username.
+     * Getter for the username.
      *
      * @return Username.
      */
@@ -116,7 +116,7 @@ public class BPSPassword {
     }
 
     /**
-     * Setter to set the username.
+     * Setter for the username.
      *
      * @param username Username.
      */

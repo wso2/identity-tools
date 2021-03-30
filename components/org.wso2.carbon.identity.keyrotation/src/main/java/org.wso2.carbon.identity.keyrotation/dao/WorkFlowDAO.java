@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.wso2.carbon.identity.keyrotation.dao;
 
 import org.apache.log4j.Logger;
@@ -36,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class to reEncrypt the WorkFlow data in DB.
+ * This class holds implementations needed to re-encrypt the WorkFlow data in DB.
  */
 public class WorkFlowDAO {
 

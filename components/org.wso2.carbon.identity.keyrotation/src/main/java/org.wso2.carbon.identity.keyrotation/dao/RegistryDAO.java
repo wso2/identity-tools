@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class to re-encrypt keystore properties within REG_PROPERTY in DB.
+ * This class holds implementations needed to re-encrypt keystore properties within REG_PROPERTY in DB.
  */
 public class RegistryDAO {
 

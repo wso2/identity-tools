@@ -15,10 +15,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.wso2.carbon.identity.keyrotation.util;
 
 /**
- * The exception which will be thrown if something unexpected happens during key-rotation.
+ * This class holds the exception which will be thrown if something unexpected happens during key-rotation.
  */
 public class KeyRotationException extends Exception {
 

@@ -32,7 +32,7 @@ import static org.wso2.carbon.identity.keyrotation.util.ConfigFileUtil.getFolder
 import static org.wso2.carbon.identity.keyrotation.util.ConfigFileUtil.updateConfigFile;
 
 /**
- * Config file reEncryption service.
+ * This class holds the config file re-encryption service.
  */
 public class ConfigFileKeyRotator {
 
@@ -47,14 +47,14 @@ public class ConfigFileKeyRotator {
     }
 
     /**
-     * ReEncryption of the configuration file data.
+     * Re-encryption of the configuration file data.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
      */
     public void configFileReEncryptor(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
-        log.info("Re-encrypting configuration file data...");
+        log.info("Started re-encrypting configuration file data...");
         reEncryptSuperTenantUserStore(keyRotationConfig);
         log.info("Updated super tenant secondary userstore configuration files: " + ConfigFileUtil.updateCount);
         log.info("Failed super tenant secondary userstore configuration files: " + ConfigFileUtil.failedCount);
@@ -64,11 +64,11 @@ public class ConfigFileKeyRotator {
         reEncryptEventPublishers(keyRotationConfig);
         log.info("Updated event publisher configuration files: " + ConfigFileUtil.updateCount);
         log.info("Failed event publisher configuration files: " + ConfigFileUtil.failedCount);
-        log.info("Re-encrypting configuration file data completed...\n");
+        log.info("Finished re-encrypting configuration file data completed...\n");
     }
 
     /**
-     * ReEncryption of the passwords in configuration files.
+     * Re-encryption of the passwords in configuration files.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @param newIsHomePath     New Is Home absolute path.
@@ -105,7 +105,7 @@ public class ConfigFileKeyRotator {
     }
 
     /**
-     * ReEncryption of the super tenant user store passwords in configuration files.
+     * Re-encryption of the super tenant user store passwords in configuration files.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
@@ -114,12 +114,14 @@ public class ConfigFileKeyRotator {
 
         ConfigFileUtil.updateCount = 0;
         ConfigFileUtil.failedCount = 0;
+        log.debug("Started re-encryption of the super tenant secondary user store configuration files...");
         getConfigsAndUpdate(keyRotationConfig, keyRotationConfig.getNewISHome(), null,
                 KeyRotationConstants.SUPER_TENANT);
+        log.debug("Finished re-encryption of the super tenant secondary user store configuration files...");
     }
 
     /**
-     * ReEncryption of the tenant user store passwords in configuration files.
+     * Re-encryption of the tenant user store passwords in configuration files.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
@@ -129,14 +131,16 @@ public class ConfigFileKeyRotator {
         ConfigFileUtil.updateCount = 0;
         ConfigFileUtil.failedCount = 0;
         List<String> tenants = getFolderPaths(keyRotationConfig.getNewISHome());
+        log.debug("Started re-encryption of the tenant secondary user store configuration files...");
         for (String tenant : tenants) {
             getConfigsAndUpdate(keyRotationConfig, keyRotationConfig.getNewISHome(), tenant,
                     KeyRotationConstants.TENANT);
         }
+        log.debug("Finished re-encryption of the tenant secondary user store configuration files...");
     }
 
     /**
-     * ReEncryption of the event publisher passwords in configuration files.
+     * Re-encryption of the event publisher passwords in configuration files.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
@@ -145,7 +149,9 @@ public class ConfigFileKeyRotator {
 
         ConfigFileUtil.updateCount = 0;
         ConfigFileUtil.failedCount = 0;
+        log.debug("Started re-encryption of the event publisher configuration files...");
         getConfigsAndUpdate(keyRotationConfig, keyRotationConfig.getNewISHome(), null,
                 KeyRotationConstants.EVENT_PUBLISHER);
+        log.debug("Finished re-encryption of the event publisher configuration files...");
     }
 }

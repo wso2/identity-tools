@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.wso2.carbon.identity.keyrotation.service;
 
 import com.google.gson.Gson;
@@ -48,7 +49,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- * Class that implements the encryption and decryption tasks.
+ * This class hold implementations of the encryption and decryption tasks.
  */
 public class CryptoProvider {
 
@@ -119,7 +120,7 @@ public class CryptoProvider {
             CipherMetaData cipherMetaData = createCipherMetaData(cipherText);
             // This check is for empty bytes of data that was encrypted and stored.
             if (cipherMetaData.getCipherBase64Decoded().length == 0) {
-                log.info("Bytes of length 0 found for cipher within the cipherMetaData.");
+                log.debug("Bytes of length 0 found for cipher within the cipherMetaData.");
                 return StringUtils.EMPTY.getBytes();
             }
             cipher = Cipher.getInstance(KeyRotationConstants.TRANSFORMATION, JAVA_SECURITY_API_PROVIDER);

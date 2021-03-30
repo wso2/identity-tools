@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.wso2.carbon.identity.keyrotation.model;
 
 import org.apache.axiom.om.util.Base64;
@@ -22,7 +23,7 @@ import org.apache.axiom.om.util.Base64;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants;
 
 /**
- * Class to hold the cipher, transformation and initialization vector metadata.
+ * This class holds the cipher, transformation and initialization vector metadata.
  */
 public class CipherMetaData {
 

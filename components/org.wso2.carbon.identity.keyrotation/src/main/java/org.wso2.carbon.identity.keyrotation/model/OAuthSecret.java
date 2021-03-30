@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.keyrotation.model;
 
 /**
- * Class to hold the data stored in IDN_OAUTH_CONSUMER_APPS.
+ * This class holds the data stored in IDN_OAUTH_CONSUMER_APPS.
  */
 public class OAuthSecret {
 
@@ -42,7 +42,7 @@ public class OAuthSecret {
     }
 
     /**
-     * Getter to get the id.
+     * Getter for the id.
      *
      * @return Id.
      */
@@ -52,7 +52,7 @@ public class OAuthSecret {
     }
 
     /**
-     * Setter to set the id.
+     * Setter for the id.
      *
      * @param id Id.
      */
@@ -62,7 +62,7 @@ public class OAuthSecret {
     }
 
     /**
-     * Getter to get the consumer secret.
+     * Getter for the consumer secret.
      *
      * @return Consumer secret.
      */
@@ -72,7 +72,7 @@ public class OAuthSecret {
     }
 
     /**
-     * Setter to set the consumer secret.
+     * Setter for the consumer secret.
      *
      * @param consumerSecret Consumer secret.
      */
@@ -82,7 +82,7 @@ public class OAuthSecret {
     }
 
     /**
-     * Getter to get the app name.
+     * Getter for the app name.
      *
      * @return App name.
      */
@@ -92,7 +92,7 @@ public class OAuthSecret {
     }
 
     /**
-     * Setter to set the app name.
+     * Setter for the app name.
      *
      * @param appName App name.
      */

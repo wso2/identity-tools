@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.keyrotation.model;
 
 /**
- * Class to hold the data stored in IDN_IDENTITY_USER_DATA.
+ * This class holds the data stored in IDN_IDENTITY_USER_DATA.
  */
 public class TOTPSecret {
 
@@ -45,7 +45,7 @@ public class TOTPSecret {
     }
 
     /**
-     * Getter to get the tenant id.
+     * Getter for the tenant id.
      *
      * @return Tenant id.
      */
@@ -55,7 +55,7 @@ public class TOTPSecret {
     }
 
     /**
-     * Setter to set the tenant id.
+     * Setter for the tenant id.
      *
      * @param tenantId Tenant id.
      */
@@ -65,7 +65,7 @@ public class TOTPSecret {
     }
 
     /**
-     * Getter to get the username.
+     * Getter for the username.
      *
      * @return Username.
      */
@@ -75,7 +75,7 @@ public class TOTPSecret {
     }
 
     /**
-     * Setter to set the username.
+     * Setter for the username.
      *
      * @param username Username.
      */
@@ -85,7 +85,7 @@ public class TOTPSecret {
     }
 
     /**
-     * Getter to get the data key.
+     * Getter for the data key.
      *
      * @return Data key.
      */
@@ -95,7 +95,7 @@ public class TOTPSecret {
     }
 
     /**
-     * Setter to set the data key.
+     * Setter for the data key.
      *
      * @param dataKey Data key.
      */
@@ -105,7 +105,7 @@ public class TOTPSecret {
     }
 
     /**
-     * Getter to get the data value.
+     * Getter for the data value.
      *
      * @return Data value.
      */
@@ -115,7 +115,7 @@ public class TOTPSecret {
     }
 
     /**
-     * Setter to set the data value.
+     * Setter for the data value.
      *
      * @param dataValue Data value.
      */

@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.keyrotation.util;
 
 /**
- * Class that hold constants needed for the key rotation functionality.
+ * This class hold the constants needed for the key rotation functionality.
  */
 public class KeyRotationConstants {
 

@@ -47,7 +47,7 @@ import javax.xml.xpath.XPathFactory;
 import static org.wso2.carbon.identity.keyrotation.util.EncryptionUtil.symmetricReEncryption;
 
 /**
- * The class that holds utility methods to update the configuration files.
+ * This class hold the utility methods needed to update the configuration files.
  */
 public class ConfigFileUtil {
 
@@ -116,9 +116,9 @@ public class ConfigFileUtil {
             if (data.getLength() == 1) {
                 log.info("Re-encryption in " + filename + " configuration file.");
                 String encryptedValue = data.item(0).getNodeValue();
-                log.info("Encrypted value " + encryptedValue);
+                log.debug("Encrypted value " + encryptedValue);
                 String reEncryptedValue = symmetricReEncryption(encryptedValue, keyRotationConfig);
-                log.info("Re-encrypted value " + reEncryptedValue);
+                log.debug("Re-encrypted value " + reEncryptedValue);
                 data.item(0).setNodeValue(reEncryptedValue);
                 Transformer transformer = TransformerFactory.newInstance().newTransformer();
                 transformer.transform(new DOMSource(document), new StreamResult(filename.getPath()));

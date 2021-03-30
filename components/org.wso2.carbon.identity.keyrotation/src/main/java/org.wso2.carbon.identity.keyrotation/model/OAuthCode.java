@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.keyrotation.model;
 
 /**
- * Class to hold the data stored in IDN_OAUTH2_AUTHORIZATION_CODE.
+ * This class holds the data stored in IDN_OAUTH2_AUTHORIZATION_CODE.
  */
 public class OAuthCode {
 
@@ -42,7 +42,7 @@ public class OAuthCode {
     }
 
     /**
-     * Getter to get the code id.
+     * Getter for the code id.
      *
      * @return Code id.
      */
@@ -52,7 +52,7 @@ public class OAuthCode {
     }
 
     /**
-     * Setter to set the code id.
+     * Setter for the code id.
      *
      * @param codeId Code id.
      */
@@ -62,7 +62,7 @@ public class OAuthCode {
     }
 
     /**
-     * Getter to get the authorization code.
+     * Getter for the authorization code.
      *
      * @return Authorization code.
      */
@@ -72,7 +72,7 @@ public class OAuthCode {
     }
 
     /**
-     * Setter to set the authorization code.
+     * Setter for the authorization code.
      *
      * @param authorizationCode Authorization code.
      */
@@ -82,7 +82,7 @@ public class OAuthCode {
     }
 
     /**
-     * Getter to get the consumer key id.
+     * Getter for the consumer key id.
      *
      * @return Consumer key id.
      */
@@ -92,7 +92,7 @@ public class OAuthCode {
     }
 
     /**
-     * Setter to set the consumer key id.
+     * Setter for the consumer key id.
      *
      * @param consumerKeyId Consumer key id.
      */

@@ -29,14 +29,14 @@ import org.wso2.carbon.identity.keyrotation.service.CryptoProvider;
 import java.nio.charset.Charset;
 
 /**
- * The class that calls the reEncryption mechanism.
+ * This class holds the re-encryption mechanism.
  */
 public class EncryptionUtil {
 
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
     /**
-     * ReEncryption mechanism needed for the key rotation task.
+     * Re-encryption mechanism needed for the key rotation task.
      *
      * @param cipher            The ciphertext needed to perform re-encryption on.
      * @param keyRotationConfig Configuration data needed to perform the task.

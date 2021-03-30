@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.keyrotation.model;
 
 /**
- * Class to hold the data stored in IDN_OAUTH2_ACCESS_TOKEN.
+ * This class holds the data stored in IDN_OAUTH2_ACCESS_TOKEN.
  */
 public class OAuthToken {
 
@@ -45,7 +45,7 @@ public class OAuthToken {
     }
 
     /**
-     * Getter to get the token id.
+     * Getter for the token id.
      *
      * @return Token id.
      */
@@ -55,7 +55,7 @@ public class OAuthToken {
     }
 
     /**
-     * Setter to set the token id.
+     * Setter for the token id.
      *
      * @param tokenId Token id.
      */
@@ -65,7 +65,7 @@ public class OAuthToken {
     }
 
     /**
-     * Getter to get the access token.
+     * Getter for the access token.
      *
      * @return Access token.
      */
@@ -75,7 +75,7 @@ public class OAuthToken {
     }
 
     /**
-     * Setter to set the access token.
+     * Setter for the access token.
      *
      * @param accessToken Access token.
      */
@@ -85,7 +85,7 @@ public class OAuthToken {
     }
 
     /**
-     * Getter to get the refresh token.
+     * Getter for the refresh token.
      *
      * @return Refresh token.
      */
@@ -95,7 +95,7 @@ public class OAuthToken {
     }
 
     /**
-     * Setter to set the refresh token.
+     * Setter for the refresh token.
      *
      * @param refreshToken Refresh token.
      */
@@ -105,7 +105,7 @@ public class OAuthToken {
     }
 
     /**
-     * Getter to get the consumer key id.
+     * Getter for the consumer key id.
      *
      * @return Consumer key id.
      */
@@ -115,7 +115,7 @@ public class OAuthToken {
     }
 
     /**
-     * Setter to set the consumer key id.
+     * Setter for the consumer key id.
      *
      * @param consumerKeyId Consumer key id.
      */

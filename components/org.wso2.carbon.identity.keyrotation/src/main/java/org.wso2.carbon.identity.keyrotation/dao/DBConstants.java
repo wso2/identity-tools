@@ -15,14 +15,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.wso2.carbon.identity.keyrotation.dao;
 
 /**
- * Class to store DB related constants.
+ * This class hold DB related constants.
  */
 public class DBConstants {
 
     public static final int CHUNK_SIZE = 2;
+    // Syncing data record by record using the SYNC_ID.
     public static final int SYNC_CHUNK_SIZE = 1;
     public static final String CREDENTIAL = "Credential";
     public static final String REQUEST = "REQUEST";
@@ -38,6 +40,10 @@ public class DBConstants {
             "IDN_IDENTITY_USER_DATA ORDER BY TENANT_ID, USER_NAME, DATA_KEY OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
     public static final String GET_TEMP_TOTP_SECRET = "SELECT TENANT_ID, USER_NAME, DATA_KEY, DATA_VALUE " +
             "FROM IDN_IDENTITY_USER_DATA_TEMP ORDER BY SYNC_ID LIMIT ?, ?";
+    public static final String GET_TEMP_TOTP_SECRET_POSTGRE = "SELECT TENANT_ID, USER_NAME, DATA_KEY, DATA_VALUE " +
+            "FROM IDN_IDENTITY_USER_DATA_TEMP ORDER BY SYNC_ID LIMIT ? OFFSET ?";
+    public static final String GET_TEMP_TOTP_SECRET_OTHER = "SELECT TENANT_ID, USER_NAME, DATA_KEY, DATA_VALUE " +
+            "FROM IDN_IDENTITY_USER_DATA_TEMP ORDER BY SYNC_ID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
     public static final String UPDATE_TOTP_SECRET =
             "UPDATE IDN_IDENTITY_USER_DATA SET DATA_VALUE=? WHERE TENANT_ID=? AND USER_NAME=? AND DATA_KEY=?";
     public static final String GET_OAUTH_AUTHORIZATION_CODE = "SELECT CODE_ID, AUTHORIZATION_CODE, CONSUMER_KEY_ID " +
