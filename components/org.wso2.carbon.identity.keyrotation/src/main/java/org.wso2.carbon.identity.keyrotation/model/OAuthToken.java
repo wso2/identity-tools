@@ -45,7 +45,7 @@ public class OAuthToken {
     }
 
     /**
-     * Getter for the token id.
+     * Get for the token id.
      *
      * @return Token id.
      */
@@ -55,7 +55,7 @@ public class OAuthToken {
     }
 
     /**
-     * Setter for the token id.
+     * Set for the token id.
      *
      * @param tokenId Token id.
      */
@@ -65,7 +65,7 @@ public class OAuthToken {
     }
 
     /**
-     * Getter for the access token.
+     * Get for the access token.
      *
      * @return Access token.
      */
@@ -75,7 +75,7 @@ public class OAuthToken {
     }
 
     /**
-     * Setter for the access token.
+     * Set for the access token.
      *
      * @param accessToken Access token.
      */
@@ -85,7 +85,7 @@ public class OAuthToken {
     }
 
     /**
-     * Getter for the refresh token.
+     * Get for the refresh token.
      *
      * @return Refresh token.
      */
@@ -95,7 +95,7 @@ public class OAuthToken {
     }
 
     /**
-     * Setter for the refresh token.
+     * Set for the refresh token.
      *
      * @param refreshToken Refresh token.
      */
@@ -105,7 +105,7 @@ public class OAuthToken {
     }
 
     /**
-     * Getter for the consumer key id.
+     * Get for the consumer key id.
      *
      * @return Consumer key id.
      */
@@ -115,7 +115,7 @@ public class OAuthToken {
     }
 
     /**
-     * Setter for the consumer key id.
+     * Set for the consumer key id.
      *
      * @param consumerKeyId Consumer key id.
      */

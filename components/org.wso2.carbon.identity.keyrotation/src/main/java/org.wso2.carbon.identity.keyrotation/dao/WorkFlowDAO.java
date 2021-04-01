@@ -61,7 +61,7 @@ public class WorkFlowDAO {
      * @param startIndex        The start index of the data chunk.
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @return List comprising of the records in the table.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while retrieving data from WF_REQUEST.
      */
     public List<WorkflowRequest> getWFRequestChunks(int startIndex, KeyRotationConfig keyRotationConfig) throws
             KeyRotationException {
@@ -104,7 +104,7 @@ public class WorkFlowDAO {
      *
      * @param updateWfRequestList The list containing records that should be re-encrypted.
      * @param keyRotationConfig   Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while updating data from WF_REQUEST.
      */
     public void updateWFRequestChunks(List<WorkflowRequest> updateWfRequestList, KeyRotationConfig keyRotationConfig)
             throws KeyRotationException {
@@ -154,8 +154,8 @@ public class WorkFlowDAO {
      *
      * @param serializedData The byte stream.
      * @return WorkFlowRequest object.
-     * @throws IOException            Exception thrown if something unexpected happens during I/O operations.
-     * @throws ClassNotFoundException Exception thrown if something unexpected happens when loading the class.
+     * @throws IOException            Exception thrown during I/O operations.
+     * @throws ClassNotFoundException Exception thrown while loading the class.
      */
     private WorkflowRequest deserializeWFRequest(byte[] serializedData) throws IOException,
             ClassNotFoundException {
@@ -171,7 +171,7 @@ public class WorkFlowDAO {
      *
      * @param wfRequest WorkFlowRequest object.
      * @return The byte stream.
-     * @throws IOException Exception thrown if something unexpected happens during I/O operations.
+     * @throws IOException Exception thrown during I/O operations.
      */
     private byte[] serializeWFRequest(WorkflowRequest wfRequest) throws IOException {
 

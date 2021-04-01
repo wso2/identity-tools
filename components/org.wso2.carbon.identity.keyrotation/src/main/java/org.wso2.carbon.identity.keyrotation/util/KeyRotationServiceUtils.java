@@ -36,7 +36,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * This class hold the key rotation utility methods.
+ * This class holds the key rotation utility methods.
  */
 public class KeyRotationServiceUtils {
 
@@ -80,6 +80,7 @@ public class KeyRotationServiceUtils {
      *
      * @param configFilePath Properties.yaml file path.
      * @return An object of the KeyRotationConfig class.
+     * @throws KeyRotationException Exception thrown while loading the properties.yaml file.
      */
     public static KeyRotationConfig loadKeyRotationConfig(String configFilePath) throws KeyRotationException {
 

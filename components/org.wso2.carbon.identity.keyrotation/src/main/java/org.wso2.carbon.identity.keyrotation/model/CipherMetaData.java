@@ -32,7 +32,7 @@ public class CipherMetaData {
     private String iv;
 
     /**
-     * Getter for the transformation.
+     * Get for the transformation.
      *
      * @return Set of operation to be performed on the given input to product some output.
      */
@@ -42,7 +42,7 @@ public class CipherMetaData {
     }
 
     /**
-     * Setter for the transformation.
+     * Set for the transformation.
      *
      * @param transformation Set of operation to be performed on the given input to product some output.
      */
@@ -52,7 +52,7 @@ public class CipherMetaData {
     }
 
     /**
-     * Getter for the ciphertext.
+     * Get for the ciphertext.
      *
      * @return The ciphertext.
      */
@@ -62,7 +62,7 @@ public class CipherMetaData {
     }
 
     /**
-     * Setter for the ciphertext.
+     * Set for the ciphertext.
      *
      * @param cipher The ciphertext.
      */
@@ -72,7 +72,7 @@ public class CipherMetaData {
     }
 
     /**
-     * Getter for the base64 decoded ciphertext.
+     * Get for the base64 decoded ciphertext.
      *
      * @return Base64 decoded cipher.
      */
@@ -82,7 +82,7 @@ public class CipherMetaData {
     }
 
     /**
-     * Getter for the IV.
+     * Get for the IV.
      *
      * @return Initialization vector.
      */
@@ -92,7 +92,7 @@ public class CipherMetaData {
     }
 
     /**
-     * Setter for the IV.
+     * Set for the IV.
      *
      * @param iv Initialization vector.
      */
@@ -102,7 +102,7 @@ public class CipherMetaData {
     }
 
     /**
-     * Getter for the base64 decoded IV.
+     * Get for the base64 decoded IV.
      *
      * @return Base64 decoded initialization vector.
      */

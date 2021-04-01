@@ -50,7 +50,7 @@ public class ConfigFileKeyRotator {
      * Re-encryption of the configuration file data.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while re-encrypting configuration files.
      */
     public void configFileReEncryptor(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
@@ -74,7 +74,7 @@ public class ConfigFileKeyRotator {
      * @param newIsHomePath     New Is Home absolute path.
      * @param tenant            The tenant folder.
      * @param config            The property value to identify the corresponding config file.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while updating the configuration file.
      */
     private void getConfigsAndUpdate(KeyRotationConfig keyRotationConfig, String newIsHomePath, String tenant,
                                      String config) throws KeyRotationException {
@@ -108,7 +108,8 @@ public class ConfigFileKeyRotator {
      * Re-encryption of the super tenant user store passwords in configuration files.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while re-encrypting super tenant secondary user store configuration
+     *                              files.
      */
     private void reEncryptSuperTenantUserStore(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
@@ -124,7 +125,8 @@ public class ConfigFileKeyRotator {
      * Re-encryption of the tenant user store passwords in configuration files.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while re-encrypting tenant secondary user store configuration
+     *                              files.
      */
     private void reEncryptTenantUserStore(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
@@ -143,7 +145,7 @@ public class ConfigFileKeyRotator {
      * Re-encryption of the event publisher passwords in configuration files.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while re-encrypting event publisher configuration files.
      */
     private void reEncryptEventPublishers(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 

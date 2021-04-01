@@ -59,7 +59,7 @@ public class KeyRotationConfig {
      * Load the configurations placed in the properties.yaml file.
      *
      * @return KeyRotation config object.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while loading the configs from properties.yaml file.
      */
     public KeyRotationConfig loadConfigs(String[] args) throws KeyRotationException {
 
@@ -73,11 +73,11 @@ public class KeyRotationConfig {
             throw new KeyRotationException(
                     "Error occurred, properties.yaml file not found in provided path, " + propertiesFilePath);
         }
-        log.debug("Loading Key Rotation Configs from path: " + propertiesFilePath);
+        log.info("Loading Key Rotation Configs from path: " + propertiesFilePath);
         KeyRotationConfig keyRotationConfig =
                 KeyRotationServiceUtils.loadKeyRotationConfig(propertiesFilePath);
         checkKeyRotationConfigs(keyRotationConfig);
-        log.debug("Successfully loaded the config file.");
+        log.info("Successfully loaded the config file.");
         return keyRotationConfig;
     }
 
@@ -85,7 +85,7 @@ public class KeyRotationConfig {
      * To check whether the loaded configurations are valid and not null.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while checking for null values in the loaded properties.yaml file.
      */
     public void checkKeyRotationConfigs(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
@@ -111,7 +111,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Getter for the old secret key.
+     * Get for the old secret key.
      *
      * @return Old secret key.
      */
@@ -121,7 +121,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Setter for the old secret key.
+     * Set for the old secret key.
      *
      * @param oldSecretKey Old secret key.
      */
@@ -131,7 +131,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Getter for the new secret key.
+     * Get for the new secret key.
      *
      * @return New secret key.
      */
@@ -141,7 +141,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Setter for the new secret key.
+     * Set for the new secret key.
      *
      * @param newSecretKey New secret key.
      */
@@ -151,7 +151,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Getter for the new IS home path.
+     * Get for the new IS home path.
      *
      * @return New IS home path.
      */
@@ -161,7 +161,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Setter for the new IS home path.
+     * Set for the new IS home path.
      *
      * @param newISHome New IS home path.
      */
@@ -171,7 +171,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Getter for the old IS identity database URL.
+     * Get for the old IS identity database URL.
      *
      * @return Old IS identity database URL.
      */
@@ -181,7 +181,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Setter for the old IS identity database URL.
+     * Set for the old IS identity database URL.
      *
      * @param oldIdnDBUrl Old IS identity database URL.
      */
@@ -191,7 +191,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Getter for the old IS identity database username.
+     * Get for the old IS identity database username.
      *
      * @return Old IS identity database username.
      */
@@ -201,7 +201,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Setter for the old IS identity database username.
+     * Set for the old IS identity database username.
      *
      * @param oldIdnUsername Old IS identity database username.
      */
@@ -211,7 +211,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Getter for the old IS identity database password.
+     * Get for the old IS identity database password.
      *
      * @return Base64 decoded old IS identity database password.
      */
@@ -221,7 +221,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Setter for the old IS identity database password.
+     * Set for the old IS identity database password.
      *
      * @param oldIdnPassword Old IS identity database password.
      */
@@ -231,7 +231,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Getter for the new IS identity database URL.
+     * Get for the new IS identity database URL.
      *
      * @return New IS identity database URL.
      */
@@ -241,7 +241,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Setter for the new IS identity database URL.
+     * Set for the new IS identity database URL.
      *
      * @param newIdnDBUrl New IS identity database URL.
      */
@@ -251,7 +251,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Getter for the new IS identity database username.
+     * Get for the new IS identity database username.
      *
      * @return New IS identity database username.
      */
@@ -261,7 +261,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Setter for the new IS identity database username.
+     * Set for the new IS identity database username.
      *
      * @param newIdnUsername New IS identity database username.
      */
@@ -271,7 +271,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Getter for the new IS identity database password.
+     * Get for the new IS identity database password.
      *
      * @return Base64 decoded new IS identity database password.
      */
@@ -281,7 +281,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Setter for the new IS identity database password.
+     * Set for the new IS identity database password.
      *
      * @param password New IS identity database password.
      */
@@ -291,7 +291,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Getter for the registry database URL.
+     * Get for the registry database URL.
      *
      * @return Registry database URL.
      */
@@ -301,7 +301,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Setter for the registry database URL.
+     * Set for the registry database URL.
      *
      * @param newRegDBUrl Registry database URL.
      */
@@ -311,7 +311,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Getter for the registry database username.
+     * Get for the registry database username.
      *
      * @return Registry database username.
      */
@@ -321,7 +321,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Setter for the registry database username.
+     * Set for the registry database username.
      *
      * @param newRegUsername Registry database username.
      */
@@ -331,7 +331,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Getter for the registry database password.
+     * Get for the registry database password.
      *
      * @return Registry database password.
      */
@@ -341,7 +341,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Setter for the registry database password.
+     * Set for the registry database password.
      *
      * @param newRegPassword Registry database password.
      */
@@ -351,7 +351,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Getter for the enable database migrator property value.
+     * Get for the enable database migrator property value.
      *
      * @return Enable database migrator property value.
      */
@@ -361,7 +361,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Setter for the enable database migrator property value.
+     * Set for the enable database migrator property value.
      *
      * @param enableDBMigrator Enable database migrator property value.
      */
@@ -371,7 +371,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Getter for the enable configuration file migrator property value.
+     * Get for the enable configuration file migrator property value.
      *
      * @return Enable configuration file migrator property value.
      */
@@ -381,7 +381,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Setter for the enable configuration file migrator property value.
+     * Set for the enable configuration file migrator property value.
      *
      * @param enableConfigMigrator Enable configuration file migrator property value.
      */
@@ -391,7 +391,7 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Getter for the enable syncing migrator property value.
+     * Get for the enable syncing migrator property value.
      *
      * @return Enable syncing migrator property value.
      */
@@ -401,24 +401,12 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Setter for the enable syncing migrator property value.
+     * Set for the enable syncing migrator property value.
      *
      * @param enableSyncMigrator Enable syncing migrator property value.
      */
     public void setEnableSyncMigrator(String enableSyncMigrator) {
 
         this.enableSyncMigrator = enableSyncMigrator;
-    }
-
-    @Override
-    public String toString() {
-
-        return "\noldSecretKey: " + oldSecretKey + "\nnewSecretKey: " + newSecretKey + "\nnewISHome: " + newISHome +
-                "\noldIdnDBUrl: " + oldIdnDBUrl + "\noldIdnUsername: " + oldIdnUsername + "\noldIdnPassword: " +
-                oldIdnPassword + "\nnewIdnDBUrl: " + newIdnDBUrl + "\nnewIdnUsername: " + newIdnUsername +
-                "\nnewIdnPassword: " + newIdnPassword + "\nnewRegDBUrl: " + newRegDBUrl + "\nnewRegUsername: " +
-                newRegUsername + "\nnewRegPassword: " + newRegPassword + "\nenableDBMigrator: " + enableDBMigrator +
-                "\nenableConfigMigrator: " + enableConfigMigrator + "\nenableSyncMigrator: " + enableSyncMigrator +
-                "\n";
     }
 }

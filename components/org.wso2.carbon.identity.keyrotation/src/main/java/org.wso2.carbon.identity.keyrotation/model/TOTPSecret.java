@@ -45,7 +45,7 @@ public class TOTPSecret {
     }
 
     /**
-     * Getter for the tenant id.
+     * Get for the tenant id.
      *
      * @return Tenant id.
      */
@@ -55,7 +55,7 @@ public class TOTPSecret {
     }
 
     /**
-     * Setter for the tenant id.
+     * Set for the tenant id.
      *
      * @param tenantId Tenant id.
      */
@@ -65,7 +65,7 @@ public class TOTPSecret {
     }
 
     /**
-     * Getter for the username.
+     * Get for the username.
      *
      * @return Username.
      */
@@ -75,7 +75,7 @@ public class TOTPSecret {
     }
 
     /**
-     * Setter for the username.
+     * Set for the username.
      *
      * @param username Username.
      */
@@ -85,7 +85,7 @@ public class TOTPSecret {
     }
 
     /**
-     * Getter for the data key.
+     * Get for the data key.
      *
      * @return Data key.
      */
@@ -95,7 +95,7 @@ public class TOTPSecret {
     }
 
     /**
-     * Setter for the data key.
+     * Set for the data key.
      *
      * @param dataKey Data key.
      */
@@ -105,7 +105,7 @@ public class TOTPSecret {
     }
 
     /**
-     * Getter for the data value.
+     * Get for the data value.
      *
      * @return Data value.
      */
@@ -115,7 +115,7 @@ public class TOTPSecret {
     }
 
     /**
-     * Setter for the data value.
+     * Set for the data value.
      *
      * @param dataValue Data value.
      */

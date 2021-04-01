@@ -42,7 +42,7 @@ public class OAuthSecret {
     }
 
     /**
-     * Getter for the id.
+     * Get for the id.
      *
      * @return Id.
      */
@@ -52,7 +52,7 @@ public class OAuthSecret {
     }
 
     /**
-     * Setter for the id.
+     * Set for the id.
      *
      * @param id Id.
      */
@@ -62,7 +62,7 @@ public class OAuthSecret {
     }
 
     /**
-     * Getter for the consumer secret.
+     * Get for the consumer secret.
      *
      * @return Consumer secret.
      */
@@ -72,7 +72,7 @@ public class OAuthSecret {
     }
 
     /**
-     * Setter for the consumer secret.
+     * Set for the consumer secret.
      *
      * @param consumerSecret Consumer secret.
      */
@@ -82,7 +82,7 @@ public class OAuthSecret {
     }
 
     /**
-     * Getter for the app name.
+     * Get for the app name.
      *
      * @return App name.
      */
@@ -92,7 +92,7 @@ public class OAuthSecret {
     }
 
     /**
-     * Setter for the app name.
+     * Set for the app name.
      *
      * @param appName App name.
      */

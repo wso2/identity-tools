@@ -61,7 +61,7 @@ public class IdentityDAO {
      * @param startIndex        The start index of the data chunk.
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @return List comprising of the records in the table.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while retrieving data from IDN_IDENTITY_USER_DATA.
      */
     public List<TOTPSecret> getTOTPSecretsChunks(int startIndex, KeyRotationConfig keyRotationConfig)
             throws KeyRotationException {
@@ -106,7 +106,7 @@ public class IdentityDAO {
      *
      * @param updateTOTPSecretList The list containing records that should be re-encrypted.
      * @param keyRotationConfig    Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while updating data from IDN_IDENTITY_USER_DATA.
      */
     public void updateTOTPSecretsChunks(List<TOTPSecret> updateTOTPSecretList,
                                         KeyRotationConfig keyRotationConfig) throws KeyRotationException {
@@ -163,9 +163,9 @@ public class IdentityDAO {
      * @param startIndex        The start index of the data chunk.
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @return List comprising of the records in the table.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while retrieving data from IDN_IDENTITY_USER_DATA_TEMP.
      */
-    public List<TOTPSecret> getTempTOTPSecretsAndUpdate(int startIndex, KeyRotationConfig keyRotationConfig)
+    public List<TOTPSecret> getTempTOTPSecrets(int startIndex, KeyRotationConfig keyRotationConfig)
             throws KeyRotationException {
 
         List<TOTPSecret> totpSecretList = new ArrayList<>();

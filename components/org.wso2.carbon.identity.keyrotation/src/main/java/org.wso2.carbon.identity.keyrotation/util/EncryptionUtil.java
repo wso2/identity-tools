@@ -41,7 +41,7 @@ public class EncryptionUtil {
      * @param cipher            The ciphertext needed to perform re-encryption on.
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @return Ciphertext that gets decrypted from the old key and encrypted using the new key.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while performing re-encryption.
      */
     public static String symmetricReEncryption(String cipher, KeyRotationConfig keyRotationConfig)
             throws KeyRotationException {

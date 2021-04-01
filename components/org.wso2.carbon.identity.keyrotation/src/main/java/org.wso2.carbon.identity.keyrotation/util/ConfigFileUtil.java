@@ -47,7 +47,7 @@ import javax.xml.xpath.XPathFactory;
 import static org.wso2.carbon.identity.keyrotation.util.EncryptionUtil.symmetricReEncryption;
 
 /**
- * This class hold the utility methods needed to update the configuration files.
+ * This class holds the utility methods needed to update the configuration files.
  */
 public class ConfigFileUtil {
 
@@ -95,7 +95,7 @@ public class ConfigFileUtil {
      * @param filename          The absolute path of the configuration file.
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @param property          The property value to identify the corresponding config file.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while updating the configuration file.
      */
     public static void updateConfigFile(File filename, KeyRotationConfig keyRotationConfig, String property)
             throws KeyRotationException {

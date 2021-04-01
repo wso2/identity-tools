@@ -60,7 +60,7 @@ public class BPSProfileDAO {
      * @param startIndex        The start index of the data chunk.
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @return List comprising of the records in the table.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while retrieving data from WF_BPS_PROFILE.
      */
     public List<BPSPassword> getBpsPasswordChunks(int startIndex, KeyRotationConfig keyRotationConfig) throws
             KeyRotationException {
@@ -104,7 +104,7 @@ public class BPSProfileDAO {
      *
      * @param updateBPSPasswordsList The list containing records that should be re-encrypted.
      * @param keyRotationConfig      Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while updating data from WF_BPS_PROFILE.
      */
     public void updateBpsPasswordChunks(List<BPSPassword> updateBPSPasswordsList, KeyRotationConfig keyRotationConfig)
             throws KeyRotationException {

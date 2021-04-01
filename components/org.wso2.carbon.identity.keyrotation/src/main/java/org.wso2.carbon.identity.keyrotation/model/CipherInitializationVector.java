@@ -27,7 +27,7 @@ public class CipherInitializationVector {
     private String initializationVector;
 
     /**
-     * Getter for the cipher.
+     * Get for the cipher.
      *
      * @return Cipher The ciphertext.
      */
@@ -37,7 +37,7 @@ public class CipherInitializationVector {
     }
 
     /**
-     * Setter for the cipher.
+     * Set for the cipher.
      *
      * @param cipher The ciphertext.
      */
@@ -47,7 +47,7 @@ public class CipherInitializationVector {
     }
 
     /**
-     * Getter for the initialization vector.
+     * Get for the initialization vector.
      *
      * @return IV The initialization vector.
      */
@@ -57,7 +57,7 @@ public class CipherInitializationVector {
     }
 
     /**
-     * Setter for the initialization vector.
+     * Set for the initialization vector.
      *
      * @param initializationVector The initialization vector.
      */

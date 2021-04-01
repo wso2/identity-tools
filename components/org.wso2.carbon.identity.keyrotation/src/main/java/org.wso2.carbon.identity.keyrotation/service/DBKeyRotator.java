@@ -63,7 +63,7 @@ public class DBKeyRotator {
      * Re-encryption of the identity and registry DB data.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while re-encrypting identity and registry DB data.
      */
     public void dbReEncryptor(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
@@ -72,19 +72,19 @@ public class DBKeyRotator {
         log.info("Successfully updated totp data records in IDN_IDENTITY_USER_DATA: " + IdentityDAO.updateCount);
         log.info("Failed totp data records in IDN_IDENTITY_USER_DATA: " + IdentityDAO.failedCount);
         reEncryptOauthAuthData(keyRotationConfig);
-        log.info("Successfully updated Oauth2 authorization code data records in IDN_OAUTH2_AUTHORIZATION_CODE: " +
+        log.info("Successfully updated OAuth2 authorization code data records in IDN_OAUTH2_AUTHORIZATION_CODE: " +
                 OAuthDAO.updateCodeCount);
-        log.info("Failed Oauth2 authorization code data records in IDN_OAUTH2_AUTHORIZATION_CODE: " +
+        log.info("Failed OAuth2 authorization code data records in IDN_OAUTH2_AUTHORIZATION_CODE: " +
                 OAuthDAO.failedCodeCount);
         reEncryptOauthTokenData(keyRotationConfig);
-        log.info("Successfully updated Oauth2 access and refresh tokens data records in IDN_OAUTH2_ACCESS_TOKEN: " +
+        log.info("Successfully updated OAuth2 access and refresh tokens data records in IDN_OAUTH2_ACCESS_TOKEN: " +
                 OAuthDAO.updateTokenCount);
-        log.info("Failed Oauth2 access and refresh tokens data records in IDN_OAUTH2_ACCESS_TOKEN: " +
+        log.info("Failed OAuth2 access and refresh tokens data records in IDN_OAUTH2_ACCESS_TOKEN: " +
                 OAuthDAO.failedTokenCount);
         reEncryptOauthConsumerData(keyRotationConfig);
-        log.info("Successfully updated Oauth consumer secret data records in IDN_OAUTH_CONSUMER_APPS: " +
+        log.info("Successfully updated OAuth consumer secret data records in IDN_OAUTH_CONSUMER_APPS: " +
                 OAuthDAO.updateSecretCount);
-        log.info("Failed Oauth consumer secret data records in IDN_OAUTH_CONSUMER_APPS: " + OAuthDAO.failedSecretCount);
+        log.info("Failed OAuth consumer secret data records in IDN_OAUTH_CONSUMER_APPS: " + OAuthDAO.failedSecretCount);
         reEncryptBPSData(keyRotationConfig);
         log.info("Successfully updated BPS profile data records in WF_BPS_PROFILE: " + BPSProfileDAO.updateCount);
         log.info("Failed BPS profile data records in WF_BPS_PROFILE: " + BPSProfileDAO.failedCount);
@@ -110,7 +110,7 @@ public class DBKeyRotator {
      * Re-encryption of the IDN_IDENTITY_USER_DATA table data.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while re-encrypting TOTP data.
      */
     private void reEncryptIdentityTOTPData(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
@@ -141,11 +141,11 @@ public class DBKeyRotator {
      * Re-encryption of the IDN_OAUTH2_AUTHORIZATION_CODE table data.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while re-encrypting OAuth2 authorization code data.
      */
     private void reEncryptOauthAuthData(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
-        log.debug("Started re-encryption of the Oauth2 authorization code data...");
+        log.debug("Started re-encryption of the OAuth2 authorization code data...");
         int startIndex = 0;
         List<OAuthCode> chunkList =
                 OAuthDAO.getInstance().getOAuthCodeChunks(startIndex, keyRotationConfig);
@@ -165,18 +165,18 @@ public class DBKeyRotator {
             startIndex = startIndex + DBConstants.CHUNK_SIZE;
             chunkList = OAuthDAO.getInstance().getOAuthCodeChunks(startIndex, keyRotationConfig);
         }
-        log.debug("Finished re-encryption of the Oauth2 authorization code data...");
+        log.debug("Finished re-encryption of the OAuth2 authorization code data...");
     }
 
     /**
      * Re-encryption of the IDN_OAUTH2_ACCESS_TOKEN table data.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while re-encrypting OAuth2 access and refresh token data.
      */
     private void reEncryptOauthTokenData(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
-        log.debug("Started re-encryption of the Oauth2 access and refresh tokens data...");
+        log.debug("Started re-encryption of the OAuth2 access and refresh token data...");
         int startIndex = 0;
         List<OAuthToken> chunkList =
                 OAuthDAO.getInstance().getOAuthTokenChunks(startIndex, keyRotationConfig);
@@ -201,18 +201,18 @@ public class DBKeyRotator {
             startIndex = startIndex + DBConstants.CHUNK_SIZE;
             chunkList = OAuthDAO.getInstance().getOAuthTokenChunks(startIndex, keyRotationConfig);
         }
-        log.debug("Finished re-encryption of the Oauth2 access and refresh tokens data...");
+        log.debug("Finished re-encryption of the OAuth2 access and refresh token data...");
     }
 
     /**
      * Re-encryption of the IDN_OAUTH_CONSUMER_APPS consumer table data.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while re-encrypting OAuth consumer secret data.
      */
     private void reEncryptOauthConsumerData(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
-        log.debug("Started re-encryption of the Oauth consumer secret data...");
+        log.debug("Started re-encryption of the OAuth consumer secret data...");
         int startIndex = 0;
         List<OAuthSecret> chunkList =
                 OAuthDAO.getInstance().getOAuthSecretChunks(startIndex, keyRotationConfig);
@@ -232,14 +232,14 @@ public class DBKeyRotator {
             startIndex = startIndex + DBConstants.CHUNK_SIZE;
             chunkList = OAuthDAO.getInstance().getOAuthSecretChunks(startIndex, keyRotationConfig);
         }
-        log.debug("Finished re-encryption of the Oauth consumer secret data...");
+        log.debug("Finished re-encryption of the OAuth consumer secret data...");
     }
 
     /**
      * Re-encryption of the WF_BPS_PROFILE table data.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while re-encrypting BPS profile data.
      */
     private void reEncryptBPSData(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
@@ -269,7 +269,7 @@ public class DBKeyRotator {
      * Re-encryption of the WF_REQUEST table data.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while re-encrypting WF request data.
      */
     private void reEncryptWFRequestData(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
@@ -303,7 +303,7 @@ public class DBKeyRotator {
      * Re-encryption of keystore password in REG_PROPERTY table.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while re-encrypting keystore password property data.
      */
     private void reEncryptKeystorePasswordData(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
@@ -335,7 +335,7 @@ public class DBKeyRotator {
      * Re-encryption of keystore privatekeyPass in REG_PROPERTY table.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while re-encrypting keystore privatekeyPass property data.
      */
     private void reEncryptKeystorePrivatekeyPassData(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
@@ -368,7 +368,7 @@ public class DBKeyRotator {
      * Re-encryption of subscriber password in REG_PROPERTY table.
      *
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while re-encrypting subscriber password property data.
      */
     private void reEncryptSubscriberPasswordData(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 

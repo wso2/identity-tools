@@ -55,12 +55,12 @@ public class RegistryDAO {
     }
 
     /**
-     * To retrieve the keystore data in REG_PROPERTY as chunks.
+     * To retrieve the registry property data in REG_PROPERTY as chunks.
      *
      * @param startIndex        The start index of the data chunk.
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @return List comprising of the records in the table.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while retrieving data from REG_PROPERTY.
      */
     public List<RegistryProperty> getRegPropertyDataChunks(int startIndex, KeyRotationConfig keyRotationConfig,
                                                            String property) throws KeyRotationException {
@@ -107,7 +107,7 @@ public class RegistryDAO {
      *
      * @param updateRegPropertyList The list containing records that should be re-encrypted.
      * @param keyRotationConfig     Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while updating data from REG_PROPERTY.
      */
     public void updateRegPropertyDataChunks(List<RegistryProperty> updateRegPropertyList,
                                             KeyRotationConfig keyRotationConfig, String property)

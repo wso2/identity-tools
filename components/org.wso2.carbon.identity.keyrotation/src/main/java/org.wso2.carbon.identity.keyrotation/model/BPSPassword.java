@@ -46,7 +46,7 @@ public class BPSPassword {
     }
 
     /**
-     * Getter for the profile name.
+     * Get for the profile name.
      *
      * @return Profile name.
      */
@@ -56,7 +56,7 @@ public class BPSPassword {
     }
 
     /**
-     * Setter for the profile name.
+     * Set for the profile name.
      *
      * @param profileName Profile name.
      */
@@ -66,7 +66,7 @@ public class BPSPassword {
     }
 
     /**
-     * Getter for the tenant id.
+     * Get for the tenant id.
      *
      * @return Tenant id.
      */
@@ -76,7 +76,7 @@ public class BPSPassword {
     }
 
     /**
-     * Setter for the tenant id.
+     * Set for the tenant id.
      *
      * @param tenantId Tenant id.
      */
@@ -86,7 +86,7 @@ public class BPSPassword {
     }
 
     /**
-     * Getter for the password.
+     * Get for the password.
      *
      * @return Password.
      */
@@ -96,7 +96,7 @@ public class BPSPassword {
     }
 
     /**
-     * Setter for the password.
+     * Set for the password.
      *
      * @param password Password.
      */
@@ -106,7 +106,7 @@ public class BPSPassword {
     }
 
     /**
-     * Getter for the username.
+     * Get for the username.
      *
      * @return Username.
      */
@@ -116,7 +116,7 @@ public class BPSPassword {
     }
 
     /**
-     * Setter for the username.
+     * Set for the username.
      *
      * @param username Username.
      */

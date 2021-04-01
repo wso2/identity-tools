@@ -45,7 +45,7 @@ public class RegistryProperty {
     }
 
     /**
-     * Getter for the registry id.
+     * Get for the registry id.
      *
      * @return Registry id.
      */
@@ -55,7 +55,7 @@ public class RegistryProperty {
     }
 
     /**
-     * Setter for the registry id.
+     * Set for the registry id.
      *
      * @param regId Registry id.
      */
@@ -65,7 +65,7 @@ public class RegistryProperty {
     }
 
     /**
-     * Getter for the registry name.
+     * Get for the registry name.
      *
      * @return Registry name.
      */
@@ -75,7 +75,7 @@ public class RegistryProperty {
     }
 
     /**
-     * Setter for the registry name.
+     * Set for the registry name.
      *
      * @param regName Registry name.
      */
@@ -85,7 +85,7 @@ public class RegistryProperty {
     }
 
     /**
-     * Getter for the registry value.
+     * Get for the registry value.
      *
      * @return Registry value.
      */
@@ -95,7 +95,7 @@ public class RegistryProperty {
     }
 
     /**
-     * Setter for the registry value.
+     * Set for the registry value.
      *
      * @param regValue Registry value.
      */
@@ -105,7 +105,7 @@ public class RegistryProperty {
     }
 
     /**
-     * Getter for the registry tenant id.
+     * Get for the registry tenant id.
      *
      * @return Registry tenant id.
      */
@@ -115,7 +115,7 @@ public class RegistryProperty {
     }
 
     /**
-     * Setter for the registry tenant id.
+     * Set for the registry tenant id.
      *
      * @param regTenantId Registry tenant id.
      */

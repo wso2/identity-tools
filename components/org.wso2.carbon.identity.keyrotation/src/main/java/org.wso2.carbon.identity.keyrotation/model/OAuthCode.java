@@ -42,7 +42,7 @@ public class OAuthCode {
     }
 
     /**
-     * Getter for the code id.
+     * Get for the code id.
      *
      * @return Code id.
      */
@@ -52,7 +52,7 @@ public class OAuthCode {
     }
 
     /**
-     * Setter for the code id.
+     * Set for the code id.
      *
      * @param codeId Code id.
      */
@@ -62,7 +62,7 @@ public class OAuthCode {
     }
 
     /**
-     * Getter for the authorization code.
+     * Get for the authorization code.
      *
      * @return Authorization code.
      */
@@ -72,7 +72,7 @@ public class OAuthCode {
     }
 
     /**
-     * Setter for the authorization code.
+     * Set for the authorization code.
      *
      * @param authorizationCode Authorization code.
      */
@@ -82,7 +82,7 @@ public class OAuthCode {
     }
 
     /**
-     * Getter for the consumer key id.
+     * Get for the consumer key id.
      *
      * @return Consumer key id.
      */
@@ -92,7 +92,7 @@ public class OAuthCode {
     }
 
     /**
-     * Setter for the consumer key id.
+     * Set for the consumer key id.
      *
      * @param consumerKeyId Consumer key id.
      */

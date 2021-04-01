@@ -56,7 +56,6 @@ public class OAuthDAO {
     public static int failedTokenCount = 0;
     public static int failedSecretCount = 0;
 
-
     public OAuthDAO() {
 
     }
@@ -72,7 +71,7 @@ public class OAuthDAO {
      * @param startIndex        The start index of the data chunk.
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @return List comprising of the records in the table.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while retrieving data from IDN_OAUTH2_AUTHORIZATION_CODE.
      */
     public List<OAuthCode> getOAuthCodeChunks(int startIndex, KeyRotationConfig keyRotationConfig) throws
             KeyRotationException {
@@ -116,7 +115,7 @@ public class OAuthDAO {
      *
      * @param updateAuthCodeList The list containing records that should be re-encrypted.
      * @param keyRotationConfig  Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while updating data from IDN_OAUTH2_AUTHORIZATION_CODE.
      */
     public void updateOAuthCodeChunks(List<OAuthCode> updateAuthCodeList, KeyRotationConfig keyRotationConfig)
             throws KeyRotationException {
@@ -170,7 +169,7 @@ public class OAuthDAO {
      * @param startIndex        The start index of the data chunk.
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @return List comprising of the records in the table.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while retrieving data from IDN_OAUTH2_ACCESS_TOKEN.
      */
     public List<OAuthToken> getOAuthTokenChunks(int startIndex, KeyRotationConfig keyRotationConfig) throws
             KeyRotationException {
@@ -213,7 +212,7 @@ public class OAuthDAO {
      *
      * @param updateAuthTokensList The list containing records that should be re-encrypted.
      * @param keyRotationConfig    Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while updating data from IDN_OAUTH2_ACCESS_TOKEN.
      */
     public void updateOAuthTokenChunks(List<OAuthToken> updateAuthTokensList, KeyRotationConfig keyRotationConfig)
             throws KeyRotationException {
@@ -269,7 +268,7 @@ public class OAuthDAO {
      * @param startIndex        The start index of the data chunk.
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @return List comprising of the records in the table.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while retrieving data from IDN_OAUTH_CONSUMER_APPS.
      */
     public List<OAuthSecret> getOAuthSecretChunks(int startIndex, KeyRotationConfig keyRotationConfig) throws
             KeyRotationException {
@@ -312,7 +311,7 @@ public class OAuthDAO {
      *
      * @param updateOAuthSecretList The list containing records that should be re-encrypted.
      * @param keyRotationConfig     Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while updating data from IDN_OAUTH_CONSUMER_APPS.
      */
     public void updateOAuthSecretChunks(List<OAuthSecret> updateOAuthSecretList, KeyRotationConfig keyRotationConfig)
             throws
@@ -357,5 +356,50 @@ public class OAuthDAO {
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to new identity DB.", e);
         }
+    }
+
+    /**
+     * To retrieve the list of data in IDN_OAUTH2_AUTHORIZATION_CODE_TEMP as chunks.
+     *
+     * @param startIndex        The start index of the data chunk.
+     * @param keyRotationConfig Configuration data needed to perform the task.
+     * @return List comprising of the records in the table.
+     * @throws KeyRotationException Exception thrown while retrieving data from IDN_OAUTH2_AUTHORIZATION_CODE_TEMP.
+     */
+    public List<OAuthCode> getTempOAuthCode(int startIndex, KeyRotationConfig keyRotationConfig) throws
+            KeyRotationException {
+
+        List<OAuthCode> oAuthCodeList = new ArrayList<>();
+        String query = DBConstants.GET_TEMP_OAUTH_AUTHORIZATION_CODE;
+        int firstIndex = startIndex;
+        int secIndex = DBConstants.SYNC_CHUNK_SIZE;
+        try (Connection connection = DriverManager
+                .getConnection(keyRotationConfig.getOldIdnDBUrl(), keyRotationConfig.getOldIdnUsername(),
+                        keyRotationConfig.getNewIdnPassword())) {
+            if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
+                query = DBConstants.GET_TEMP_OAUTH_AUTHORIZATION_CODE_POSTGRE;
+                firstIndex = DBConstants.SYNC_CHUNK_SIZE;
+                secIndex = startIndex;
+            } else if (connection.getMetaData().getDriverName().contains(DBConstants.MSSQL) ||
+                    connection.getMetaData().getDriverName().contains(DBConstants.ORACLE)) {
+                query = DBConstants.GET_TEMP_OAUTH_AUTHORIZATION_CODE_OTHER;
+            }
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, firstIndex);
+                preparedStatement.setInt(2, secIndex);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    oAuthCodeList.add(new OAuthCode(resultSet.getString(CODE_ID),
+                            resultSet.getString(AUTHORIZATION_CODE),
+                            resultSet.getString(CONSUMER_KEY_ID)));
+                }
+            } catch (SQLException e) {
+                throw new KeyRotationException(
+                        "Error while retrieving auth codes from IDN_OAUTH2_AUTHORIZATION_CODE_TEMP.", e);
+            }
+        } catch (SQLException e) {
+            throw new KeyRotationException("Error while connecting to old identity DB.", e);
+        }
+        return oAuthCodeList;
     }
 }

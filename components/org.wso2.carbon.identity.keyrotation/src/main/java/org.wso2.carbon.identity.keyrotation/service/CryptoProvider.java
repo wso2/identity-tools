@@ -49,7 +49,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- * This class hold implementations of the encryption and decryption tasks.
+ * This class holds implementations of the encryption and decryption tasks.
  */
 public class CryptoProvider {
 
@@ -64,7 +64,7 @@ public class CryptoProvider {
      * @param cleartext         The cleartext to be encrypted.
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @return The encrypted cleartext.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while encrypting the cleartext.
      */
     public byte[] encrypt(byte[] cleartext, KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
@@ -106,7 +106,7 @@ public class CryptoProvider {
      * @param cipherText        The ciphertext to be decrypted.
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @return The decrypted ciphertext.
-     * @throws KeyRotationException Exception thrown if something unexpected happens during key rotation.
+     * @throws KeyRotationException Exception thrown while decrypting the ciphertext.
      **/
     public byte[] decrypt(byte[] cipherText, KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
@@ -203,6 +203,7 @@ public class CryptoProvider {
      *
      * @param cipherText The ciphertext.
      * @return Refactored cipher The refactored ciphertext.
+     * @throws KeyRotationException Exception thrown while re-factoring the cipher text.
      */
     public byte[] reFactorCipherText(byte[] cipherText) throws KeyRotationException {
 
