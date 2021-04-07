@@ -70,39 +70,41 @@ public class DBKeyRotator {
         log.info("Started re-encrypting identity and registry DB data...");
         reEncryptIdentityTOTPData(keyRotationConfig);
         log.info("Successfully updated totp data records in IDN_IDENTITY_USER_DATA: " + IdentityDAO.updateCount);
-        log.info("Failed totp data records in IDN_IDENTITY_USER_DATA: " + IdentityDAO.failedCount);
+        log.info("Failed totp data records in IDN_IDENTITY_USER_DATA: " + IdentityDAO.failedUpdateCount);
         reEncryptOauthAuthData(keyRotationConfig);
         log.info("Successfully updated OAuth2 authorization code data records in IDN_OAUTH2_AUTHORIZATION_CODE: " +
                 OAuthDAO.updateCodeCount);
         log.info("Failed OAuth2 authorization code data records in IDN_OAUTH2_AUTHORIZATION_CODE: " +
-                OAuthDAO.failedCodeCount);
+                OAuthDAO.failedUpdateCodeCount);
         reEncryptOauthTokenData(keyRotationConfig);
         log.info("Successfully updated OAuth2 access and refresh tokens data records in IDN_OAUTH2_ACCESS_TOKEN: " +
                 OAuthDAO.updateTokenCount);
         log.info("Failed OAuth2 access and refresh tokens data records in IDN_OAUTH2_ACCESS_TOKEN: " +
-                OAuthDAO.failedTokenCount);
+                OAuthDAO.failedUpdateTokenCount);
         reEncryptOauthConsumerData(keyRotationConfig);
         log.info("Successfully updated OAuth consumer secret data records in IDN_OAUTH_CONSUMER_APPS: " +
                 OAuthDAO.updateSecretCount);
-        log.info("Failed OAuth consumer secret data records in IDN_OAUTH_CONSUMER_APPS: " + OAuthDAO.failedSecretCount);
+        log.info("Failed OAuth consumer secret data records in IDN_OAUTH_CONSUMER_APPS: " +
+                OAuthDAO.failedUpdateSecretCount);
         reEncryptBPSData(keyRotationConfig);
         log.info("Successfully updated BPS profile data records in WF_BPS_PROFILE: " + BPSProfileDAO.updateCount);
-        log.info("Failed BPS profile data records in WF_BPS_PROFILE: " + BPSProfileDAO.failedCount);
+        log.info("Failed BPS profile data records in WF_BPS_PROFILE: " + BPSProfileDAO.failedUpdateCount);
         reEncryptWFRequestData(keyRotationConfig);
         log.info("Successfully updated WF request data records in WF_REQUEST: " + WorkFlowDAO.updateCount);
-        log.info("Failed WF request data records in WF_REQUEST: " + WorkFlowDAO.failedCount);
+        log.info("Failed WF request data records in WF_REQUEST: " + WorkFlowDAO.failedUpdateCount);
         reEncryptKeystorePasswordData(keyRotationConfig);
         log.info("Successfully updated keystore password property data records in REG_PROPERTY: " +
                 RegistryDAO.updateCount);
-        log.info("Failed keystore password property data records in REG_PROPERTY: " + RegistryDAO.failedCount);
+        log.info("Failed keystore password property data records in REG_PROPERTY: " + RegistryDAO.failedUpdateCount);
         reEncryptKeystorePrivatekeyPassData(keyRotationConfig);
         log.info("Successfully updated keystore privatekeyPass property data records in REG_PROPERTY: " +
                 RegistryDAO.updateCount);
-        log.info("Failed keystore privatekeyPass property data records in REG_PROPERTY: " + RegistryDAO.failedCount);
+        log.info("Failed keystore privatekeyPass property data records in REG_PROPERTY: " +
+                RegistryDAO.failedUpdateCount);
         reEncryptSubscriberPasswordData(keyRotationConfig);
         log.info("Successfully updated subscriber password property data records in REG_PROPERTY: " +
                 RegistryDAO.updateCount);
-        log.info("Failed subscriber password property data records in REG_PROPERTY: " + RegistryDAO.failedCount);
+        log.info("Failed subscriber password property data records in REG_PROPERTY: " + RegistryDAO.failedUpdateCount);
         log.info("Finished re-encrypting identity and registry DB data completed...\n");
     }
 
@@ -121,8 +123,7 @@ public class DBKeyRotator {
         while (CollectionUtils.isNotEmpty(chunkList)) {
             List<TOTPSecret> midChunkList = new ArrayList<>();
             for (TOTPSecret totpSecret : chunkList) {
-                if (DBConstants.DATA_KEY.equals(totpSecret.getDataKey()) &&
-                        !checkPlainText(totpSecret.getDataValue())) {
+                if (!checkPlainText(totpSecret.getDataValue())) {
                     log.debug("Encrypted value " + totpSecret.getDataValue());
                     String reEncryptedValue = symmetricReEncryption(totpSecret.getDataValue(), keyRotationConfig);
                     totpSecret.setDataValue(reEncryptedValue);
@@ -309,7 +310,7 @@ public class DBKeyRotator {
 
         log.debug("Started re-encryption of the keystore password property data...");
         RegistryDAO.updateCount = 0;
-        RegistryDAO.failedCount = 0;
+        RegistryDAO.failedUpdateCount = 0;
         int startIndex = 0;
         List<RegistryProperty> chunkList =
                 RegistryDAO.getInstance().getRegPropertyDataChunks(startIndex, keyRotationConfig, password);
@@ -341,7 +342,7 @@ public class DBKeyRotator {
 
         log.debug("Started re-encryption of the keystore privatekeyPass property data...");
         RegistryDAO.updateCount = 0;
-        RegistryDAO.failedCount = 0;
+        RegistryDAO.failedUpdateCount = 0;
         int startIndex = 0;
         List<RegistryProperty> chunkList =
                 RegistryDAO.getInstance().getRegPropertyDataChunks(startIndex, keyRotationConfig, privatekeyPass);
@@ -374,7 +375,7 @@ public class DBKeyRotator {
 
         log.debug("Started re-encryption of the subscriber password property data...");
         RegistryDAO.updateCount = 0;
-        RegistryDAO.failedCount = 0;
+        RegistryDAO.failedUpdateCount = 0;
         int startIndex = 0;
         List<RegistryProperty> chunkList =
                 RegistryDAO.getInstance().getRegPropertyDataChunks(startIndex, keyRotationConfig, subscriberPassword);

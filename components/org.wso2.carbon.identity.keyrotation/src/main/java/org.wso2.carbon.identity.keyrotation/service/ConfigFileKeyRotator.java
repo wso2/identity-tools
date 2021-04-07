@@ -56,14 +56,15 @@ public class ConfigFileKeyRotator {
 
         log.info("Started re-encrypting configuration file data...");
         reEncryptSuperTenantUserStore(keyRotationConfig);
-        log.info("Updated super tenant secondary userstore configuration files: " + ConfigFileUtil.updateCount);
-        log.info("Failed super tenant secondary userstore configuration files: " + ConfigFileUtil.failedCount);
+        log.info("Successfully updated super tenant secondary userstore configuration files: " +
+                ConfigFileUtil.updateCount);
+        log.info("Failed super tenant secondary userstore configuration files: " + ConfigFileUtil.failedUpdateCount);
         reEncryptTenantUserStore(keyRotationConfig);
-        log.info("Updated tenant secondary userstore configuration files: " + ConfigFileUtil.updateCount);
-        log.info("Failed tenant secondary userstore configuration files: " + ConfigFileUtil.failedCount);
+        log.info("Successfully updated tenant secondary userstore configuration files: " + ConfigFileUtil.updateCount);
+        log.info("Failed tenant secondary userstore configuration files: " + ConfigFileUtil.failedUpdateCount);
         reEncryptEventPublishers(keyRotationConfig);
-        log.info("Updated event publisher configuration files: " + ConfigFileUtil.updateCount);
-        log.info("Failed event publisher configuration files: " + ConfigFileUtil.failedCount);
+        log.info("Successfully updated event publisher configuration files: " + ConfigFileUtil.updateCount);
+        log.info("Failed event publisher configuration files: " + ConfigFileUtil.failedUpdateCount);
         log.info("Finished re-encrypting configuration file data completed...\n");
     }
 
@@ -114,7 +115,7 @@ public class ConfigFileKeyRotator {
     private void reEncryptSuperTenantUserStore(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
         ConfigFileUtil.updateCount = 0;
-        ConfigFileUtil.failedCount = 0;
+        ConfigFileUtil.failedUpdateCount = 0;
         log.debug("Started re-encryption of the super tenant secondary user store configuration files...");
         getConfigsAndUpdate(keyRotationConfig, keyRotationConfig.getNewISHome(), null,
                 KeyRotationConstants.SUPER_TENANT);
@@ -131,7 +132,7 @@ public class ConfigFileKeyRotator {
     private void reEncryptTenantUserStore(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
         ConfigFileUtil.updateCount = 0;
-        ConfigFileUtil.failedCount = 0;
+        ConfigFileUtil.failedUpdateCount = 0;
         List<String> tenants = getFolderPaths(keyRotationConfig.getNewISHome());
         log.debug("Started re-encryption of the tenant secondary user store configuration files...");
         for (String tenant : tenants) {
@@ -150,7 +151,7 @@ public class ConfigFileKeyRotator {
     private void reEncryptEventPublishers(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
         ConfigFileUtil.updateCount = 0;
-        ConfigFileUtil.failedCount = 0;
+        ConfigFileUtil.failedUpdateCount = 0;
         log.debug("Started re-encryption of the event publisher configuration files...");
         getConfigsAndUpdate(keyRotationConfig, keyRotationConfig.getNewISHome(), null,
                 KeyRotationConstants.EVENT_PUBLISHER);

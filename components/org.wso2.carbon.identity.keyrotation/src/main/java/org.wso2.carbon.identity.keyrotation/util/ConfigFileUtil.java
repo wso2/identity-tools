@@ -53,7 +53,7 @@ public class ConfigFileUtil {
 
     private static final Logger log = Logger.getLogger(ConfigFileUtil.class);
     public static int updateCount = 0;
-    public static int failedCount = 0;
+    public static int failedUpdateCount = 0;
 
     /**
      * Get all the files inside the base path.
@@ -111,7 +111,7 @@ public class ConfigFileUtil {
             if (data.getLength() != 1 && data.getLength() != 0) {
                 log.error("Error occurred while updating config file having multiple encrypted properties in " +
                         filename);
-                failedCount++;
+                failedUpdateCount++;
             }
             if (data.getLength() == 1) {
                 log.info("Re-encryption in " + filename + " configuration file.");
@@ -126,10 +126,10 @@ public class ConfigFileUtil {
             }
         } catch (SAXException | IOException e) {
             log.error("Error occurred while parsing the xml file, " + e);
-            failedCount++;
+            failedUpdateCount++;
         } catch (TransformerException | ParserConfigurationException | XPathExpressionException e) {
             log.error("Error occurred while updating configuration file, " + e);
-            failedCount++;
+            failedUpdateCount++;
         }
     }
 }

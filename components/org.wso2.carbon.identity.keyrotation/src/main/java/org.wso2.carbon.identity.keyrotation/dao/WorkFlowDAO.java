@@ -44,7 +44,7 @@ public class WorkFlowDAO {
     private static final Logger log = Logger.getLogger(WorkFlowDAO.class);
     private static final WorkFlowDAO instance = new WorkFlowDAO();
     public static int updateCount = 0;
-    public static int failedCount = 0;
+    public static int failedUpdateCount = 0;
 
     public WorkFlowDAO() {
 
@@ -124,28 +124,44 @@ public class WorkFlowDAO {
                 updateCount += updateWfRequestList.size();
             } catch (SQLException | IOException e) {
                 connection.rollback();
-                WorkflowRequest faulty = updateWfRequestList.get(0);
                 log.error(
-                        "Error while updating requests from WF_REQUEST, trying the chunk row by row again. ", e);
-                PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_WF_REQUEST);
-                for (WorkflowRequest wfRequest : updateWfRequestList) {
-                    try {
-                        faulty = wfRequest;
-                        preparedStatement.setBytes(1, serializeWFRequest(wfRequest));
-                        preparedStatement.setString(2, wfRequest.getUuid());
-                        preparedStatement.executeUpdate();
-                        connection.commit();
-                        updateCount++;
-                    } catch (SQLException | IOException err) {
-                        connection.rollback();
-                        log.error("Error while updating requests from WF_REQUEST of record with uuid: " +
-                                faulty.getUuid() + " ," + err);
-                        failedCount++;
-                    }
-                }
+                        "Error while updating requests in WF_REQUEST, trying the chunk row by row again. ", e);
+                retryOnRequestUpdate(updateWfRequestList, connection);
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to new identity DB.", e);
+        }
+    }
+
+    /**
+     * To retry upon a failure in updating request chunk in WF_REQUEST.
+     *
+     * @param updateWfRequestList The list containing records that should be re-encrypted.
+     * @param connection          Connection with the new identity DB.
+     * @throws KeyRotationException Exception thrown while accessing new identity DB data.
+     */
+    private void retryOnRequestUpdate(List<WorkflowRequest> updateWfRequestList, Connection connection)
+            throws KeyRotationException {
+
+        WorkflowRequest faulty = null;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_WF_REQUEST)) {
+            for (WorkflowRequest wfRequest : updateWfRequestList) {
+                try {
+                    faulty = wfRequest;
+                    preparedStatement.setBytes(1, serializeWFRequest(wfRequest));
+                    preparedStatement.setString(2, wfRequest.getUuid());
+                    preparedStatement.executeUpdate();
+                    connection.commit();
+                    updateCount++;
+                } catch (SQLException | IOException err) {
+                    connection.rollback();
+                    log.error("Error while updating requests in WF_REQUEST of record with uuid: " +
+                            faulty.getUuid() + " ," + err);
+                    failedUpdateCount++;
+                }
+            }
+        } catch (SQLException e) {
+            throw new KeyRotationException("Error while accessing new identity DB.", e);
         }
     }
 

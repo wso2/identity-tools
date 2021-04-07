@@ -43,7 +43,7 @@ public class BPSProfileDAO {
     private static final String TENANT_ID = "TENANT_ID";
     private static final String PASSWORD = "PASSWORD";
     public static int updateCount = 0;
-    public static int failedCount = 0;
+    public static int failedUpdateCount = 0;
 
     public BPSProfileDAO() {
 
@@ -125,29 +125,45 @@ public class BPSProfileDAO {
                 updateCount += updateBPSPasswordsList.size();
             } catch (SQLException e) {
                 connection.rollback();
-                BPSPassword faulty = updateBPSPasswordsList.get(0);
-                log.error("Error while updating passwords from WF_BPS_PROFILE, trying the chunk row by row " +
+                log.error("Error while updating passwords in WF_BPS_PROFILE, trying the chunk row by row " +
                         "again. ", e);
-                PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_BPS_PASSWORD);
-                for (BPSPassword bpsPassword : updateBPSPasswordsList) {
-                    try {
-                        faulty = bpsPassword;
-                        preparedStatement.setString(1, bpsPassword.getPassword());
-                        preparedStatement.setString(2, bpsPassword.getProfileName());
-                        preparedStatement.setInt(3, Integer.parseInt(bpsPassword.getTenantId()));
-                        preparedStatement.executeUpdate();
-                        connection.commit();
-                        updateCount++;
-                    } catch (SQLException err) {
-                        connection.rollback();
-                        log.error("Error while updating password from WF_BPS_PROFILE of record with profile name: " +
-                                faulty.getProfileName() + " , tenant id: " + faulty.getTenantId() + " ," + err);
-                        failedCount++;
-                    }
-                }
+                retryOnBpsUpdate(updateBPSPasswordsList, connection);
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to new identity DB.", e);
+        }
+    }
+
+    /**
+     * To retry upon a failure in updating the BPS chunk in WF_BPS_PROFILE.
+     *
+     * @param updateBPSPasswordsList The list containing records that should be re-encrypted.
+     * @param connection             Connection with the new identity DB.
+     * @throws KeyRotationException Exception thrown while accessing new identity DB data.
+     */
+    private void retryOnBpsUpdate(List<BPSPassword> updateBPSPasswordsList, Connection connection)
+            throws KeyRotationException {
+
+        BPSPassword faulty = null;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_BPS_PASSWORD)) {
+            for (BPSPassword bpsPassword : updateBPSPasswordsList) {
+                try {
+                    faulty = bpsPassword;
+                    preparedStatement.setString(1, bpsPassword.getPassword());
+                    preparedStatement.setString(2, bpsPassword.getProfileName());
+                    preparedStatement.setInt(3, Integer.parseInt(bpsPassword.getTenantId()));
+                    preparedStatement.executeUpdate();
+                    connection.commit();
+                    updateCount++;
+                } catch (SQLException err) {
+                    connection.rollback();
+                    log.error("Error while updating password in WF_BPS_PROFILE of record with profile name: " +
+                            faulty.getProfileName() + " , tenant id: " + faulty.getTenantId() + " ," + err);
+                    failedUpdateCount++;
+                }
+            }
+        } catch (SQLException e) {
+            throw new KeyRotationException("Error while accessing new identity DB.", e);
         }
     }
 }

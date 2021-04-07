@@ -43,7 +43,7 @@ public class RegistryDAO {
     private static final String REG_VALUE = "REG_VALUE";
     private static final String REG_TENANT_ID = "REG_TENANT_ID";
     public static int updateCount = 0;
-    public static int failedCount = 0;
+    public static int failedUpdateCount = 0;
 
     public RegistryDAO() {
 
@@ -59,6 +59,7 @@ public class RegistryDAO {
      *
      * @param startIndex        The start index of the data chunk.
      * @param keyRotationConfig Configuration data needed to perform the task.
+     * @param property          Registry property value.
      * @return List comprising of the records in the table.
      * @throws KeyRotationException Exception thrown while retrieving data from REG_PROPERTY.
      */
@@ -107,6 +108,7 @@ public class RegistryDAO {
      *
      * @param updateRegPropertyList The list containing records that should be re-encrypted.
      * @param keyRotationConfig     Configuration data needed to perform the task.
+     * @param property              Registry property value.
      * @throws KeyRotationException Exception thrown while updating data from REG_PROPERTY.
      */
     public void updateRegPropertyDataChunks(List<RegistryProperty> updateRegPropertyList,
@@ -130,31 +132,48 @@ public class RegistryDAO {
                 updateCount += updateRegPropertyList.size();
             } catch (SQLException e) {
                 connection.rollback();
-                RegistryProperty faulty = updateRegPropertyList.get(0);
                 log.error(
-                        "Error while updating registry property: " + property + " from REG_PROPERTY, trying the chunk" +
-                                " row by row again. ", e);
-                PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_REG_PROPERTY_DATA);
-                for (RegistryProperty regProperty : updateRegPropertyList) {
-                    try {
-                        faulty = regProperty;
-                        preparedStatement.setString(1, regProperty.getRegValue());
-                        preparedStatement.setInt(2, Integer.parseInt(regProperty.getRegId()));
-                        preparedStatement.setInt(3, Integer.parseInt(regProperty.getRegTenantId()));
-                        preparedStatement.executeUpdate();
-                        connection.commit();
-                        updateCount++;
-                    } catch (SQLException err) {
-                        connection.rollback();
-                        log.error("Error while updating registry property: " + property + " from REG_PROPERTY of " +
-                                "record with reg id: " + faulty.getRegId() + " reg tenant id: " +
-                                faulty.getRegTenantId() + " ," + err);
-                        failedCount++;
-                    }
-                }
+                        "Error while updating registry property: " + property + " in REG_PROPERTY, trying the " +
+                                "chunk row by row again. ", e);
+                retryOnRegPropertyUpdate(updateRegPropertyList, connection, property);
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to new registry DB.", e);
+        }
+    }
+
+    /**
+     * To retry upon a failure in updating reg property chunk in REG_PROPERTY.
+     *
+     * @param updateRegPropertyList The list containing records that should be re-encrypted.
+     * @param connection            Connection with the new identity DB.
+     * @param property              Registry property value.
+     * @throws KeyRotationException Exception thrown while accessing new identity DB data.
+     */
+    private void retryOnRegPropertyUpdate(List<RegistryProperty> updateRegPropertyList, Connection connection,
+                                          String property) throws KeyRotationException {
+
+        RegistryProperty faulty = null;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_REG_PROPERTY_DATA)) {
+            for (RegistryProperty regProperty : updateRegPropertyList) {
+                try {
+                    faulty = regProperty;
+                    preparedStatement.setString(1, regProperty.getRegValue());
+                    preparedStatement.setInt(2, Integer.parseInt(regProperty.getRegId()));
+                    preparedStatement.setInt(3, Integer.parseInt(regProperty.getRegTenantId()));
+                    preparedStatement.executeUpdate();
+                    connection.commit();
+                    updateCount++;
+                } catch (SQLException err) {
+                    connection.rollback();
+                    log.error("Error while updating registry property: " + property + " in REG_PROPERTY of " +
+                            "record with reg id: " + faulty.getRegId() + " reg tenant id: " +
+                            faulty.getRegTenantId() + " ," + err);
+                    failedUpdateCount++;
+                }
+            }
+        } catch (SQLException e) {
+            throw new KeyRotationException("Error while accessing new identity DB.", e);
         }
     }
 }
