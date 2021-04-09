@@ -73,6 +73,7 @@ public class WorkFlowDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
                         keyRotationConfig.getNewIdnPassword())) {
+            connection.setAutoCommit(false);
             if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_WF_REQUEST_POSTGRE;
                 firstIndex = DBConstants.CHUNK_SIZE;
@@ -85,12 +86,14 @@ public class WorkFlowDAO {
                 preparedStatement.setInt(1, firstIndex);
                 preparedStatement.setInt(2, secIndex);
                 ResultSet resultSet = preparedStatement.executeQuery();
+                connection.commit();
                 while (resultSet.next()) {
                     byte[] requestBytes = resultSet.getBytes(DBConstants.REQUEST);
                     WorkflowRequest wfRequest = deserializeWFRequest(requestBytes);
                     wfRequestList.add(wfRequest);
                 }
             } catch (SQLException | IOException | ClassNotFoundException e) {
+                connection.rollback();
                 throw new KeyRotationException("Error while retrieving requests from WF_REQUEST.", e);
             }
         } catch (SQLException e) {
