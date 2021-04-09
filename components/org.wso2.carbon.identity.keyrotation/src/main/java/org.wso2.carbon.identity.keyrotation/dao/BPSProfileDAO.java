@@ -72,6 +72,7 @@ public class BPSProfileDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
                         keyRotationConfig.getNewIdnPassword())) {
+            connection.setAutoCommit(false);
             if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_BPS_PASSWORD_POSTGRE;
                 firstIndex = DBConstants.CHUNK_SIZE;
@@ -84,6 +85,7 @@ public class BPSProfileDAO {
                 preparedStatement.setInt(1, firstIndex);
                 preparedStatement.setInt(2, secIndex);
                 ResultSet resultSet = preparedStatement.executeQuery();
+                connection.commit();
                 while (resultSet.next()) {
                     bpsPasswordList.add(new BPSPassword(resultSet.getString(PROFILE_NAME),
                             resultSet.getString(USERNAME),
@@ -91,6 +93,7 @@ public class BPSProfileDAO {
                             resultSet.getString(PASSWORD)));
                 }
             } catch (SQLException e) {
+                connection.rollback();
                 throw new KeyRotationException("Error while retrieving passwords from WF_BPS_PROFILE.", e);
             }
         } catch (SQLException e) {

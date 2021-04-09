@@ -73,6 +73,7 @@ public class RegistryDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewRegDBUrl(), keyRotationConfig.getNewRegUsername(),
                         keyRotationConfig.getNewRegPassword())) {
+            connection.setAutoCommit(false);
             if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_REG_PROPERTY_DATA_POSTGRE;
                 firstIndex = DBConstants.CHUNK_SIZE;
@@ -86,6 +87,7 @@ public class RegistryDAO {
                 preparedStatement.setInt(2, firstIndex);
                 preparedStatement.setInt(3, secIndex);
                 ResultSet resultSet = preparedStatement.executeQuery();
+                connection.commit();
                 while (resultSet.next()) {
                     regPropertyList
                             .add(new RegistryProperty(resultSet.getString(REG_ID),
@@ -94,7 +96,8 @@ public class RegistryDAO {
                                     resultSet.getString(REG_TENANT_ID)));
                 }
             } catch (SQLException e) {
-                throw new KeyRotationException("Error while retrieving registry property " + property + " from " +
+                connection.rollback();
+                throw new KeyRotationException("Error while retrieving registry property: " + property + " from " +
                         "REG_PROPERTY.", e);
             }
         } catch (SQLException e) {

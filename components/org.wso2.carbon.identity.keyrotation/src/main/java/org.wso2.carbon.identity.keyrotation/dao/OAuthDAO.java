@@ -120,6 +120,7 @@ public class OAuthDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
                         keyRotationConfig.getNewIdnPassword())) {
+            connection.setAutoCommit(false);
             if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_OAUTH_AUTHORIZATION_CODE_POSTGRE;
                 firstIndex = DBConstants.CHUNK_SIZE;
@@ -132,11 +133,13 @@ public class OAuthDAO {
                 preparedStatement.setInt(1, firstIndex);
                 preparedStatement.setInt(2, secIndex);
                 ResultSet resultSet = preparedStatement.executeQuery();
+                connection.commit();
                 while (resultSet.next()) {
                     oAuthCodeList.add(new OAuthCode(resultSet.getString(CODE_ID),
                             resultSet.getString(AUTHORIZATION_CODE), resultSet.getString(CONSUMER_KEY_ID)));
                 }
             } catch (SQLException e) {
+                connection.rollback();
                 throw new KeyRotationException("Error while retrieving OAuth codes from " +
                         "IDN_OAUTH2_AUTHORIZATION_CODE.", e);
             }
@@ -233,6 +236,7 @@ public class OAuthDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
                         keyRotationConfig.getNewIdnPassword())) {
+            connection.setAutoCommit(false);
             if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_OAUTH_ACCESS_TOKEN_POSTGRE;
                 firstIndex = DBConstants.CHUNK_SIZE;
@@ -245,12 +249,14 @@ public class OAuthDAO {
                 preparedStatement.setInt(1, firstIndex);
                 preparedStatement.setInt(2, secIndex);
                 ResultSet resultSet = preparedStatement.executeQuery();
+                connection.commit();
                 while (resultSet.next()) {
                     oAuthTokenList.add(new OAuthToken(resultSet.getString(TOKEN_ID),
                             resultSet.getString(ACCESS_TOKEN), resultSet.getString(REFRESH_TOKEN),
                             resultSet.getString(CONSUMER_KEY_ID)));
                 }
             } catch (SQLException e) {
+                connection.rollback();
                 throw new KeyRotationException("Error while retrieving OAuth tokens from IDN_OAUTH2_ACCESS_TOKEN.", e);
             }
         } catch (SQLException e) {
@@ -348,6 +354,7 @@ public class OAuthDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
                         keyRotationConfig.getNewIdnPassword())) {
+            connection.setAutoCommit(false);
             if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_OAUTH_SECRET_POSTGRE;
                 firstIndex = DBConstants.CHUNK_SIZE;
@@ -360,12 +367,14 @@ public class OAuthDAO {
                 preparedStatement.setInt(1, firstIndex);
                 preparedStatement.setInt(2, secIndex);
                 ResultSet resultSet = preparedStatement.executeQuery();
+                connection.commit();
                 while (resultSet.next()) {
                     oAuthSecretList.add(new OAuthSecret(resultSet.getString(ID),
                             resultSet.getString(CONSUMER_SECRET),
                             resultSet.getString(APP_NAME)));
                 }
             } catch (SQLException e) {
+                connection.rollback();
                 throw new KeyRotationException("Error while retrieving secrets from IDN_OAUTH_CONSUMER_APPS.", e);
             }
         } catch (SQLException e) {

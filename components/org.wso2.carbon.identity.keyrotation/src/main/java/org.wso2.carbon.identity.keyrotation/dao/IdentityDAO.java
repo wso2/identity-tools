@@ -79,6 +79,7 @@ public class IdentityDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
                         keyRotationConfig.getNewIdnPassword())) {
+            connection.setAutoCommit(false);
             if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_TOTP_SECRET_POSTGRE;
                 firstIndex = DBConstants.CHUNK_SIZE;
@@ -93,6 +94,7 @@ public class IdentityDAO {
                 preparedStatement.setInt(3, firstIndex);
                 preparedStatement.setInt(4, secIndex);
                 ResultSet resultSet = preparedStatement.executeQuery();
+                connection.commit();
                 while (resultSet.next()) {
                     totpSecretList
                             .add(new TOTPSecret(resultSet.getString(TENANT_ID),
@@ -101,6 +103,7 @@ public class IdentityDAO {
                                     resultSet.getString(DATA_VALUE)));
                 }
             } catch (SQLException e) {
+                connection.rollback();
                 throw new KeyRotationException("Error while retrieving TOTP secrets from IDN_IDENTITY_USER_DATA.", e);
             }
         } catch (SQLException e) {
