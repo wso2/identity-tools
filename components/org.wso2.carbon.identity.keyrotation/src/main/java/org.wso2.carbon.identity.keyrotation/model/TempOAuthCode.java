@@ -40,7 +40,9 @@ public class TempOAuthCode {
     private String pkceCodeChallengeMethod;
     private String authorizationCodeHash;
     private String idpId;
-    private String availability;
+    private int availability;
+    private int syncId;
+    private int synced;
 
     /**
      * TempOAuthCode class constructor.
@@ -63,13 +65,15 @@ public class TempOAuthCode {
      * @param authorizationCodeHash   Authorization code hash field in IDN_OAUTH2_AUTHORIZATION_CODE_TEMP table.
      * @param idpId                   Idp id field in IDN_OAUTH2_AUTHORIZATION_CODE_TEMP table.
      * @param availability            Availability field in IDN_OAUTH2_AUTHORIZATION_CODE_TEMP table.
+     * @param syncId                  Sync id field in IDN_OAUTH2_AUTHORIZATION_CODE_TEMP table.
+     * @param synced                  Synced field in IDN_OAUTH2_AUTHORIZATION_CODE_TEMP table.
      */
     public TempOAuthCode(String codeId, String authorizationCode, String consumerKeyId, String callbackUrl,
                          String scope, String authzUser, String tenantId, String userDomain, String timeCreated,
                          String validityPeriod,
                          String state, String tokenId, String subjectIdentifier, String pkceCodeChallenge,
                          String pkceCodeChallengeMethod, String authorizationCodeHash, String idpId,
-                         String availability) {
+                         int availability, int syncId, int synced) {
 
         this.codeId = codeId;
         this.authorizationCode = authorizationCode;
@@ -89,6 +93,8 @@ public class TempOAuthCode {
         this.authorizationCodeHash = authorizationCodeHash;
         this.idpId = idpId;
         this.availability = availability;
+        this.syncId = syncId;
+        this.synced = synced;
 
     }
 
@@ -437,7 +443,7 @@ public class TempOAuthCode {
      *
      * @return Availability.
      */
-    public String getAvailability() {
+    public int getAvailability() {
 
         return availability;
     }
@@ -447,8 +453,48 @@ public class TempOAuthCode {
      *
      * @param availability Availability.
      */
-    public void setAvailability(String availability) {
+    public void setAvailability(int availability) {
 
         this.availability = availability;
+    }
+
+    /**
+     * Get for the sync id.
+     *
+     * @return Sync id.
+     */
+    public int getSyncId() {
+
+        return syncId;
+    }
+
+    /**
+     * Set for the sync id.
+     *
+     * @param syncId Sync id.
+     */
+    public void setSyncId(int syncId) {
+
+        this.syncId = syncId;
+    }
+
+    /**
+     * Get for the synced.
+     *
+     * @return Synced.
+     */
+    public int getSynced() {
+
+        return synced;
+    }
+
+    /**
+     * Set for the synced.
+     *
+     * @param synced Synced.
+     */
+    public void setSynced(int synced) {
+
+        this.synced = synced;
     }
 }

@@ -78,6 +78,8 @@ public class OAuthDAO {
     private static final String REFRESH_TOKEN_HASH = "REFRESH_TOKEN_HASH";
     private static final String TOKEN_BINDING_REF = "TOKEN_BINDING_REF";
     private static final String AVAILABILITY = "AVAILABILITY";
+    private static final String SYNC_ID = "SYNC_ID";
+    private static final String SYNCED = "SYNCED";
     public static int updateCodeCount = 0;
     public static int updateTokenCount = 0;
     public static int updateSecretCount = 0;
@@ -441,34 +443,23 @@ public class OAuthDAO {
     }
 
     /**
-     * To retrieve the list of data in IDN_OAUTH2_AUTHORIZATION_CODE_TEMP as chunks.
+     * To retrieve the list of data in IDN_OAUTH2_AUTHORIZATION_CODE_TEMP.
      *
-     * @param startIndex        The start index of the data chunk.
+     * @param syncId            The syncId of the data.
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @return List comprising of the records in the table.
      * @throws KeyRotationException Exception thrown while retrieving data from IDN_OAUTH2_AUTHORIZATION_CODE_TEMP.
      */
-    public List<TempOAuthCode> getTempOAuthCode(int startIndex, KeyRotationConfig keyRotationConfig) throws
+    public List<TempOAuthCode> getTempOAuthCode(int syncId, KeyRotationConfig keyRotationConfig) throws
             KeyRotationException {
 
         List<TempOAuthCode> oAuthCodeList = new ArrayList<>();
-        String query = DBConstants.GET_TEMP_OAUTH_AUTHORIZATION_CODE;
-        int firstIndex = startIndex;
-        int secIndex = DBConstants.CHUNK_SIZE;
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getOldIdnDBUrl(), keyRotationConfig.getOldIdnUsername(),
-                        keyRotationConfig.getNewIdnPassword())) {
-            if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
-                query = DBConstants.GET_TEMP_OAUTH_AUTHORIZATION_CODE_POSTGRE;
-                firstIndex = DBConstants.CHUNK_SIZE;
-                secIndex = startIndex;
-            } else if (connection.getMetaData().getDriverName().contains(DBConstants.MSSQL) ||
-                    connection.getMetaData().getDriverName().contains(DBConstants.ORACLE)) {
-                query = DBConstants.GET_TEMP_OAUTH_AUTHORIZATION_CODE_OTHER;
-            }
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                preparedStatement.setInt(1, firstIndex);
-                preparedStatement.setInt(2, secIndex);
+                        keyRotationConfig.getOldIdnPassword())) {
+            try (PreparedStatement preparedStatement = connection
+                    .prepareStatement(DBConstants.GET_TEMP_OAUTH_AUTHORIZATION_CODE)) {
+                preparedStatement.setInt(1, syncId);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     oAuthCodeList.add(new TempOAuthCode(resultSet.getString(CODE_ID),
@@ -480,11 +471,11 @@ public class OAuthDAO {
                             resultSet.getString(TOKEN_ID), resultSet.getString(SUBJECT_IDENTIFIER),
                             resultSet.getString(PKCE_CODE_CHALLENGE), resultSet.getString(PKCE_CODE_CHALLENGE_METHOD),
                             resultSet.getString(AUTHORIZATION_CODE_HASH), resultSet.getString(IDP_ID),
-                            resultSet.getString(AVAILABILITY)));
+                            resultSet.getInt(AVAILABILITY), resultSet.getInt(SYNC_ID), resultSet.getInt(SYNCED)));
                 }
             } catch (SQLException e) {
                 throw new KeyRotationException(
-                        "Error while retrieving OAuth codes from IDN_OAUTH2_AUTHORIZATION_CODE_TEMP.", e);
+                        "Error while retrieving OAuth code from IDN_OAUTH2_AUTHORIZATION_CODE_TEMP.", e);
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to old identity DB.", e);
@@ -493,112 +484,137 @@ public class OAuthDAO {
     }
 
     /**
-     * To retrieve the list of data in IDN_OAUTH2_ACCESS_TOKEN_TEMP as chunks.
+     * To retrieve the max sync id from similar primary key records in IDN_OAUTH2_AUTHORIZATION_CODE_TEMP.
      *
-     * @param startIndex        The start index of the data chunk.
+     * @param record            A data record in IDN_OAUTH2_AUTHORIZATION_CODE_TEMP table.
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @return List comprising of the records in the table.
-     * @throws KeyRotationException Exception thrown while retrieving data from IDN_OAUTH2_ACCESS_TOKEN_TEMP.
+     * @throws KeyRotationException Exception thrown while retrieving latest data from
+     *                              IDN_OAUTH2_AUTHORIZATION_CODE_TEMP.
      */
-    public List<TempOAuthToken> getTempOAuthToken(int startIndex, KeyRotationConfig keyRotationConfig) throws
-            KeyRotationException {
+    public List<TempOAuthCode> getTempOAuthCodeLatest(TempOAuthCode record, KeyRotationConfig keyRotationConfig)
+            throws KeyRotationException {
 
-        List<TempOAuthToken> oAuthTokenList = new ArrayList<>();
-        String query = DBConstants.GET_TEMP_OAUTH_ACCESS_TOKEN;
-        int firstIndex = startIndex;
-        int secIndex = DBConstants.CHUNK_SIZE;
+        List<TempOAuthCode> oAuthCodeList = new ArrayList<>();
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getOldIdnDBUrl(), keyRotationConfig.getOldIdnUsername(),
                         keyRotationConfig.getOldIdnPassword())) {
-            if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
-                query = DBConstants.GET_TEMP_OAUTH_ACCESS_TOKEN_POSTGRE;
-                firstIndex = DBConstants.CHUNK_SIZE;
-                secIndex = startIndex;
-            } else if (connection.getMetaData().getDriverName().contains(DBConstants.MSSQL) ||
-                    connection.getMetaData().getDriverName().contains(DBConstants.ORACLE)) {
-                query = DBConstants.GET_TEMP_OAUTH_ACCESS_TOKEN_OTHER;
-            }
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                preparedStatement.setInt(1, firstIndex);
-                preparedStatement.setInt(2, secIndex);
+            try (PreparedStatement preparedStatement =
+                         connection.prepareStatement(DBConstants.GET_TEMP_OAUTH_AUTHORIZATION_CODE_LATEST)) {
+                preparedStatement.setString(1, record.getCodeId());
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-                    oAuthTokenList.add(new TempOAuthToken(resultSet.getString(TOKEN_ID),
-                            resultSet.getString(ACCESS_TOKEN), resultSet.getString(REFRESH_TOKEN),
-                            resultSet.getString(CONSUMER_KEY_ID), resultSet.getString(AUTHZ_USER),
-                            resultSet.getString(TENANT_ID), resultSet.getString(USER_DOMAIN),
-                            resultSet.getString(USER_TYPE), resultSet.getString(GRANT_TYPE),
-                            resultSet.getString(TIME_CREATED), resultSet.getString(REFRESH_TOKEN_TIME_CREATED),
-                            resultSet.getString(VALIDITY_PERIOD), resultSet.getString(REFRESH_TOKEN_VALIDITY_PERIOD),
-                            resultSet.getString(TOKEN_SCOPE_HASH), resultSet.getString(TOKEN_STATE),
-                            resultSet.getString(TOKEN_STATE_ID), resultSet.getString(SUBJECT_IDENTIFIER),
-                            resultSet.getString(ACCESS_TOKEN_HASH), resultSet.getString(REFRESH_TOKEN_HASH),
-                            resultSet.getString(IDP_ID), resultSet.getString(TOKEN_BINDING_REF),
-                            resultSet.getString(AVAILABILITY)));
+                    oAuthCodeList
+                            .add(new TempOAuthCode(resultSet.getString(CODE_ID),
+                                    resultSet.getString(AUTHORIZATION_CODE), resultSet.getString(CONSUMER_KEY_ID),
+                                    resultSet.getString(CALLBACK_URL), resultSet.getString(SCOPE),
+                                    resultSet.getString(AUTHZ_USER), resultSet.getString(TENANT_ID),
+                                    resultSet.getString(USER_DOMAIN), resultSet.getString(TIME_CREATED),
+                                    resultSet.getString(VALIDITY_PERIOD), resultSet.getString(STATE),
+                                    resultSet.getString(TOKEN_ID), resultSet.getString(SUBJECT_IDENTIFIER),
+                                    resultSet.getString(PKCE_CODE_CHALLENGE),
+                                    resultSet.getString(PKCE_CODE_CHALLENGE_METHOD),
+                                    resultSet.getString(AUTHORIZATION_CODE_HASH), resultSet.getString(IDP_ID),
+                                    resultSet.getInt(AVAILABILITY), resultSet.getInt(SYNC_ID),
+                                    resultSet.getInt(SYNCED)));
                 }
             } catch (SQLException e) {
-                throw new KeyRotationException("Error while retrieving OAuth tokens from IDN_OAUTH2_ACCESS_TOKEN_TEMP.",
-                        e);
+                throw new KeyRotationException("Error while retrieving the latest OAuth code from " +
+                        "IDN_OAUTH2_AUTHORIZATION_CODE_TEMP.", e);
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to old identity DB.", e);
         }
-        return oAuthTokenList;
+        return oAuthCodeList;
     }
 
     /**
-     * To retrieve the list of data in IDN_OAUTH2_ACCESS_TOKEN_SCOPE_TEMP as chunks.
+     * To retrieve previous similar primary key records in IDN_OAUTH2_AUTHORIZATION_CODE_TEMP.
      *
-     * @param startIndex        The start index of the data chunk.
+     * @param record            A data record in IDN_OAUTH2_AUTHORIZATION_CODE_TEMP table.
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @return List comprising of the records in the table.
-     * @throws KeyRotationException Exception thrown while retrieving data from IDN_OAUTH2_ACCESS_TOKEN_SCOPE_TEMP.
+     * @throws KeyRotationException Exception thrown while retrieving previous data from
+     *                              IDN_OAUTH2_AUTHORIZATION_CODE_TEMP.
      */
-    public List<TempOAuthScope> getTempOAuthScope(int startIndex, KeyRotationConfig keyRotationConfig) throws
-            KeyRotationException {
+    public List<TempOAuthCode> getTempOAuthCodePrevious(TempOAuthCode record, KeyRotationConfig keyRotationConfig)
+            throws KeyRotationException {
 
-        List<TempOAuthScope> tempOAuthScopeList = new ArrayList<>();
-        String query = DBConstants.GET_TEMP_OAUTH_SCOPE;
-        int firstIndex = startIndex;
-        int secIndex = DBConstants.CHUNK_SIZE;
+        List<TempOAuthCode> oAuthCodeList = new ArrayList<>();
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getOldIdnDBUrl(), keyRotationConfig.getOldIdnUsername(),
                         keyRotationConfig.getOldIdnPassword())) {
-            if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
-                query = DBConstants.GET_TEMP_OAUTH_SCOPE_POSTGRE;
-                firstIndex = DBConstants.CHUNK_SIZE;
-                secIndex = startIndex;
-            } else if (connection.getMetaData().getDriverName().contains(DBConstants.MSSQL) ||
-                    connection.getMetaData().getDriverName().contains(DBConstants.ORACLE)) {
-                query = DBConstants.GET_TEMP_OAUTH_SCOPE_OTHER;
-            }
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                preparedStatement.setInt(1, firstIndex);
-                preparedStatement.setInt(2, secIndex);
+            try (PreparedStatement preparedStatement =
+                         connection.prepareStatement(DBConstants.GET_TEMP_OAUTH_AUTHORIZATION_CODE_PREVIOUS)) {
+                preparedStatement.setString(1, record.getCodeId());
+                preparedStatement.setInt(2, record.getSyncId());
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-                    tempOAuthScopeList.add(new TempOAuthScope(resultSet.getString(TOKEN_ID),
-                            resultSet.getString(TOKEN_SCOPE), resultSet.getString(TENANT_ID),
-                            resultSet.getString(AVAILABILITY)));
+                    oAuthCodeList
+                            .add(new TempOAuthCode(resultSet.getString(CODE_ID),
+                                    resultSet.getString(AUTHORIZATION_CODE), resultSet.getString(CONSUMER_KEY_ID),
+                                    resultSet.getString(CALLBACK_URL), resultSet.getString(SCOPE),
+                                    resultSet.getString(AUTHZ_USER), resultSet.getString(TENANT_ID),
+                                    resultSet.getString(USER_DOMAIN), resultSet.getString(TIME_CREATED),
+                                    resultSet.getString(VALIDITY_PERIOD), resultSet.getString(STATE),
+                                    resultSet.getString(TOKEN_ID), resultSet.getString(SUBJECT_IDENTIFIER),
+                                    resultSet.getString(PKCE_CODE_CHALLENGE),
+                                    resultSet.getString(PKCE_CODE_CHALLENGE_METHOD),
+                                    resultSet.getString(AUTHORIZATION_CODE_HASH), resultSet.getString(IDP_ID),
+                                    resultSet.getInt(AVAILABILITY), resultSet.getInt(SYNC_ID),
+                                    resultSet.getInt(SYNCED)));
                 }
             } catch (SQLException e) {
-                throw new KeyRotationException(
-                        "Error while retrieving OAuth scopes from IDN_OAUTH2_ACCESS_TOKEN_SCOPE_TEMP.", e);
+                throw new KeyRotationException("Error while retrieving the previous OAuth code from " +
+                        "IDN_OAUTH2_AUTHORIZATION_CODE_TEMP.", e);
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to old identity DB.", e);
         }
-        return tempOAuthScopeList;
+        return oAuthCodeList;
     }
 
     /**
-     * To insert the OAuth code into IDN_OAUTH2_AUTHORIZATION_CODE.
+     * To update previous similar primary key records in IDN_OAUTH2_AUTHORIZATION_CODE_TEMP.
      *
-     * @param insertAuthCodeList The list containing records that should be inserted.
-     * @param keyRotationConfig  Configuration data needed to perform the task.
+     * @param updateOAuthSecretList The list containing records that should be updated.
+     * @param keyRotationConfig     Configuration data needed to perform the task.
+     * @throws KeyRotationException Exception thrown while updating data in IDN_OAUTH2_AUTHORIZATION_CODE_TEMP.
+     */
+    public void updateCodePreviousSimilarRecords(List<TempOAuthCode> updateOAuthSecretList,
+                                                 KeyRotationConfig keyRotationConfig)
+            throws KeyRotationException {
+
+        try (Connection connection = DriverManager
+                .getConnection(keyRotationConfig.getOldIdnDBUrl(), keyRotationConfig.getOldIdnUsername(),
+                        keyRotationConfig.getOldIdnPassword())) {
+            connection.setAutoCommit(false);
+            try (PreparedStatement preparedStatement = connection.prepareStatement(
+                    DBConstants.UPDATE_TEMP_OAUTH_AUTHORIZATION_CODE)) {
+                for (TempOAuthCode oAuthCode : updateOAuthSecretList) {
+                    preparedStatement.setInt(1, oAuthCode.getSynced());
+                    preparedStatement.setInt(2, oAuthCode.getSyncId());
+                    preparedStatement.addBatch();
+                }
+                preparedStatement.executeBatch();
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                log.error("Error while updating synced in IDN_OAUTH2_AUTHORIZATION_CODE_TEMP", e);
+            }
+        } catch (SQLException e) {
+            throw new KeyRotationException("Error while connecting to old identity DB.", e);
+        }
+    }
+
+    /**
+     * To insert the synced OAuth code into IDN_OAUTH2_AUTHORIZATION_CODE.
+     *
+     * @param insertAuthCode    The record that should be inserted.
+     * @param keyRotationConfig Configuration data needed to perform the task.
      * @throws KeyRotationException Exception thrown while inserting data into IDN_OAUTH2_AUTHORIZATION_CODE.
      */
-    public void insertOAuthCodes(List<TempOAuthCode> insertAuthCodeList, KeyRotationConfig keyRotationConfig)
+    public void insertOAuthCode(TempOAuthCode insertAuthCode, KeyRotationConfig keyRotationConfig)
             throws KeyRotationException {
 
         try (Connection connection = DriverManager
@@ -607,19 +623,13 @@ public class OAuthDAO {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement =
                          connection.prepareStatement(DBConstants.INSERT_OAUTH_AUTHORIZATION_CODE)) {
-                for (TempOAuthCode oAuthCode : insertAuthCodeList) {
-                    codeDuplicatedCode(preparedStatement, oAuthCode);
-                    preparedStatement.addBatch();
-                }
-                preparedStatement.executeBatch();
-                connection.commit();
-                insertCodeCount += insertAuthCodeList.size();
+                codeDuplicatedCode(preparedStatement, insertAuthCode);
+                preparedStatement.executeUpdate();
+                insertCodeCount++;
             } catch (SQLException e) {
                 connection.rollback();
-                log.error(
-                        "Error while inserting OAuth codes in IDN_OAUTH2_AUTHORIZATION_CODE, trying the " +
-                                "chunk row by row again. ", e);
-                retryOnCodeInsert(insertAuthCodeList, connection);
+                failedInsertCodeCount++;
+                log.error("Error while inserting OAuth codes into IDN_OAUTH2_AUTHORIZATION_CODE. ", e);
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to new identity DB.", e);
@@ -627,39 +637,7 @@ public class OAuthDAO {
     }
 
     /**
-     * To retry upon a failure in inserting OAuth code chunk into IDN_OAUTH2_AUTHORIZATION_CODE.
-     *
-     * @param insertAuthCodeList The list containing records that should be inserted.
-     * @param connection         Connection with the new identity DB.
-     * @throws KeyRotationException Exception thrown while accessing new identity DB data.
-     */
-    private void retryOnCodeInsert(List<TempOAuthCode> insertAuthCodeList, Connection connection)
-            throws KeyRotationException {
-
-        TempOAuthCode faulty = null;
-        try (PreparedStatement preparedStatement =
-                     connection.prepareStatement(DBConstants.INSERT_OAUTH_AUTHORIZATION_CODE)) {
-            for (TempOAuthCode oAuthCode : insertAuthCodeList) {
-                try {
-                    faulty = oAuthCode;
-                    codeDuplicatedCode(preparedStatement, oAuthCode);
-                    preparedStatement.executeUpdate();
-                    connection.commit();
-                    insertCodeCount++;
-                } catch (SQLException err) {
-                    connection.rollback();
-                    log.error("Error while inserting OAuth code in IDN_OAUTH2_AUTHORIZATION_CODE of record with " +
-                            "code id: " + faulty.getCodeId() + " ," + err);
-                    failedInsertCodeCount++;
-                }
-            }
-        } catch (SQLException e) {
-            throw new KeyRotationException("Error while accessing new identity DB.", e);
-        }
-    }
-
-    /**
-     * To delete the OAuth code in IDN_OAUTH2_AUTHORIZATION_CODE.
+     * To delete the OAuth code data in IDN_OAUTH2_AUTHORIZATION_CODE.
      *
      * @param deleteAuthCode    The record that should be deleted.
      * @param keyRotationConfig Configuration data needed to perform the task.
@@ -677,6 +655,425 @@ public class OAuthDAO {
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 log.error("Error while deleting OAuth codes in IDN_OAUTH2_AUTHORIZATION_CODE. ", e);
+            }
+        } catch (SQLException e) {
+            throw new KeyRotationException("Error while connecting to new identity DB.", e);
+        }
+    }
+
+    /**
+     * To retrieve the list of data in IDN_OAUTH2_ACCESS_TOKEN_TEMP.
+     *
+     * @param syncId            The syncId of the data.
+     * @param keyRotationConfig Configuration data needed to perform the task.
+     * @return List comprising of the records in the table.
+     * @throws KeyRotationException Exception thrown while retrieving data from IDN_OAUTH2_ACCESS_TOKEN_TEMP.
+     */
+    public List<TempOAuthToken> getTempOAuthToken(int syncId, KeyRotationConfig keyRotationConfig) throws
+            KeyRotationException {
+
+        List<TempOAuthToken> oAuthTokenList = new ArrayList<>();
+        try (Connection connection = DriverManager
+                .getConnection(keyRotationConfig.getOldIdnDBUrl(), keyRotationConfig.getOldIdnUsername(),
+                        keyRotationConfig.getOldIdnPassword())) {
+            try (PreparedStatement preparedStatement = connection
+                    .prepareStatement(DBConstants.GET_TEMP_OAUTH_ACCESS_TOKEN)) {
+                preparedStatement.setInt(1, syncId);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    oAuthTokenList.add(new TempOAuthToken(resultSet.getString(TOKEN_ID),
+                            resultSet.getString(ACCESS_TOKEN), resultSet.getString(REFRESH_TOKEN),
+                            resultSet.getString(CONSUMER_KEY_ID), resultSet.getString(AUTHZ_USER),
+                            resultSet.getString(TENANT_ID), resultSet.getString(USER_DOMAIN),
+                            resultSet.getString(USER_TYPE), resultSet.getString(GRANT_TYPE),
+                            resultSet.getString(TIME_CREATED), resultSet.getString(REFRESH_TOKEN_TIME_CREATED),
+                            resultSet.getString(VALIDITY_PERIOD), resultSet.getString(REFRESH_TOKEN_VALIDITY_PERIOD),
+                            resultSet.getString(TOKEN_SCOPE_HASH), resultSet.getString(TOKEN_STATE),
+                            resultSet.getString(TOKEN_STATE_ID), resultSet.getString(SUBJECT_IDENTIFIER),
+                            resultSet.getString(ACCESS_TOKEN_HASH), resultSet.getString(REFRESH_TOKEN_HASH),
+                            resultSet.getString(IDP_ID), resultSet.getString(TOKEN_BINDING_REF),
+                            resultSet.getInt(AVAILABILITY), resultSet.getInt(SYNC_ID), resultSet.getInt(SYNCED)));
+                }
+            } catch (SQLException e) {
+                throw new KeyRotationException("Error while retrieving OAuth token from IDN_OAUTH2_ACCESS_TOKEN_TEMP.",
+                        e);
+            }
+        } catch (SQLException e) {
+            throw new KeyRotationException("Error while connecting to old identity DB.", e);
+        }
+        return oAuthTokenList;
+    }
+
+    /**
+     * To retrieve the max sync id from similar primary key records in IDN_OAUTH2_ACCESS_TOKEN_TEMP.
+     *
+     * @param record            A data record in IDN_OAUTH2_ACCESS_TOKEN_TEMP table.
+     * @param keyRotationConfig Configuration data needed to perform the task.
+     * @return List comprising of the records in the table.
+     * @throws KeyRotationException Exception thrown while retrieving latest data from IDN_OAUTH2_ACCESS_TOKEN_TEMP.
+     */
+    public List<TempOAuthToken> getTempOAuthTokenLatest(TempOAuthToken record, KeyRotationConfig keyRotationConfig)
+            throws KeyRotationException {
+
+        List<TempOAuthToken> oAuthTokenList = new ArrayList<>();
+        try (Connection connection = DriverManager
+                .getConnection(keyRotationConfig.getOldIdnDBUrl(), keyRotationConfig.getOldIdnUsername(),
+                        keyRotationConfig.getOldIdnPassword())) {
+            try (PreparedStatement preparedStatement =
+                         connection.prepareStatement(DBConstants.GET_TEMP_OAUTH_ACCESS_TOKEN_LATEST)) {
+                preparedStatement.setString(1, record.getTokenId());
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    oAuthTokenList
+                            .add(new TempOAuthToken(resultSet.getString(TOKEN_ID),
+                                    resultSet.getString(ACCESS_TOKEN), resultSet.getString(REFRESH_TOKEN),
+                                    resultSet.getString(CONSUMER_KEY_ID), resultSet.getString(AUTHZ_USER),
+                                    resultSet.getString(TENANT_ID), resultSet.getString(USER_DOMAIN),
+                                    resultSet.getString(USER_TYPE), resultSet.getString(GRANT_TYPE),
+                                    resultSet.getString(TIME_CREATED), resultSet.getString(REFRESH_TOKEN_TIME_CREATED),
+                                    resultSet.getString(VALIDITY_PERIOD),
+                                    resultSet.getString(REFRESH_TOKEN_VALIDITY_PERIOD),
+                                    resultSet.getString(TOKEN_SCOPE_HASH), resultSet.getString(TOKEN_STATE),
+                                    resultSet.getString(TOKEN_STATE_ID), resultSet.getString(SUBJECT_IDENTIFIER),
+                                    resultSet.getString(ACCESS_TOKEN_HASH), resultSet.getString(REFRESH_TOKEN_HASH),
+                                    resultSet.getString(IDP_ID), resultSet.getString(TOKEN_BINDING_REF),
+                                    resultSet.getInt(AVAILABILITY), resultSet.getInt(SYNC_ID),
+                                    resultSet.getInt(SYNCED)));
+                }
+            } catch (SQLException e) {
+                throw new KeyRotationException("Error while retrieving the latest OAuth token from " +
+                        "IDN_OAUTH2_ACCESS_TOKEN_TEMP.", e);
+            }
+        } catch (SQLException e) {
+            throw new KeyRotationException("Error while connecting to old identity DB.", e);
+        }
+        return oAuthTokenList;
+    }
+
+    /**
+     * To retrieve previous similar primary key records in IDN_OAUTH2_ACCESS_TOKEN_TEMP.
+     *
+     * @param record            A data record in IDN_OAUTH2_ACCESS_TOKEN_TEMP table.
+     * @param keyRotationConfig Configuration data needed to perform the task.
+     * @return List comprising of the records in the table.
+     * @throws KeyRotationException Exception thrown while retrieving previous data from IDN_OAUTH2_ACCESS_TOKEN_TEMP.
+     */
+    public List<TempOAuthToken> getTempOAuthTokenPrevious(TempOAuthToken record, KeyRotationConfig keyRotationConfig)
+            throws KeyRotationException {
+
+        List<TempOAuthToken> oAuthTokenList = new ArrayList<>();
+        try (Connection connection = DriverManager
+                .getConnection(keyRotationConfig.getOldIdnDBUrl(), keyRotationConfig.getOldIdnUsername(),
+                        keyRotationConfig.getOldIdnPassword())) {
+            try (PreparedStatement preparedStatement =
+                         connection.prepareStatement(DBConstants.GET_TEMP_OAUTH_ACCESS_TOKEN_PREVIOUS)) {
+                preparedStatement.setString(1, record.getTokenId());
+                preparedStatement.setInt(2, record.getSyncId());
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    oAuthTokenList
+                            .add(new TempOAuthToken(resultSet.getString(TOKEN_ID),
+                                    resultSet.getString(ACCESS_TOKEN), resultSet.getString(REFRESH_TOKEN),
+                                    resultSet.getString(CONSUMER_KEY_ID), resultSet.getString(AUTHZ_USER),
+                                    resultSet.getString(TENANT_ID), resultSet.getString(USER_DOMAIN),
+                                    resultSet.getString(USER_TYPE), resultSet.getString(GRANT_TYPE),
+                                    resultSet.getString(TIME_CREATED), resultSet.getString(REFRESH_TOKEN_TIME_CREATED),
+                                    resultSet.getString(VALIDITY_PERIOD),
+                                    resultSet.getString(REFRESH_TOKEN_VALIDITY_PERIOD),
+                                    resultSet.getString(TOKEN_SCOPE_HASH), resultSet.getString(TOKEN_STATE),
+                                    resultSet.getString(TOKEN_STATE_ID), resultSet.getString(SUBJECT_IDENTIFIER),
+                                    resultSet.getString(ACCESS_TOKEN_HASH), resultSet.getString(REFRESH_TOKEN_HASH),
+                                    resultSet.getString(IDP_ID), resultSet.getString(TOKEN_BINDING_REF),
+                                    resultSet.getInt(AVAILABILITY), resultSet.getInt(SYNC_ID),
+                                    resultSet.getInt(SYNCED)));
+                }
+            } catch (SQLException e) {
+                throw new KeyRotationException("Error while retrieving the previous OAuth token from " +
+                        "IDN_OAUTH2_ACCESS_TOKEN_TEMP.", e);
+            }
+        } catch (SQLException e) {
+            throw new KeyRotationException("Error while connecting to old identity DB.", e);
+        }
+        return oAuthTokenList;
+    }
+
+    /**
+     * To update previous similar primary key records in IDN_OAUTH2_ACCESS_TOKEN_TEMP.
+     *
+     * @param updateAuthTokensList The list containing records that should be updated.
+     * @param keyRotationConfig    Configuration data needed to perform the task.
+     * @throws KeyRotationException Exception thrown while updating data in IDN_OAUTH2_ACCESS_TOKEN_TEMP.
+     */
+    public void updateTokenPreviousSimilarRecords(List<TempOAuthToken> updateAuthTokensList,
+                                                  KeyRotationConfig keyRotationConfig)
+            throws KeyRotationException {
+
+        try (Connection connection = DriverManager
+                .getConnection(keyRotationConfig.getOldIdnDBUrl(), keyRotationConfig.getOldIdnUsername(),
+                        keyRotationConfig.getOldIdnPassword())) {
+            connection.setAutoCommit(false);
+            try (PreparedStatement preparedStatement = connection.prepareStatement(
+                    DBConstants.UPDATE_TEMP_OAUTH_ACCESS_TOKEN)) {
+                for (TempOAuthToken oAuthToken : updateAuthTokensList) {
+                    preparedStatement.setInt(1, oAuthToken.getSynced());
+                    preparedStatement.setInt(2, oAuthToken.getSyncId());
+                    preparedStatement.addBatch();
+                }
+                preparedStatement.executeBatch();
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                log.error("Error while updating synced in IDN_OAUTH2_ACCESS_TOKEN_TEMP", e);
+            }
+        } catch (SQLException e) {
+            throw new KeyRotationException("Error while connecting to old identity DB.", e);
+        }
+    }
+
+    /**
+     * To insert the synced access and refresh tokens into IDN_OAUTH2_ACCESS_TOKEN.
+     *
+     * @param insertAuthToken   The record that should be inserted.
+     * @param keyRotationConfig Configuration data needed to perform the task.
+     * @throws KeyRotationException Exception thrown while inserting data into IDN_OAUTH2_ACCESS_TOKEN.
+     */
+    public void insertOAuthTokens(TempOAuthToken insertAuthToken, KeyRotationConfig keyRotationConfig)
+            throws KeyRotationException {
+
+        try (Connection connection = DriverManager
+                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
+                        keyRotationConfig.getNewIdnPassword())) {
+            try (PreparedStatement preparedStatement = connection
+                    .prepareStatement(DBConstants.INSERT_OAUTH_ACCESS_TOKEN)) {
+                tokenDuplicatedCode(preparedStatement, insertAuthToken);
+                preparedStatement.executeUpdate();
+                insertTokenCount++;
+            } catch (SQLException e) {
+                connection.rollback();
+                failedInsertTokenCount++;
+                log.error("Error while inserting access and refresh tokens into IDN_OAUTH2_ACCESS_TOKEN. ", e);
+            }
+        } catch (SQLException e) {
+            throw new KeyRotationException("Error while connecting to new identity DB.", e);
+        }
+    }
+
+    /**
+     * To delete the access and refresh token data in IDN_OAUTH2_ACCESS_TOKEN.
+     *
+     * @param deleteAuthToken   The record that should be deleted.
+     * @param keyRotationConfig Configuration data needed to perform the task.
+     * @throws KeyRotationException Exception thrown while deleting data in IDN_OAUTH2_ACCESS_TOKEN.
+     */
+    public void deleteOAuthToken(TempOAuthToken deleteAuthToken, KeyRotationConfig keyRotationConfig)
+            throws KeyRotationException {
+
+        try (Connection connection = DriverManager
+                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
+                        keyRotationConfig.getNewIdnPassword())) {
+            try (PreparedStatement preparedStatement = connection
+                    .prepareStatement(DBConstants.DELETE_OAUTH_ACCESS_TOKEN)) {
+                preparedStatement.setString(1, deleteAuthToken.getTokenId());
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                log.error("Error while deleting access and refresh token in IDN_OAUTH2_ACCESS_TOKEN. ", e);
+            }
+        } catch (SQLException e) {
+            throw new KeyRotationException("Error while connecting to new identity DB.", e);
+        }
+    }
+
+    /**
+     * To retrieve the list of data in IDN_OAUTH2_ACCESS_TOKEN_SCOPE_TEMP.
+     *
+     * @param syncId            The syncId of the data.
+     * @param keyRotationConfig Configuration data needed to perform the task.
+     * @return List comprising of the records in the table.
+     * @throws KeyRotationException Exception thrown while retrieving data from IDN_OAUTH2_ACCESS_TOKEN_SCOPE_TEMP.
+     */
+    public List<TempOAuthScope> getTempOAuthScope(int syncId, KeyRotationConfig keyRotationConfig) throws
+            KeyRotationException {
+
+        List<TempOAuthScope> tempOAuthScopeList = new ArrayList<>();
+        try (Connection connection = DriverManager
+                .getConnection(keyRotationConfig.getOldIdnDBUrl(), keyRotationConfig.getOldIdnUsername(),
+                        keyRotationConfig.getOldIdnPassword())) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.GET_TEMP_OAUTH_SCOPE)) {
+                preparedStatement.setInt(1, syncId);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    tempOAuthScopeList.add(new TempOAuthScope(resultSet.getString(TOKEN_ID),
+                            resultSet.getString(TOKEN_SCOPE), resultSet.getString(TENANT_ID),
+                            resultSet.getInt(AVAILABILITY), resultSet.getInt(SYNC_ID), resultSet.getInt(SYNCED)));
+                }
+            } catch (SQLException e) {
+                throw new KeyRotationException(
+                        "Error while retrieving OAuth scope from IDN_OAUTH2_ACCESS_TOKEN_SCOPE_TEMP.", e);
+            }
+        } catch (SQLException e) {
+            throw new KeyRotationException("Error while connecting to old identity DB.", e);
+        }
+        return tempOAuthScopeList;
+    }
+
+    /**
+     * To retrieve the max sync id from similar primary key records in IDN_OAUTH2_ACCESS_TOKEN_SCOPE_TEMP.
+     *
+     * @param record            A data record in IDN_OAUTH2_ACCESS_TOKEN_SCOPE_TEMP table.
+     * @param keyRotationConfig Configuration data needed to perform the task.
+     * @return List comprising of the records in the table.
+     * @throws KeyRotationException Exception thrown while retrieving latest data from
+     *                              IDN_OAUTH2_ACCESS_TOKEN_SCOPE_TEMP.
+     */
+    public List<TempOAuthScope> getTempOAuthScopeLatest(TempOAuthScope record, KeyRotationConfig keyRotationConfig)
+            throws KeyRotationException {
+
+        List<TempOAuthScope> tempOAuthScopeList = new ArrayList<>();
+        try (Connection connection = DriverManager
+                .getConnection(keyRotationConfig.getOldIdnDBUrl(), keyRotationConfig.getOldIdnUsername(),
+                        keyRotationConfig.getOldIdnPassword())) {
+            try (PreparedStatement preparedStatement = connection
+                    .prepareStatement(DBConstants.GET_TEMP_OAUTH_SCOPE_LATEST)) {
+                preparedStatement.setString(1, record.getTokenId());
+                preparedStatement.setString(2, record.getTokenScope());
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    tempOAuthScopeList
+                            .add(new TempOAuthScope(resultSet.getString(TOKEN_ID), resultSet.getString(TOKEN_SCOPE),
+                                    resultSet.getString(TENANT_ID), resultSet.getInt(AVAILABILITY),
+                                    resultSet.getInt(SYNC_ID), resultSet.getInt(SYNCED)));
+                }
+            } catch (SQLException e) {
+                throw new KeyRotationException("Error while retrieving the latest OAuth scope from " +
+                        "IDN_OAUTH2_ACCESS_TOKEN_SCOPE_TEMP.", e);
+            }
+        } catch (SQLException e) {
+            throw new KeyRotationException("Error while connecting to old identity DB.", e);
+        }
+        return tempOAuthScopeList;
+    }
+
+    /**
+     * To retrieve previous similar primary key records in IDN_OAUTH2_ACCESS_TOKEN_SCOPE_TEMP.
+     *
+     * @param record            A data record in IDN_OAUTH2_ACCESS_TOKEN_SCOPE_TEMP table.
+     * @param keyRotationConfig Configuration data needed to perform the task.
+     * @return List comprising of the records in the table.
+     * @throws KeyRotationException Exception thrown while retrieving previous data from
+     *                              IDN_OAUTH2_ACCESS_TOKEN_SCOPE_TEMP.
+     */
+    public List<TempOAuthScope> getTempOAuthScopePrevious(TempOAuthScope record, KeyRotationConfig keyRotationConfig)
+            throws KeyRotationException {
+
+        List<TempOAuthScope> tempOAuthScopeList = new ArrayList<>();
+        try (Connection connection = DriverManager
+                .getConnection(keyRotationConfig.getOldIdnDBUrl(), keyRotationConfig.getOldIdnUsername(),
+                        keyRotationConfig.getOldIdnPassword())) {
+            try (PreparedStatement preparedStatement =
+                         connection.prepareStatement(DBConstants.GET_TEMP_OAUTH_SCOPE_PREVIOUS)) {
+                preparedStatement.setString(1, record.getTokenId());
+                preparedStatement.setString(2, record.getTokenScope());
+                preparedStatement.setInt(3, record.getSyncId());
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    tempOAuthScopeList
+                            .add(new TempOAuthScope(resultSet.getString(TOKEN_ID), resultSet.getString(TOKEN_SCOPE),
+                                    resultSet.getString(TENANT_ID), resultSet.getInt(AVAILABILITY),
+                                    resultSet.getInt(SYNC_ID), resultSet.getInt(SYNCED)));
+                }
+            } catch (SQLException e) {
+                throw new KeyRotationException("Error while retrieving the previous OAuth scope from " +
+                        "IDN_OAUTH2_ACCESS_TOKEN_SCOPE_TEMP.", e);
+            }
+        } catch (SQLException e) {
+            throw new KeyRotationException("Error while connecting to old identity DB.", e);
+        }
+        return tempOAuthScopeList;
+    }
+
+    /**
+     * To update previous similar primary key records in IDN_OAUTH2_ACCESS_TOKEN_SCOPE_TEMP.
+     *
+     * @param updateAuthScopesList The list containing records that should be updated.
+     * @param keyRotationConfig    Configuration data needed to perform the task.
+     * @throws KeyRotationException Exception thrown while updating data in IDN_OAUTH2_ACCESS_TOKEN_SCOPE_TEMP.
+     */
+    public void updateScopePreviousSimilarRecords(List<TempOAuthScope> updateAuthScopesList,
+                                                  KeyRotationConfig keyRotationConfig) throws KeyRotationException {
+
+        try (Connection connection = DriverManager
+                .getConnection(keyRotationConfig.getOldIdnDBUrl(), keyRotationConfig.getOldIdnUsername(),
+                        keyRotationConfig.getOldIdnPassword())) {
+            connection.setAutoCommit(false);
+            try (PreparedStatement preparedStatement = connection
+                    .prepareStatement(DBConstants.UPDATE_TEMP_OAUTH_SCOPE)) {
+                for (TempOAuthScope oAuthScope : updateAuthScopesList) {
+                    preparedStatement.setInt(1, oAuthScope.getSynced());
+                    preparedStatement.setInt(2, oAuthScope.getSyncId());
+                    preparedStatement.addBatch();
+                }
+                preparedStatement.executeBatch();
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                log.error("Error while updating synced in IDN_OAUTH2_ACCESS_TOKEN_SCOPE_TEMP", e);
+            }
+        } catch (SQLException e) {
+            throw new KeyRotationException("Error while connecting to old identity DB.", e);
+        }
+    }
+
+    /**
+     * To insert the synced OAuth scope data into IDN_OAUTH2_ACCESS_TOKEN_SCOPE.
+     *
+     * @param insertAuthScope   The record that should be inserted.
+     * @param keyRotationConfig Configuration data needed to perform the task.
+     * @throws KeyRotationException Exception thrown while inserting data into IDN_OAUTH2_ACCESS_TOKEN_SCOPE.
+     */
+    public void insertOAuthScope(TempOAuthScope insertAuthScope, KeyRotationConfig keyRotationConfig)
+            throws KeyRotationException {
+
+        try (Connection connection = DriverManager
+                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
+                        keyRotationConfig.getNewIdnPassword())) {
+            try (PreparedStatement preparedStatement =
+                         connection.prepareStatement(DBConstants.INSERT_OAUTH_SCOPE)) {
+                preparedStatement.setString(1, insertAuthScope.getTokenId());
+                preparedStatement.setString(2, insertAuthScope.getTokenScope());
+                preparedStatement.setInt(3, Integer.parseInt(insertAuthScope.getTenantId()));
+                preparedStatement.setInt(4, Integer.parseInt(insertAuthScope.getTenantId()));
+                preparedStatement.executeUpdate();
+                insertScopeCount++;
+            } catch (SQLException e) {
+                connection.rollback();
+                failedInsertScopeCount++;
+                log.error("Error while inserting OAuth scope into IDN_OAUTH2_ACCESS_TOKEN_SCOPE. ", e);
+            }
+        } catch (SQLException e) {
+            throw new KeyRotationException("Error while connecting to new identity DB.", e);
+        }
+    }
+
+    /**
+     * To delete the OAuth scope data in IDN_OAUTH2_ACCESS_TOKEN_SCOPE.
+     *
+     * @param deleteAuthScope   The record that should be deleted.
+     * @param keyRotationConfig Configuration data needed to perform the task.
+     * @throws KeyRotationException Exception thrown while deleting data in IDN_OAUTH2_ACCESS_TOKEN_SCOPE.
+     */
+    public void deleteOAuthScope(TempOAuthScope deleteAuthScope, KeyRotationConfig keyRotationConfig)
+            throws KeyRotationException {
+
+        try (Connection connection = DriverManager
+                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
+                        keyRotationConfig.getNewIdnPassword())) {
+            try (PreparedStatement preparedStatement =
+                         connection.prepareStatement(DBConstants.DELETE_OAUTH_SCOPE)) {
+                preparedStatement.setString(1, deleteAuthScope.getTokenId());
+                preparedStatement.setString(2, deleteAuthScope.getTokenScope());
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                log.error("Error while deleting OAuth scope in IDN_OAUTH2_ACCESS_TOKEN_SCOPE. ", e);
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to new identity DB.", e);
@@ -725,98 +1122,6 @@ public class OAuthDAO {
         preparedStatement.setString(31, oAuthCode.getPkceCodeChallengeMethod());
         preparedStatement.setString(32, oAuthCode.getAuthorizationCodeHash());
         preparedStatement.setInt(33, Integer.parseInt(oAuthCode.getIdpId()));
-    }
-
-    /**
-     * To insert the access and refresh tokens into IDN_OAUTH2_ACCESS_TOKEN.
-     *
-     * @param insertAuthTokensList The list containing records that should be inserted.
-     * @param keyRotationConfig    Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown while inserting data into IDN_OAUTH2_ACCESS_TOKEN.
-     */
-    public void insertOAuthTokens(List<TempOAuthToken> insertAuthTokensList, KeyRotationConfig keyRotationConfig)
-            throws KeyRotationException {
-
-        try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
-                        keyRotationConfig.getNewIdnPassword())) {
-            connection.setAutoCommit(false);
-            try (PreparedStatement preparedStatement =
-                         connection.prepareStatement(DBConstants.INSERT_OAUTH_ACCESS_TOKEN)) {
-                for (TempOAuthToken oAuthToken : insertAuthTokensList) {
-                    tokenDuplicatedCode(preparedStatement, oAuthToken);
-                    preparedStatement.addBatch();
-                }
-                preparedStatement.executeBatch();
-                connection.commit();
-                insertTokenCount += insertAuthTokensList.size();
-            } catch (SQLException e) {
-                connection.rollback();
-                log.error(
-                        "Error while inserting access and refresh tokens into IDN_OAUTH2_ACCESS_TOKEN, " +
-                                "trying the chunk row by row again. ", e);
-                retryOnTokenInsert(insertAuthTokensList, connection);
-            }
-        } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to new identity DB.", e);
-        }
-    }
-
-    /**
-     * To retry upon a failure in inserting OAuth token chunk into IDN_OAUTH2_ACCESS_TOKEN.
-     *
-     * @param insertAuthTokensList The list containing records that should be re-encrypted.
-     * @param connection           Connection with the new identity DB.
-     * @throws KeyRotationException Exception thrown while accessing new identity DB data.
-     */
-    private void retryOnTokenInsert(List<TempOAuthToken> insertAuthTokensList, Connection connection)
-            throws KeyRotationException {
-
-        TempOAuthToken faulty = null;
-        try (PreparedStatement preparedStatement =
-                     connection.prepareStatement(DBConstants.INSERT_OAUTH_ACCESS_TOKEN)) {
-            for (TempOAuthToken oAuthToken : insertAuthTokensList) {
-                try {
-                    faulty = oAuthToken;
-                    tokenDuplicatedCode(preparedStatement, oAuthToken);
-                    preparedStatement.executeUpdate();
-                    connection.commit();
-                    insertTokenCount++;
-                } catch (SQLException err) {
-                    connection.rollback();
-                    log.error("Error while inserting access and refresh tokens in IDN_OAUTH2_ACCESS_TOKEN of " +
-                            "record with token id: " + faulty.getTokenId() + " ," + err);
-                    failedInsertTokenCount++;
-                }
-            }
-        } catch (SQLException e) {
-            throw new KeyRotationException("Error while accessing new identity DB.", e);
-        }
-    }
-
-    /**
-     * To delete the access and refresh tokens in IDN_OAUTH2_ACCESS_TOKEN.
-     *
-     * @param deleteAuthToken   The record that should be deleted.
-     * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown while deleting data in IDN_OAUTH2_ACCESS_TOKEN.
-     */
-    public void deleteOAuthToken(TempOAuthToken deleteAuthToken, KeyRotationConfig keyRotationConfig)
-            throws KeyRotationException {
-
-        try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
-                        keyRotationConfig.getNewIdnPassword())) {
-            try (PreparedStatement preparedStatement = connection
-                    .prepareStatement(DBConstants.DELETE_OAUTH_ACCESS_TOKEN)) {
-                preparedStatement.setString(1, deleteAuthToken.getTokenId());
-                preparedStatement.executeUpdate();
-            } catch (SQLException e) {
-                log.error("Error while deleting access and refresh tokens into IDN_OAUTH2_ACCESS_TOKEN. ", e);
-            }
-        } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to new identity DB.", e);
-        }
     }
 
     /**
@@ -874,105 +1179,5 @@ public class OAuthDAO {
         preparedStatement.setString(39, oAuthToken.getRefreshTokenHash());
         preparedStatement.setInt(40, Integer.parseInt(oAuthToken.getIdpId()));
         preparedStatement.setString(41, oAuthToken.getTokenBindingRef());
-    }
-
-    /**
-     * To insert the synced OAuth scopes into IDN_OAUTH2_ACCESS_TOKEN_SCOPE.
-     *
-     * @param insertAuthScopesList The list containing records that should be inserted.
-     * @param keyRotationConfig    Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown while inserting data into IDN_OAUTH2_ACCESS_TOKEN_SCOPE.
-     */
-    public void insertOAuthScopes(List<TempOAuthScope> insertAuthScopesList, KeyRotationConfig keyRotationConfig)
-            throws KeyRotationException {
-
-        try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
-                        keyRotationConfig.getNewIdnPassword())) {
-            connection.setAutoCommit(false);
-            try (PreparedStatement preparedStatement =
-                         connection.prepareStatement(DBConstants.INSERT_OAUTH_SCOPE)) {
-                for (TempOAuthScope tempOAuthScope : insertAuthScopesList) {
-                    preparedStatement.setString(1, tempOAuthScope.getTokenId());
-                    preparedStatement.setString(2, tempOAuthScope.getTokenScope());
-                    preparedStatement.setInt(3, Integer.parseInt(tempOAuthScope.getTenantId()));
-                    preparedStatement.setInt(4, Integer.parseInt(tempOAuthScope.getTenantId()));
-                    preparedStatement.addBatch();
-                }
-                preparedStatement.executeBatch();
-                connection.commit();
-                insertScopeCount += insertAuthScopesList.size();
-            } catch (SQLException e) {
-                connection.rollback();
-                log.error(
-                        "Error while inserting OAuth scopes into IDN_OAUTH2_ACCESS_TOKEN_SCOPE, trying " +
-                                "the chunk row by row again. ", e);
-                retryOnScopeInsert(insertAuthScopesList, connection);
-            }
-        } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to new identity DB.", e);
-        }
-    }
-
-    /**
-     * To retry upon a failure in inserting OAuth scope chunk into IDN_OAUTH2_ACCESS_TOKEN_SCOPE.
-     *
-     * @param insertAuthScopesList The list containing records that should be re-encrypted.
-     * @param connection           Connection with the new identity DB.
-     * @throws KeyRotationException Exception thrown while accessing new identity DB data.
-     */
-    private void retryOnScopeInsert(List<TempOAuthScope> insertAuthScopesList, Connection connection)
-            throws KeyRotationException {
-
-        TempOAuthScope faulty = null;
-        try (PreparedStatement preparedStatement =
-                     connection.prepareStatement(DBConstants.INSERT_OAUTH_SCOPE)) {
-            for (TempOAuthScope tempOAuthScope : insertAuthScopesList) {
-                try {
-                    faulty = tempOAuthScope;
-                    preparedStatement.setString(1, tempOAuthScope.getTokenId());
-                    preparedStatement.setString(2, tempOAuthScope.getTokenScope());
-                    preparedStatement.setInt(3, Integer.parseInt(tempOAuthScope.getTenantId()));
-                    preparedStatement.setInt(4, Integer.parseInt(tempOAuthScope.getTenantId()));
-                    preparedStatement.executeUpdate();
-                    connection.commit();
-                    insertScopeCount++;
-                } catch (SQLException err) {
-                    connection.rollback();
-                    log.error("Error while inserting OAuth scopes into IDN_OAUTH2_ACCESS_TOKEN_SCOPE of " +
-                            "record with token id: " + faulty.getTokenId() + " token scope: ," +
-                            faulty.getTokenScope() + " tenant id: " + faulty.getTenantId() + " ," + err);
-                    failedInsertScopeCount++;
-                }
-            }
-        } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to new identity DB.", e);
-        }
-    }
-
-    /**
-     * To delete OAuth scope in IDN_OAUTH2_ACCESS_TOKEN_SCOPE.
-     *
-     * @param deleteAuthScope   The record that should be deleted.
-     * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown while deleting data in IDN_OAUTH2_ACCESS_TOKEN_SCOPE.
-     */
-    public void deleteOAuthScope(TempOAuthScope deleteAuthScope, KeyRotationConfig keyRotationConfig)
-            throws KeyRotationException {
-
-        try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
-                        keyRotationConfig.getNewIdnPassword())) {
-            try (PreparedStatement preparedStatement =
-                         connection.prepareStatement(DBConstants.DELETE_OAUTH_SCOPE)) {
-                preparedStatement.setString(1, deleteAuthScope.getTokenId());
-                preparedStatement.setString(2, deleteAuthScope.getTokenScope());
-                preparedStatement.executeUpdate();
-            } catch (SQLException e) {
-                log.error("Error while deleting OAuth scopes in IDN_OAUTH2_ACCESS_TOKEN_SCOPE. ", e);
-            }
-        } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to new identity DB.", e);
-        }
     }
 }

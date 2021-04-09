@@ -44,7 +44,9 @@ public class TempOAuthToken {
     private String refreshTokenHash;
     private String idpId;
     private String tokenBindingRef;
-    private String availability;
+    private int availability;
+    private int syncId;
+    private int synced;
 
     /**
      * TempOAuthToken class constructor.
@@ -71,13 +73,16 @@ public class TempOAuthToken {
      * @param idpId                      IdpId field in IDN_OAUTH2_ACCESS_TOKEN_TEMP table.
      * @param tokenBindingRef            Token binding ref field in IDN_OAUTH2_ACCESS_TOKEN_TEMP table.
      * @param availability               Availability field in IDN_OAUTH2_ACCESS_TOKEN_TEMP table.
+     * @param syncId                     Sync id field in IDN_OAUTH2_ACCESS_TOKEN_TEMP table.
+     * @param synced                     Synced field in IDN_OAUTH2_ACCESS_TOKEN_TEMP table.
      */
     public TempOAuthToken(String tokenId, String accessToken, String refreshToken, String consumerKeyId,
                           String authzUser, String tenantId, String userDomain, String userType, String grantType,
                           String timeCreated, String refreshTokenTimeCreated, String validityPeriod,
                           String refreshTokenValidityPeriod, String tokenScopeHash, String tokenState,
                           String tokenStateId, String subjectIdentifier, String accessTokenHash,
-                          String refreshTokenHash, String idpId, String tokenBindingRef, String availability) {
+                          String refreshTokenHash, String idpId, String tokenBindingRef, int availability, int syncId,
+                          int synced) {
 
         this.tokenId = tokenId;
         this.accessToken = accessToken;
@@ -101,6 +106,8 @@ public class TempOAuthToken {
         this.idpId = idpId;
         this.tokenBindingRef = tokenBindingRef;
         this.availability = availability;
+        this.syncId = syncId;
+        this.synced = synced;
     }
 
     /**
@@ -528,7 +535,7 @@ public class TempOAuthToken {
      *
      * @return Availability.
      */
-    public String getAvailability() {
+    public int getAvailability() {
 
         return availability;
     }
@@ -538,8 +545,48 @@ public class TempOAuthToken {
      *
      * @param availability Availability.
      */
-    public void setAvailability(String availability) {
+    public void setAvailability(int availability) {
 
         this.availability = availability;
+    }
+
+    /**
+     * Get for the sync id.
+     *
+     * @return Sync id.
+     */
+    public int getSyncId() {
+
+        return syncId;
+    }
+
+    /**
+     * Set for the sync id.
+     *
+     * @param syncId Sync id.
+     */
+    public void setSyncId(int syncId) {
+
+        this.syncId = syncId;
+    }
+
+    /**
+     * Get for the synced.
+     *
+     * @return Synced.
+     */
+    public int getSynced() {
+
+        return synced;
+    }
+
+    /**
+     * Set for the synced.
+     *
+     * @param synced Synced.
+     */
+    public void setSynced(int synced) {
+
+        this.synced = synced;
     }
 }
