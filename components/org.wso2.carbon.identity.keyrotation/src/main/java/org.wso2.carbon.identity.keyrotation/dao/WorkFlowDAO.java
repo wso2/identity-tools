@@ -94,7 +94,7 @@ public class WorkFlowDAO {
                 }
             } catch (SQLException | IOException | ClassNotFoundException e) {
                 connection.rollback();
-                throw new KeyRotationException("Error while retrieving requests from WF_REQUEST.", e);
+                log.error("Error while retrieving requests from WF_REQUEST.", e);
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to new identity DB.", e);
@@ -127,8 +127,7 @@ public class WorkFlowDAO {
                 updateCount += updateWfRequestList.size();
             } catch (SQLException | IOException e) {
                 connection.rollback();
-                log.error(
-                        "Error while updating requests in WF_REQUEST, trying the chunk row by row again. ", e);
+                log.error("Error while updating requests in WF_REQUEST, trying the chunk row by row again. ", e);
                 retryOnRequestUpdate(updateWfRequestList, connection);
             }
         } catch (SQLException e) {

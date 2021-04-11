@@ -97,8 +97,7 @@ public class RegistryDAO {
                 }
             } catch (SQLException e) {
                 connection.rollback();
-                throw new KeyRotationException("Error while retrieving registry property: " + property + " from " +
-                        "REG_PROPERTY.", e);
+                log.error("Error while retrieving registry property: " + property + " from REG_PROPERTY.", e);
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to new registry DB.", e);

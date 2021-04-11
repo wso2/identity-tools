@@ -112,7 +112,6 @@ public class SyncedDataKeyRotator {
                 log.debug("latestRecord " + latestRecord.getSyncId());
                 List<TempTOTPSecret> previousSimilarRecords =
                         IdentityDAO.getInstance().getTempTOTPPrevious(latestRecord, keyRotationConfig);
-                log.debug("SIZE " + previousSimilarRecords.size());
                 for (TempTOTPSecret previousSimilarRecord : previousSimilarRecords) {
                     previousSimilarRecord.setSynced(1);
                     log.debug("previousSimilarRecords " + previousSimilarRecord.getSyncId());
@@ -129,7 +128,10 @@ public class SyncedDataKeyRotator {
                     log.debug("Re-encrypted value " + latestRecord.getDataValue());
                 }
                 if (latestRecord.getAvailability() == 1) {
-                    IdentityDAO.getInstance().insertTOTPSecret(latestRecord, keyRotationConfig);
+                    int updatedRecords = IdentityDAO.getInstance().updateTOTPSecret(latestRecord, keyRotationConfig);
+                    if (updatedRecords == 0) {
+                        IdentityDAO.getInstance().insertTOTPSecret(latestRecord, keyRotationConfig);
+                    }
                 } else if (latestRecord.getAvailability() == 0) {
                     IdentityDAO.getInstance().deleteTOTPSecret(latestRecord, keyRotationConfig);
                 }
@@ -158,7 +160,6 @@ public class SyncedDataKeyRotator {
                 log.debug("latestRecord " + latestRecord.getSyncId());
                 List<TempOAuthCode> previousSimilarRecords =
                         OAuthDAO.getInstance().getTempOAuthCodePrevious(latestRecord, keyRotationConfig);
-                log.debug("SIZE " + previousSimilarRecords.size());
                 for (TempOAuthCode previousSimilarRecord : previousSimilarRecords) {
                     previousSimilarRecord.setSynced(1);
                     log.debug("previousSimilarRecords " + previousSimilarRecord.getSyncId());
@@ -173,7 +174,10 @@ public class SyncedDataKeyRotator {
                     log.debug("Re-encrypted value " + latestRecord.getAuthorizationCode());
                 }
                 if (latestRecord.getAvailability() == 1) {
-                    OAuthDAO.getInstance().insertOAuthCode(latestRecord, keyRotationConfig);
+                    int updatedRecords = OAuthDAO.getInstance().updateOAuthCode(latestRecord, keyRotationConfig);
+                    if (updatedRecords == 0) {
+                        OAuthDAO.getInstance().insertOAuthCode(latestRecord, keyRotationConfig);
+                    }
                 } else if (latestRecord.getAvailability() == 0) {
                     OAuthDAO.getInstance().deleteOAuthCode(latestRecord, keyRotationConfig);
                 }
@@ -202,7 +206,6 @@ public class SyncedDataKeyRotator {
                 log.debug("latestRecord " + latestRecord.getSyncId());
                 List<TempOAuthToken> previousSimilarRecords =
                         OAuthDAO.getInstance().getTempOAuthTokenPrevious(latestRecord, keyRotationConfig);
-                log.debug("SIZE " + previousSimilarRecords.size());
                 for (TempOAuthToken previousSimilarRecord : previousSimilarRecords) {
                     previousSimilarRecord.setSynced(1);
                     log.debug("previousSimilarRecords " + previousSimilarRecord.getSyncId());
@@ -223,7 +226,10 @@ public class SyncedDataKeyRotator {
                     log.debug("Re-encrypted value " + latestRecord.getRefreshToken());
                 }
                 if (latestRecord.getAvailability() == 1) {
-                    OAuthDAO.getInstance().insertOAuthTokens(latestRecord, keyRotationConfig);
+                    int updatedRecords = OAuthDAO.getInstance().updateOAuthToken(latestRecord, keyRotationConfig);
+                    if (updatedRecords == 0) {
+                        OAuthDAO.getInstance().insertOAuthToken(latestRecord, keyRotationConfig);
+                    }
                 } else if (latestRecord.getAvailability() == 0) {
                     OAuthDAO.getInstance().deleteOAuthToken(latestRecord, keyRotationConfig);
                 }
@@ -252,14 +258,16 @@ public class SyncedDataKeyRotator {
                 log.debug("latestRecord " + latestRecord.getSyncId());
                 List<TempOAuthScope> previousSimilarRecords =
                         OAuthDAO.getInstance().getTempOAuthScopePrevious(latestRecord, keyRotationConfig);
-                log.debug("SIZE " + previousSimilarRecords.size());
                 for (TempOAuthScope previousSimilarRecord : previousSimilarRecords) {
                     previousSimilarRecord.setSynced(1);
                     log.debug("previousSimilarRecords " + previousSimilarRecord.getSyncId());
                 }
                 OAuthDAO.getInstance().updateScopePreviousSimilarRecords(previousSimilarRecords, keyRotationConfig);
                 if (latestRecord.getAvailability() == 1) {
-                    OAuthDAO.getInstance().insertOAuthScope(latestRecord, keyRotationConfig);
+                    int updatedRecords = OAuthDAO.getInstance().updateOAuthScope(latestRecord, keyRotationConfig);
+                    if (updatedRecords == 0) {
+                        OAuthDAO.getInstance().insertOAuthScope(latestRecord, keyRotationConfig);
+                    }
                 } else if (latestRecord.getAvailability() == 0) {
                     OAuthDAO.getInstance().deleteOAuthScope(latestRecord, keyRotationConfig);
                 }

@@ -104,7 +104,7 @@ public class IdentityDAO {
                 }
             } catch (SQLException e) {
                 connection.rollback();
-                throw new KeyRotationException("Error while retrieving TOTP secrets from IDN_IDENTITY_USER_DATA.", e);
+                log.error("Error while retrieving TOTP secrets from IDN_IDENTITY_USER_DATA.", e);
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to new identity DB.", e);
@@ -198,9 +198,11 @@ public class IdentityDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getOldIdnDBUrl(), keyRotationConfig.getOldIdnUsername(),
                         keyRotationConfig.getOldIdnPassword())) {
+            connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.GET_TEMP_TOTP_SECRET)) {
                 preparedStatement.setInt(1, syncId);
                 ResultSet resultSet = preparedStatement.executeQuery();
+                connection.commit();
                 while (resultSet.next()) {
                     totpSecretList
                             .add(new TempTOTPSecret(resultSet.getString(TENANT_ID),
@@ -209,8 +211,8 @@ public class IdentityDAO {
                                     resultSet.getInt(SYNC_ID), resultSet.getInt(SYNCED)));
                 }
             } catch (SQLException e) {
-                throw new KeyRotationException("Error while retrieving TOTP secret from IDN_IDENTITY_USER_DATA_TEMP.",
-                        e);
+                connection.rollback();
+                log.error("Error while retrieving TOTP secret from IDN_IDENTITY_USER_DATA_TEMP.", e);
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to old identity DB.", e);
@@ -233,12 +235,14 @@ public class IdentityDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getOldIdnDBUrl(), keyRotationConfig.getOldIdnUsername(),
                         keyRotationConfig.getOldIdnPassword())) {
+            connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement =
                          connection.prepareStatement(DBConstants.GET_TEMP_TOTP_SECRET_LATEST)) {
                 preparedStatement.setInt(1, Integer.parseInt(record.getTenantId()));
                 preparedStatement.setString(2, record.getUsername());
                 preparedStatement.setString(3, record.getDataKey());
                 ResultSet resultSet = preparedStatement.executeQuery();
+                connection.commit();
                 while (resultSet.next()) {
                     totpSecretList
                             .add(new TempTOTPSecret(resultSet.getString(TENANT_ID),
@@ -247,8 +251,8 @@ public class IdentityDAO {
                                     resultSet.getInt(SYNC_ID), resultSet.getInt(SYNCED)));
                 }
             } catch (SQLException e) {
-                throw new KeyRotationException("Error while retrieving the latest TOTP secret from " +
-                        "IDN_IDENTITY_USER_DATA_TEMP.", e);
+                connection.rollback();
+                log.error("Error while retrieving the latest TOTP secret from IDN_IDENTITY_USER_DATA_TEMP.", e);
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to old identity DB.", e);
@@ -271,6 +275,7 @@ public class IdentityDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getOldIdnDBUrl(), keyRotationConfig.getOldIdnUsername(),
                         keyRotationConfig.getOldIdnPassword())) {
+            connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement =
                          connection.prepareStatement(DBConstants.GET_TEMP_TOTP_SECRET_PREVIOUS)) {
                 preparedStatement.setInt(1, Integer.parseInt(record.getTenantId()));
@@ -278,6 +283,7 @@ public class IdentityDAO {
                 preparedStatement.setString(3, record.getDataKey());
                 preparedStatement.setInt(4, record.getSyncId());
                 ResultSet resultSet = preparedStatement.executeQuery();
+                connection.commit();
                 while (resultSet.next()) {
                     totpSecretList
                             .add(new TempTOTPSecret(resultSet.getString(TENANT_ID),
@@ -286,8 +292,9 @@ public class IdentityDAO {
                                     resultSet.getInt(SYNC_ID), resultSet.getInt(SYNCED)));
                 }
             } catch (SQLException e) {
-                throw new KeyRotationException("Error while retrieving the previous TOTP secrets from " +
-                        "IDN_IDENTITY_USER_DATA_TEMP.", e);
+                connection.rollback();
+                log.error("Error while retrieving the previous TOTP secrets from IDN_IDENTITY_USER_DATA_TEMP.",
+                        e);
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to old identity DB.", e);
@@ -328,6 +335,43 @@ public class IdentityDAO {
     }
 
     /**
+     * To update the synced TOTP secret data into IDN_IDENTITY_USER_DATA.
+     *
+     * @param updateTOTPSecret  The record that should be updated.
+     * @param keyRotationConfig Configuration data needed to perform the task.
+     * @return Number of updated records.
+     * @throws KeyRotationException Exception thrown while updating the data in IDN_IDENTITY_USER_DATA.
+     */
+    public int updateTOTPSecret(TempTOTPSecret updateTOTPSecret,
+                                KeyRotationConfig keyRotationConfig) throws KeyRotationException {
+
+        int records = 0;
+        try (Connection connection = DriverManager
+                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
+                        keyRotationConfig.getNewIdnPassword())) {
+            connection.setAutoCommit(false);
+            try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_TOTP_SECRET)) {
+                preparedStatement.setString(1, updateTOTPSecret.getDataValue());
+                preparedStatement.setInt(2, Integer.parseInt(updateTOTPSecret.getTenantId()));
+                preparedStatement.setString(3, updateTOTPSecret.getUsername());
+                preparedStatement.setString(4, updateTOTPSecret.getDataKey());
+                records = preparedStatement.executeUpdate();
+                connection.commit();
+                if (records > 0) {
+                    insertCount++;
+                }
+            } catch (SQLException e) {
+                connection.rollback();
+                failedInsertCount++;
+                log.error("Error while updating TOTP secret in IDN_IDENTITY_USER_DATA. ", e);
+            }
+        } catch (SQLException e) {
+            throw new KeyRotationException("Error while connecting to new identity DB.", e);
+        }
+        return records;
+    }
+
+    /**
      * To insert the synced TOTP secret data into IDN_IDENTITY_USER_DATA.
      *
      * @param insertTOTPSecret  The record that should be inserted.
@@ -340,13 +384,14 @@ public class IdentityDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
                         keyRotationConfig.getNewIdnPassword())) {
+            connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.INSERT_TOTP_SECRET)) {
                 preparedStatement.setInt(1, Integer.parseInt(insertTOTPSecret.getTenantId()));
                 preparedStatement.setString(2, insertTOTPSecret.getUsername());
                 preparedStatement.setString(3, insertTOTPSecret.getDataKey());
                 preparedStatement.setString(4, insertTOTPSecret.getDataValue());
-                preparedStatement.setString(5, insertTOTPSecret.getDataValue());
                 preparedStatement.executeUpdate();
+                connection.commit();
                 insertCount++;
             } catch (SQLException e) {
                 connection.rollback();
@@ -371,12 +416,15 @@ public class IdentityDAO {
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
                         keyRotationConfig.getNewIdnPassword())) {
+            connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.DELETE_TOTP_SECRET)) {
                 preparedStatement.setInt(1, Integer.parseInt(deleteTOTPSecret.getTenantId()));
                 preparedStatement.setString(2, deleteTOTPSecret.getUsername());
                 preparedStatement.setString(3, deleteTOTPSecret.getDataKey());
                 preparedStatement.executeUpdate();
+                connection.commit();
             } catch (SQLException e) {
+                connection.rollback();
                 log.error("Error while deleting TOTP secret in IDN_IDENTITY_USER_DATA. ", e);
             }
         } catch (SQLException e) {

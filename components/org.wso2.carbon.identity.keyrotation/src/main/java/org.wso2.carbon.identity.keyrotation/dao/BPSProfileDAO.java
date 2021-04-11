@@ -94,7 +94,7 @@ public class BPSProfileDAO {
                 }
             } catch (SQLException e) {
                 connection.rollback();
-                throw new KeyRotationException("Error while retrieving passwords from WF_BPS_PROFILE.", e);
+                log.error("Error while retrieving passwords from WF_BPS_PROFILE.", e);
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to new identity DB.", e);
