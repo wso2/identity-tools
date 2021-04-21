@@ -43,6 +43,7 @@
         <module>components/org.wso2.is.password.reencrypt</module>
         <!-- Modules for new config model migration tool.     -->
         <module>components/config-model-migrator</module>
+        <module>components/org.wso2.carbon.identity.keyrotation</module>
     </modules>
 
     <pluginRepositories>
