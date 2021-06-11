@@ -45,6 +45,9 @@
         <module>components/config-model-migrator</module>
         <module>components/org.wso2.carbon.identity.keyrotation</module>
     </modules>
-
+  
+    <properties>
+        <maven.findbugsplugin.version>3.0.5</maven.findbugsplugin.version>
+    </properties>
 
 </project>
