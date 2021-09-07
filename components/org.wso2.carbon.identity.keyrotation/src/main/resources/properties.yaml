@@ -14,5 +14,5 @@ newRegUsername: root
 newRegPassword: cm9vdA==
 enableDBMigrator: true
 enableConfigMigrator: true
-enableSyncMigrator: false
+enableSyncMigrator: true
 
