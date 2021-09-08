@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.keyrotation.dao;
 
 import org.apache.log4j.Logger;
-import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
+import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 import org.wso2.carbon.identity.workflow.mgt.dto.WorkflowRequest;
 

@@ -18,11 +18,18 @@
 
 package org.wso2.carbon.identity.keyrotation;
 
-import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
+import org.wso2.carbon.identity.keyrotation.config.FileBasedKeyRotationConfigProvider;
+import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfigProvider;
+import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.service.ConfigFileKeyRotator;
 import org.wso2.carbon.identity.keyrotation.service.DBKeyRotator;
 import org.wso2.carbon.identity.keyrotation.service.SyncedDataKeyRotator;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * This class holds the symmetric key rotation service.
@@ -31,15 +38,33 @@ public class KeyRotationService {
 
     public static void main(String[] args) throws KeyRotationException {
 
-        KeyRotationConfig configs = KeyRotationConfig.getInstance().loadConfigs(args);
-        if (Boolean.parseBoolean(configs.getEnableDBMigrator())) {
-            DBKeyRotator.getInstance().dbReEncryptor(configs);
+        String propertiesFilePath;
+        if (new File("properties.yaml").isFile()) {
+            propertiesFilePath = "properties.yaml";
+        } else {
+            propertiesFilePath = Paths.get("components", "org.wso2.carbon.identity.keyrotation", "src",
+                    "main", "resources", "properties.yaml").toString();
         }
-        if (Boolean.parseBoolean(configs.getEnableConfigMigrator())) {
-            ConfigFileKeyRotator.getInstance().configFileReEncryptor(configs);
+        KeyRotationConfigProvider configProvider = null;
+        try {
+            configProvider =
+                    new FileBasedKeyRotationConfigProvider(Files.newInputStream(Paths.get(propertiesFilePath)));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        if (Boolean.parseBoolean(configs.getEnableSyncMigrator())) {
-            SyncedDataKeyRotator.getInstance().syncedDataReEncryptor(configs);
+        initService(configProvider.getKeyRotationConfig());
+    }
+
+    private static void initService(KeyRotationConfig config) throws KeyRotationException {
+
+        if (Boolean.parseBoolean(config.getEnableDBMigrator())) {
+            DBKeyRotator.getInstance().dbReEncryptor(config);
+        }
+        if (Boolean.parseBoolean(config.getEnableConfigMigrator())) {
+            ConfigFileKeyRotator.getInstance().configFileReEncryptor(config);
+        }
+        if (Boolean.parseBoolean(config.getEnableSyncMigrator())) {
+            SyncedDataKeyRotator.getInstance().syncedDataReEncryptor(config);
         }
     }
 }

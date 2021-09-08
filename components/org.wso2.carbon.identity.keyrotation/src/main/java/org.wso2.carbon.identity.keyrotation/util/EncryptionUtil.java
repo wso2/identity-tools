@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import org.apache.axiom.om.util.Base64;
-import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
+import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.model.CipherMetaData;
 import org.wso2.carbon.identity.keyrotation.service.CryptoProvider;
 

@@ -25,7 +25,7 @@ import org.apache.axiom.om.util.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
+import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.model.CipherMetaData;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;

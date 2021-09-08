@@ -21,7 +21,7 @@ package org.wso2.carbon.identity.keyrotation.util;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
+import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.xml.sax.SAXException;
 
 import java.io.File;

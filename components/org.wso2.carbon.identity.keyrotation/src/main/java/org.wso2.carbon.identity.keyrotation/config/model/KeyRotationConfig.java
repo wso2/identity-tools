@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.identity.keyrotation.config;
+package org.wso2.carbon.identity.keyrotation.config.model;
 
 import org.apache.axiom.om.util.Base64;
 import org.apache.log4j.Logger;
@@ -47,67 +47,13 @@ public class KeyRotationConfig {
     private String enableDBMigrator;
     private String enableConfigMigrator;
     private String enableSyncMigrator;
+
     private static final Logger log = Logger.getLogger(KeyRotationConfig.class);
     private static final KeyRotationConfig instance = new KeyRotationConfig();
 
     public static KeyRotationConfig getInstance() {
 
         return instance;
-    }
-
-    /**
-     * Load the configurations placed in the properties.yaml file.
-     *
-     * @return KeyRotation config object.
-     * @throws KeyRotationException Exception thrown while loading the configs from properties.yaml file.
-     */
-    public KeyRotationConfig loadConfigs(String[] args) throws KeyRotationException {
-
-        String propertiesFilePath = Paths.get("components", "org.wso2.carbon.identity.keyrotation", "src",
-                "main", "resources", "properties.yaml").toString();
-        if (args.length > 0) {
-            propertiesFilePath = args[0];
-        }
-        File file = new File(propertiesFilePath);
-        if (!file.exists()) {
-            throw new KeyRotationException(
-                    "Error occurred, properties.yaml file not found in provided path, " + propertiesFilePath);
-        }
-        log.info("Loading Key Rotation Configs from path: " + propertiesFilePath);
-        KeyRotationConfig keyRotationConfig =
-                KeyRotationServiceUtils.loadKeyRotationConfig(propertiesFilePath);
-        checkKeyRotationConfigs(keyRotationConfig);
-        log.info("Successfully loaded the config file.");
-        return keyRotationConfig;
-    }
-
-    /**
-     * To check whether the loaded configurations are valid and not null.
-     *
-     * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown while checking for null values in the loaded properties.yaml file.
-     */
-    public void checkKeyRotationConfigs(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
-
-        Field[] props = KeyRotationConfig.getInstance().getClass().getDeclaredFields();
-        try {
-            for (int i = 0; i < props.length - 2; i++) {
-                if (props[i].get(keyRotationConfig) == null) {
-                    throw new KeyRotationException(
-                            "Error occurred, null value found in property, " + props[i].getName());
-                }
-                if ("oldISHome".equals(props[i].getName()) || "newISHome".equals(props[i].getName())) {
-                    File file = new File(props[i].get(keyRotationConfig).toString());
-                    if (!file.exists()) {
-                        throw new KeyRotationException(
-                                "Error occurred while finding " + props[i].getName() + " path.");
-                    }
-                }
-            }
-        } catch (IllegalArgumentException | IllegalAccessException e) {
-            throw new KeyRotationException("Error occurred while checking for null values in the loaded properties " +
-                    "file, ", e);
-        }
     }
 
     /**

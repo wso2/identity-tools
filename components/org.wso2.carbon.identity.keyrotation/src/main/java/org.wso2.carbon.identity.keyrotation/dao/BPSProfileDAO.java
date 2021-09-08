@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.keyrotation.dao;
 
 import org.apache.log4j.Logger;
-import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
+import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.model.BPSPassword;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 
@@ -94,7 +94,7 @@ public class BPSProfileDAO {
                 }
             } catch (SQLException e) {
                 connection.rollback();
-                log.error("Error while retrieving passwords from WF_BPS_PROFILE.", e);
+                throw new KeyRotationException("Error while retrieving passwords from WF_BPS_PROFILE.", e);
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to new identity DB.", e);

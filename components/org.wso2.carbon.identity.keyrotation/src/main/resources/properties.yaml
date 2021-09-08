@@ -2,7 +2,7 @@
 
 oldSecretKey: AFA27B44D43B02A9FEA41D13CEDC2E40
 newSecretKey: AFA27B44D43B02A9FEA41D13CEDC2E40
-newISHome: /home/geesa/Desktop/IS/copy/mysql/wso2is-5.11.0
+newISHome: /home/chamath/IS/5.12-release/symmetric-key-rotation
 oldIdnDBUrl: jdbc:mysql://localhost:3306/regdb?useSSL=false
 oldIdnUsername: root
 oldIdnPassword: cm9vdA==

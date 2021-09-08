@@ -23,6 +23,24 @@ package org.wso2.carbon.identity.keyrotation.util;
  */
 public class KeyRotationConstants {
 
+
+    public static final String OLD_SECRET_KEY = "oldSecretKey";
+    public static final String OLD_IDN_DB_URL = "oldIdnDBUrl";
+    public static final String OLD_IDN_USERNAME = "oldIdnUsername";
+    public static final String OLD_IDN_PASSWORD = "oldIdnPassword";
+
+    public static final String NEW_SECRET_KEY = "newSecretKey";
+    public static final String NEW_IS_HOME = "newISHome";
+    public static final String NEW_IDN_DB_URL = "newIdnDBUrl";
+    public static final String NEW_IDN_USERNAME = "newIdnUsername";
+    public static final String NEW_IDN_PASSWORD = "newIdnPassword";
+    public static final String NEW_REG_DB_URL = "newRegDBUrl";
+    public static final String NEW_REG_USERNAME = "newRegUsername";
+    public static final String NEW_REG_PASSWORD = "newRegPassword";
+    public static final String ENABLE_DB_MIGRATOR = "enableDBMigrator";
+    public static final String ENABLE_CONFIG_MIGRATOR = "enableConfigMigrator";
+    public static final String ENABLE_SYNC_MIGRATOR = "enableSyncMigrator";
+
     public static final String ALGORITHM = "AES";
     public static final String TRANSFORMATION = "AES/GCM/NoPadding";
     public static final String USERSTORES = "userstores";
