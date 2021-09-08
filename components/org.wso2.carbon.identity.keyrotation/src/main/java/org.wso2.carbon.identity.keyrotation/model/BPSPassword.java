@@ -42,7 +42,6 @@ public class BPSPassword {
         this.username = username;
         this.tenantId = tenantId;
         this.password = password;
-
     }
 
     /**

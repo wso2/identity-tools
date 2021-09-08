@@ -70,10 +70,9 @@ public class TempOAuthCode {
      */
     public TempOAuthCode(String codeId, String authorizationCode, String consumerKeyId, String callbackUrl,
                          String scope, String authzUser, String tenantId, String userDomain, String timeCreated,
-                         String validityPeriod,
-                         String state, String tokenId, String subjectIdentifier, String pkceCodeChallenge,
-                         String pkceCodeChallengeMethod, String authorizationCodeHash, String idpId,
-                         int availability, int syncId, int synced) {
+                         String validityPeriod, String state, String tokenId, String subjectIdentifier,
+                         String pkceCodeChallenge, String pkceCodeChallengeMethod, String authorizationCodeHash,
+                         String idpId, int availability, int syncId, int synced) {
 
         this.codeId = codeId;
         this.authorizationCode = authorizationCode;

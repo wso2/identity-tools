@@ -54,8 +54,6 @@ import javax.crypto.spec.SecretKeySpec;
 public class CryptoProvider {
 
     private static final Logger log = Logger.getLogger(CryptoProvider.class);
-    public static final int GCM_IV_LENGTH = 16;
-    public static final String JAVA_SECURITY_API_PROVIDER = "BC";
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
     /**
@@ -78,7 +76,8 @@ public class CryptoProvider {
         try {
             // Add the BC security provider for better security instead of the default provider.
             Security.addProvider(new BouncyCastleProvider());
-            cipher = Cipher.getInstance(KeyRotationConstants.TRANSFORMATION, JAVA_SECURITY_API_PROVIDER);
+            cipher = Cipher.getInstance(KeyRotationConstants.TRANSFORMATION,
+                    KeyRotationConstants.JAVA_SECURITY_API_PROVIDER);
             cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(keyRotationConfig.getNewSecretKey()),
                     new IvParameterSpec(iv));
             cipherText = cipher.doFinal(cleartext);
@@ -123,7 +122,8 @@ public class CryptoProvider {
                 log.debug("Bytes of length 0 found for cipher within the cipherMetaData.");
                 return StringUtils.EMPTY.getBytes();
             }
-            cipher = Cipher.getInstance(KeyRotationConstants.TRANSFORMATION, JAVA_SECURITY_API_PROVIDER);
+            cipher = Cipher.getInstance(KeyRotationConstants.TRANSFORMATION,
+                    KeyRotationConstants.JAVA_SECURITY_API_PROVIDER);
             cipher.init(Cipher.DECRYPT_MODE,
                     getSecretKey(keyRotationConfig.getOldSecretKey()),
                     new IvParameterSpec(cipherMetaData.getIvBase64Decoded()));
@@ -162,7 +162,7 @@ public class CryptoProvider {
      */
     private byte[] getInitializationVector() {
 
-        byte[] iv = new byte[GCM_IV_LENGTH];
+        byte[] iv = new byte[KeyRotationConstants.GCM_IV_LENGTH];
         UUID timeBasedUUID = UUIDGeneratorManager.getTimeBasedUUIDGenerator().generate();
         ByteBuffer byteBuffer = ByteBuffer.wrap(iv);
         byteBuffer.putLong(timeBasedUUID.getMostSignificantBits());
@@ -182,7 +182,7 @@ public class CryptoProvider {
         CipherMetaData cipherMetaData = new CipherMetaData();
         cipherMetaData.setCipherText(KeyRotationServiceUtils.getSelfContainedCiphertextWithIv(cipherText, iv));
         cipherMetaData.setTransformation(KeyRotationConstants.TRANSFORMATION);
-        cipherMetaData.setIv(Base64.encode(iv));
+        cipherMetaData.setInitializationVector(Base64.encode(iv));
         String cipherWithMetadataStr = gson.toJson(cipherMetaData);
         return cipherWithMetadataStr.getBytes(Charset.defaultCharset());
     }

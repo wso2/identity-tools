@@ -26,6 +26,7 @@ import org.wso2.carbon.identity.keyrotation.model.OAuthToken;
 import org.wso2.carbon.identity.keyrotation.model.TempOAuthCode;
 import org.wso2.carbon.identity.keyrotation.model.TempOAuthScope;
 import org.wso2.carbon.identity.keyrotation.model.TempOAuthToken;
+import org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 
 import java.sql.Connection;
@@ -44,42 +45,6 @@ public class OAuthDAO {
 
     private static final Logger log = Logger.getLogger(OAuthDAO.class);
     private static final OAuthDAO instance = new OAuthDAO();
-    private static final String CODE_ID = "CODE_ID";
-    private static final String AUTHORIZATION_CODE = "AUTHORIZATION_CODE";
-    private static final String CONSUMER_KEY_ID = "CONSUMER_KEY_ID";
-    private static final String CALLBACK_URL = "CALLBACK_URL";
-    private static final String SCOPE = "SCOPE";
-    private static final String AUTHZ_USER = "AUTHZ_USER";
-    private static final String USER_DOMAIN = "USER_DOMAIN";
-    private static final String TIME_CREATED = "TIME_CREATED";
-    private static final String VALIDITY_PERIOD = "VALIDITY_PERIOD";
-    private static final String STATE = "STATE";
-    private static final String SUBJECT_IDENTIFIER = "SUBJECT_IDENTIFIER";
-    private static final String PKCE_CODE_CHALLENGE = "PKCE_CODE_CHALLENGE";
-    private static final String PKCE_CODE_CHALLENGE_METHOD = "PKCE_CODE_CHALLENGE_METHOD";
-    private static final String AUTHORIZATION_CODE_HASH = "AUTHORIZATION_CODE_HASH";
-    private static final String IDP_ID = "IDP_ID";
-    private static final String TOKEN_ID = "TOKEN_ID";
-    private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
-    private static final String REFRESH_TOKEN = "REFRESH_TOKEN";
-    private static final String ID = "ID";
-    private static final String CONSUMER_SECRET = "CONSUMER_SECRET";
-    private static final String APP_NAME = "APP_NAME";
-    private static final String TOKEN_SCOPE = "TOKEN_SCOPE";
-    private static final String TENANT_ID = "TENANT_ID";
-    private static final String USER_TYPE = "USER_TYPE";
-    private static final String GRANT_TYPE = "GRANT_TYPE";
-    private static final String REFRESH_TOKEN_TIME_CREATED = "REFRESH_TOKEN_TIME_CREATED";
-    private static final String REFRESH_TOKEN_VALIDITY_PERIOD = "REFRESH_TOKEN_VALIDITY_PERIOD";
-    private static final String TOKEN_SCOPE_HASH = "TOKEN_SCOPE_HASH";
-    private static final String TOKEN_STATE = "TOKEN_STATE";
-    private static final String TOKEN_STATE_ID = "TOKEN_STATE_ID";
-    private static final String ACCESS_TOKEN_HASH = "ACCESS_TOKEN_HASH";
-    private static final String REFRESH_TOKEN_HASH = "REFRESH_TOKEN_HASH";
-    private static final String TOKEN_BINDING_REF = "TOKEN_BINDING_REF";
-    private static final String AVAILABILITY = "AVAILABILITY";
-    private static final String SYNC_ID = "SYNC_ID";
-    private static final String SYNCED = "SYNCED";
     public static int updateCodeCount = 0;
     public static int updateTokenCount = 0;
     public static int updateSecretCount = 0;
@@ -135,8 +100,9 @@ public class OAuthDAO {
                 ResultSet resultSet = preparedStatement.executeQuery();
                 connection.commit();
                 while (resultSet.next()) {
-                    oAuthCodeList.add(new OAuthCode(resultSet.getString(CODE_ID),
-                            resultSet.getString(AUTHORIZATION_CODE), resultSet.getString(CONSUMER_KEY_ID)));
+                    oAuthCodeList.add(new OAuthCode(resultSet.getString(KeyRotationConstants.CODE_ID),
+                            resultSet.getString(KeyRotationConstants.AUTHORIZATION_CODE),
+                            resultSet.getString(KeyRotationConstants.CONSUMER_KEY_ID)));
                 }
             } catch (SQLException e) {
                 connection.rollback();
@@ -250,9 +216,10 @@ public class OAuthDAO {
                 ResultSet resultSet = preparedStatement.executeQuery();
                 connection.commit();
                 while (resultSet.next()) {
-                    oAuthTokenList.add(new OAuthToken(resultSet.getString(TOKEN_ID),
-                            resultSet.getString(ACCESS_TOKEN), resultSet.getString(REFRESH_TOKEN),
-                            resultSet.getString(CONSUMER_KEY_ID)));
+                    oAuthTokenList.add(new OAuthToken(resultSet.getString(KeyRotationConstants.TOKEN_ID),
+                            resultSet.getString(KeyRotationConstants.ACCESS_TOKEN),
+                            resultSet.getString(KeyRotationConstants.REFRESH_TOKEN),
+                            resultSet.getString(KeyRotationConstants.CONSUMER_KEY_ID)));
                 }
             } catch (SQLException e) {
                 connection.rollback();
@@ -368,9 +335,9 @@ public class OAuthDAO {
                 ResultSet resultSet = preparedStatement.executeQuery();
                 connection.commit();
                 while (resultSet.next()) {
-                    oAuthSecretList.add(new OAuthSecret(resultSet.getString(ID),
-                            resultSet.getString(CONSUMER_SECRET),
-                            resultSet.getString(APP_NAME)));
+                    oAuthSecretList.add(new OAuthSecret(resultSet.getString(KeyRotationConstants.ID),
+                            resultSet.getString(KeyRotationConstants.CONSUMER_SECRET),
+                            resultSet.getString(KeyRotationConstants.APP_NAME)));
                 }
             } catch (SQLException e) {
                 connection.rollback();
@@ -472,16 +439,26 @@ public class OAuthDAO {
                 ResultSet resultSet = preparedStatement.executeQuery();
                 connection.commit();
                 while (resultSet.next()) {
-                    oAuthCodeList.add(new TempOAuthCode(resultSet.getString(CODE_ID),
-                            resultSet.getString(AUTHORIZATION_CODE), resultSet.getString(CONSUMER_KEY_ID),
-                            resultSet.getString(CALLBACK_URL), resultSet.getString(SCOPE),
-                            resultSet.getString(AUTHZ_USER), resultSet.getString(TENANT_ID),
-                            resultSet.getString(USER_DOMAIN), resultSet.getString(TIME_CREATED),
-                            resultSet.getString(VALIDITY_PERIOD), resultSet.getString(STATE),
-                            resultSet.getString(TOKEN_ID), resultSet.getString(SUBJECT_IDENTIFIER),
-                            resultSet.getString(PKCE_CODE_CHALLENGE), resultSet.getString(PKCE_CODE_CHALLENGE_METHOD),
-                            resultSet.getString(AUTHORIZATION_CODE_HASH), resultSet.getString(IDP_ID),
-                            resultSet.getInt(AVAILABILITY), resultSet.getInt(SYNC_ID), resultSet.getInt(SYNCED)));
+                    oAuthCodeList.add(new TempOAuthCode(resultSet.getString(KeyRotationConstants.CODE_ID),
+                            resultSet.getString(KeyRotationConstants.AUTHORIZATION_CODE),
+                            resultSet.getString(KeyRotationConstants.CONSUMER_KEY_ID),
+                            resultSet.getString(KeyRotationConstants.CALLBACK_URL),
+                            resultSet.getString(KeyRotationConstants.SCOPE),
+                            resultSet.getString(KeyRotationConstants.AUTHZ_USER),
+                            resultSet.getString(KeyRotationConstants.TENANT_ID),
+                            resultSet.getString(KeyRotationConstants.USER_DOMAIN),
+                            resultSet.getString(KeyRotationConstants.TIME_CREATED),
+                            resultSet.getString(KeyRotationConstants.VALIDITY_PERIOD),
+                            resultSet.getString(KeyRotationConstants.STATE),
+                            resultSet.getString(KeyRotationConstants.TOKEN_ID),
+                            resultSet.getString(KeyRotationConstants.SUBJECT_IDENTIFIER),
+                            resultSet.getString(KeyRotationConstants.PKCE_CODE_CHALLENGE),
+                            resultSet.getString(KeyRotationConstants.PKCE_CODE_CHALLENGE_METHOD),
+                            resultSet.getString(KeyRotationConstants.AUTHORIZATION_CODE_HASH),
+                            resultSet.getString(KeyRotationConstants.IDP_ID),
+                            resultSet.getInt(KeyRotationConstants.AVAILABILITY),
+                            resultSet.getInt(KeyRotationConstants.SYNC_ID),
+                            resultSet.getInt(KeyRotationConstants.SYNCED)));
                 }
             } catch (SQLException e) {
                 connection.rollback();
@@ -517,18 +494,26 @@ public class OAuthDAO {
                 connection.commit();
                 while (resultSet.next()) {
                     oAuthCodeList
-                            .add(new TempOAuthCode(resultSet.getString(CODE_ID),
-                                    resultSet.getString(AUTHORIZATION_CODE), resultSet.getString(CONSUMER_KEY_ID),
-                                    resultSet.getString(CALLBACK_URL), resultSet.getString(SCOPE),
-                                    resultSet.getString(AUTHZ_USER), resultSet.getString(TENANT_ID),
-                                    resultSet.getString(USER_DOMAIN), resultSet.getString(TIME_CREATED),
-                                    resultSet.getString(VALIDITY_PERIOD), resultSet.getString(STATE),
-                                    resultSet.getString(TOKEN_ID), resultSet.getString(SUBJECT_IDENTIFIER),
-                                    resultSet.getString(PKCE_CODE_CHALLENGE),
-                                    resultSet.getString(PKCE_CODE_CHALLENGE_METHOD),
-                                    resultSet.getString(AUTHORIZATION_CODE_HASH), resultSet.getString(IDP_ID),
-                                    resultSet.getInt(AVAILABILITY), resultSet.getInt(SYNC_ID),
-                                    resultSet.getInt(SYNCED)));
+                            .add(new TempOAuthCode(resultSet.getString(KeyRotationConstants.CODE_ID),
+                                    resultSet.getString(KeyRotationConstants.AUTHORIZATION_CODE),
+                                    resultSet.getString(KeyRotationConstants.CONSUMER_KEY_ID),
+                                    resultSet.getString(KeyRotationConstants.CALLBACK_URL),
+                                    resultSet.getString(KeyRotationConstants.SCOPE),
+                                    resultSet.getString(KeyRotationConstants.AUTHZ_USER),
+                                    resultSet.getString(KeyRotationConstants.TENANT_ID),
+                                    resultSet.getString(KeyRotationConstants.USER_DOMAIN),
+                                    resultSet.getString(KeyRotationConstants.TIME_CREATED),
+                                    resultSet.getString(KeyRotationConstants.VALIDITY_PERIOD),
+                                    resultSet.getString(KeyRotationConstants.STATE),
+                                    resultSet.getString(KeyRotationConstants.TOKEN_ID),
+                                    resultSet.getString(KeyRotationConstants.SUBJECT_IDENTIFIER),
+                                    resultSet.getString(KeyRotationConstants.PKCE_CODE_CHALLENGE),
+                                    resultSet.getString(KeyRotationConstants.PKCE_CODE_CHALLENGE_METHOD),
+                                    resultSet.getString(KeyRotationConstants.AUTHORIZATION_CODE_HASH),
+                                    resultSet.getString(KeyRotationConstants.IDP_ID),
+                                    resultSet.getInt(KeyRotationConstants.AVAILABILITY),
+                                    resultSet.getInt(KeyRotationConstants.SYNC_ID),
+                                    resultSet.getInt(KeyRotationConstants.SYNCED)));
                 }
             } catch (SQLException e) {
                 connection.rollback();
@@ -566,18 +551,26 @@ public class OAuthDAO {
                 connection.commit();
                 while (resultSet.next()) {
                     oAuthCodeList
-                            .add(new TempOAuthCode(resultSet.getString(CODE_ID),
-                                    resultSet.getString(AUTHORIZATION_CODE), resultSet.getString(CONSUMER_KEY_ID),
-                                    resultSet.getString(CALLBACK_URL), resultSet.getString(SCOPE),
-                                    resultSet.getString(AUTHZ_USER), resultSet.getString(TENANT_ID),
-                                    resultSet.getString(USER_DOMAIN), resultSet.getString(TIME_CREATED),
-                                    resultSet.getString(VALIDITY_PERIOD), resultSet.getString(STATE),
-                                    resultSet.getString(TOKEN_ID), resultSet.getString(SUBJECT_IDENTIFIER),
-                                    resultSet.getString(PKCE_CODE_CHALLENGE),
-                                    resultSet.getString(PKCE_CODE_CHALLENGE_METHOD),
-                                    resultSet.getString(AUTHORIZATION_CODE_HASH), resultSet.getString(IDP_ID),
-                                    resultSet.getInt(AVAILABILITY), resultSet.getInt(SYNC_ID),
-                                    resultSet.getInt(SYNCED)));
+                            .add(new TempOAuthCode(resultSet.getString(KeyRotationConstants.CODE_ID),
+                                    resultSet.getString(KeyRotationConstants.AUTHORIZATION_CODE),
+                                    resultSet.getString(KeyRotationConstants.CONSUMER_KEY_ID),
+                                    resultSet.getString(KeyRotationConstants.CALLBACK_URL),
+                                    resultSet.getString(KeyRotationConstants.SCOPE),
+                                    resultSet.getString(KeyRotationConstants.AUTHZ_USER),
+                                    resultSet.getString(KeyRotationConstants.TENANT_ID),
+                                    resultSet.getString(KeyRotationConstants.USER_DOMAIN),
+                                    resultSet.getString(KeyRotationConstants.TIME_CREATED),
+                                    resultSet.getString(KeyRotationConstants.VALIDITY_PERIOD),
+                                    resultSet.getString(KeyRotationConstants.STATE),
+                                    resultSet.getString(KeyRotationConstants.TOKEN_ID),
+                                    resultSet.getString(KeyRotationConstants.SUBJECT_IDENTIFIER),
+                                    resultSet.getString(KeyRotationConstants.PKCE_CODE_CHALLENGE),
+                                    resultSet.getString(KeyRotationConstants.PKCE_CODE_CHALLENGE_METHOD),
+                                    resultSet.getString(KeyRotationConstants.AUTHORIZATION_CODE_HASH),
+                                    resultSet.getString(KeyRotationConstants.IDP_ID),
+                                    resultSet.getInt(KeyRotationConstants.AVAILABILITY),
+                                    resultSet.getInt(KeyRotationConstants.SYNC_ID),
+                                    resultSet.getInt(KeyRotationConstants.SYNCED)));
                 }
             } catch (SQLException e) {
                 connection.rollback();
@@ -738,18 +731,30 @@ public class OAuthDAO {
                 ResultSet resultSet = preparedStatement.executeQuery();
                 connection.commit();
                 while (resultSet.next()) {
-                    oAuthTokenList.add(new TempOAuthToken(resultSet.getString(TOKEN_ID),
-                            resultSet.getString(ACCESS_TOKEN), resultSet.getString(REFRESH_TOKEN),
-                            resultSet.getString(CONSUMER_KEY_ID), resultSet.getString(AUTHZ_USER),
-                            resultSet.getString(TENANT_ID), resultSet.getString(USER_DOMAIN),
-                            resultSet.getString(USER_TYPE), resultSet.getString(GRANT_TYPE),
-                            resultSet.getString(TIME_CREATED), resultSet.getString(REFRESH_TOKEN_TIME_CREATED),
-                            resultSet.getString(VALIDITY_PERIOD), resultSet.getString(REFRESH_TOKEN_VALIDITY_PERIOD),
-                            resultSet.getString(TOKEN_SCOPE_HASH), resultSet.getString(TOKEN_STATE),
-                            resultSet.getString(TOKEN_STATE_ID), resultSet.getString(SUBJECT_IDENTIFIER),
-                            resultSet.getString(ACCESS_TOKEN_HASH), resultSet.getString(REFRESH_TOKEN_HASH),
-                            resultSet.getString(IDP_ID), resultSet.getString(TOKEN_BINDING_REF),
-                            resultSet.getInt(AVAILABILITY), resultSet.getInt(SYNC_ID), resultSet.getInt(SYNCED)));
+                    oAuthTokenList.add(new TempOAuthToken(resultSet.getString(KeyRotationConstants.TOKEN_ID),
+                            resultSet.getString(KeyRotationConstants.ACCESS_TOKEN),
+                            resultSet.getString(KeyRotationConstants.REFRESH_TOKEN),
+                            resultSet.getString(KeyRotationConstants.CONSUMER_KEY_ID),
+                            resultSet.getString(KeyRotationConstants.AUTHZ_USER),
+                            resultSet.getString(KeyRotationConstants.TENANT_ID),
+                            resultSet.getString(KeyRotationConstants.USER_DOMAIN),
+                            resultSet.getString(KeyRotationConstants.USER_TYPE),
+                            resultSet.getString(KeyRotationConstants.GRANT_TYPE),
+                            resultSet.getString(KeyRotationConstants.TIME_CREATED),
+                            resultSet.getString(KeyRotationConstants.REFRESH_TOKEN_TIME_CREATED),
+                            resultSet.getString(KeyRotationConstants.VALIDITY_PERIOD),
+                            resultSet.getString(KeyRotationConstants.REFRESH_TOKEN_VALIDITY_PERIOD),
+                            resultSet.getString(KeyRotationConstants.TOKEN_SCOPE_HASH),
+                            resultSet.getString(KeyRotationConstants.TOKEN_STATE),
+                            resultSet.getString(KeyRotationConstants.TOKEN_STATE_ID),
+                            resultSet.getString(KeyRotationConstants.SUBJECT_IDENTIFIER),
+                            resultSet.getString(KeyRotationConstants.ACCESS_TOKEN_HASH),
+                            resultSet.getString(KeyRotationConstants.REFRESH_TOKEN_HASH),
+                            resultSet.getString(KeyRotationConstants.IDP_ID),
+                            resultSet.getString(KeyRotationConstants.TOKEN_BINDING_REF),
+                            resultSet.getInt(KeyRotationConstants.AVAILABILITY),
+                            resultSet.getInt(KeyRotationConstants.SYNC_ID),
+                            resultSet.getInt(KeyRotationConstants.SYNCED)));
                 }
             } catch (SQLException e) {
                 connection.rollback();
@@ -784,20 +789,30 @@ public class OAuthDAO {
                 connection.commit();
                 while (resultSet.next()) {
                     oAuthTokenList
-                            .add(new TempOAuthToken(resultSet.getString(TOKEN_ID),
-                                    resultSet.getString(ACCESS_TOKEN), resultSet.getString(REFRESH_TOKEN),
-                                    resultSet.getString(CONSUMER_KEY_ID), resultSet.getString(AUTHZ_USER),
-                                    resultSet.getString(TENANT_ID), resultSet.getString(USER_DOMAIN),
-                                    resultSet.getString(USER_TYPE), resultSet.getString(GRANT_TYPE),
-                                    resultSet.getString(TIME_CREATED), resultSet.getString(REFRESH_TOKEN_TIME_CREATED),
-                                    resultSet.getString(VALIDITY_PERIOD),
-                                    resultSet.getString(REFRESH_TOKEN_VALIDITY_PERIOD),
-                                    resultSet.getString(TOKEN_SCOPE_HASH), resultSet.getString(TOKEN_STATE),
-                                    resultSet.getString(TOKEN_STATE_ID), resultSet.getString(SUBJECT_IDENTIFIER),
-                                    resultSet.getString(ACCESS_TOKEN_HASH), resultSet.getString(REFRESH_TOKEN_HASH),
-                                    resultSet.getString(IDP_ID), resultSet.getString(TOKEN_BINDING_REF),
-                                    resultSet.getInt(AVAILABILITY), resultSet.getInt(SYNC_ID),
-                                    resultSet.getInt(SYNCED)));
+                            .add(new TempOAuthToken(resultSet.getString(KeyRotationConstants.TOKEN_ID),
+                                    resultSet.getString(KeyRotationConstants.ACCESS_TOKEN),
+                                    resultSet.getString(KeyRotationConstants.REFRESH_TOKEN),
+                                    resultSet.getString(KeyRotationConstants.CONSUMER_KEY_ID),
+                                    resultSet.getString(KeyRotationConstants.AUTHZ_USER),
+                                    resultSet.getString(KeyRotationConstants.TENANT_ID),
+                                    resultSet.getString(KeyRotationConstants.USER_DOMAIN),
+                                    resultSet.getString(KeyRotationConstants.USER_TYPE),
+                                    resultSet.getString(KeyRotationConstants.GRANT_TYPE),
+                                    resultSet.getString(KeyRotationConstants.TIME_CREATED),
+                                    resultSet.getString(KeyRotationConstants.REFRESH_TOKEN_TIME_CREATED),
+                                    resultSet.getString(KeyRotationConstants.VALIDITY_PERIOD),
+                                    resultSet.getString(KeyRotationConstants.REFRESH_TOKEN_VALIDITY_PERIOD),
+                                    resultSet.getString(KeyRotationConstants.TOKEN_SCOPE_HASH),
+                                    resultSet.getString(KeyRotationConstants.TOKEN_STATE),
+                                    resultSet.getString(KeyRotationConstants.TOKEN_STATE_ID),
+                                    resultSet.getString(KeyRotationConstants.SUBJECT_IDENTIFIER),
+                                    resultSet.getString(KeyRotationConstants.ACCESS_TOKEN_HASH),
+                                    resultSet.getString(KeyRotationConstants.REFRESH_TOKEN_HASH),
+                                    resultSet.getString(KeyRotationConstants.IDP_ID),
+                                    resultSet.getString(KeyRotationConstants.TOKEN_BINDING_REF),
+                                    resultSet.getInt(KeyRotationConstants.AVAILABILITY),
+                                    resultSet.getInt(KeyRotationConstants.SYNC_ID),
+                                    resultSet.getInt(KeyRotationConstants.SYNCED)));
                 }
             } catch (SQLException e) {
                 connection.rollback();
@@ -833,20 +848,30 @@ public class OAuthDAO {
                 connection.commit();
                 while (resultSet.next()) {
                     oAuthTokenList
-                            .add(new TempOAuthToken(resultSet.getString(TOKEN_ID),
-                                    resultSet.getString(ACCESS_TOKEN), resultSet.getString(REFRESH_TOKEN),
-                                    resultSet.getString(CONSUMER_KEY_ID), resultSet.getString(AUTHZ_USER),
-                                    resultSet.getString(TENANT_ID), resultSet.getString(USER_DOMAIN),
-                                    resultSet.getString(USER_TYPE), resultSet.getString(GRANT_TYPE),
-                                    resultSet.getString(TIME_CREATED), resultSet.getString(REFRESH_TOKEN_TIME_CREATED),
-                                    resultSet.getString(VALIDITY_PERIOD),
-                                    resultSet.getString(REFRESH_TOKEN_VALIDITY_PERIOD),
-                                    resultSet.getString(TOKEN_SCOPE_HASH), resultSet.getString(TOKEN_STATE),
-                                    resultSet.getString(TOKEN_STATE_ID), resultSet.getString(SUBJECT_IDENTIFIER),
-                                    resultSet.getString(ACCESS_TOKEN_HASH), resultSet.getString(REFRESH_TOKEN_HASH),
-                                    resultSet.getString(IDP_ID), resultSet.getString(TOKEN_BINDING_REF),
-                                    resultSet.getInt(AVAILABILITY), resultSet.getInt(SYNC_ID),
-                                    resultSet.getInt(SYNCED)));
+                            .add(new TempOAuthToken(resultSet.getString(KeyRotationConstants.TOKEN_ID),
+                                    resultSet.getString(KeyRotationConstants.ACCESS_TOKEN),
+                                    resultSet.getString(KeyRotationConstants.REFRESH_TOKEN),
+                                    resultSet.getString(KeyRotationConstants.CONSUMER_KEY_ID),
+                                    resultSet.getString(KeyRotationConstants.AUTHZ_USER),
+                                    resultSet.getString(KeyRotationConstants.TENANT_ID),
+                                    resultSet.getString(KeyRotationConstants.USER_DOMAIN),
+                                    resultSet.getString(KeyRotationConstants.USER_TYPE),
+                                    resultSet.getString(KeyRotationConstants.GRANT_TYPE),
+                                    resultSet.getString(KeyRotationConstants.TIME_CREATED),
+                                    resultSet.getString(KeyRotationConstants.REFRESH_TOKEN_TIME_CREATED),
+                                    resultSet.getString(KeyRotationConstants.VALIDITY_PERIOD),
+                                    resultSet.getString(KeyRotationConstants.REFRESH_TOKEN_VALIDITY_PERIOD),
+                                    resultSet.getString(KeyRotationConstants.TOKEN_SCOPE_HASH),
+                                    resultSet.getString(KeyRotationConstants.TOKEN_STATE),
+                                    resultSet.getString(KeyRotationConstants.TOKEN_STATE_ID),
+                                    resultSet.getString(KeyRotationConstants.SUBJECT_IDENTIFIER),
+                                    resultSet.getString(KeyRotationConstants.ACCESS_TOKEN_HASH),
+                                    resultSet.getString(KeyRotationConstants.REFRESH_TOKEN_HASH),
+                                    resultSet.getString(KeyRotationConstants.IDP_ID),
+                                    resultSet.getString(KeyRotationConstants.TOKEN_BINDING_REF),
+                                    resultSet.getInt(KeyRotationConstants.AVAILABILITY),
+                                    resultSet.getInt(KeyRotationConstants.SYNC_ID),
+                                    resultSet.getInt(KeyRotationConstants.SYNCED)));
                 }
             } catch (SQLException e) {
                 connection.commit();
@@ -1006,9 +1031,12 @@ public class OAuthDAO {
                 ResultSet resultSet = preparedStatement.executeQuery();
                 connection.commit();
                 while (resultSet.next()) {
-                    tempOAuthScopeList.add(new TempOAuthScope(resultSet.getString(TOKEN_ID),
-                            resultSet.getString(TOKEN_SCOPE), resultSet.getString(TENANT_ID),
-                            resultSet.getInt(AVAILABILITY), resultSet.getInt(SYNC_ID), resultSet.getInt(SYNCED)));
+                    tempOAuthScopeList.add(new TempOAuthScope(resultSet.getString(KeyRotationConstants.TOKEN_ID),
+                            resultSet.getString(KeyRotationConstants.TOKEN_SCOPE),
+                            resultSet.getString(KeyRotationConstants.TENANT_ID),
+                            resultSet.getInt(KeyRotationConstants.AVAILABILITY),
+                            resultSet.getInt(KeyRotationConstants.SYNC_ID),
+                            resultSet.getInt(KeyRotationConstants.SYNCED)));
                 }
             } catch (SQLException e) {
                 connection.rollback();
@@ -1045,9 +1073,12 @@ public class OAuthDAO {
                 connection.commit();
                 while (resultSet.next()) {
                     tempOAuthScopeList
-                            .add(new TempOAuthScope(resultSet.getString(TOKEN_ID), resultSet.getString(TOKEN_SCOPE),
-                                    resultSet.getString(TENANT_ID), resultSet.getInt(AVAILABILITY),
-                                    resultSet.getInt(SYNC_ID), resultSet.getInt(SYNCED)));
+                            .add(new TempOAuthScope(resultSet.getString(KeyRotationConstants.TOKEN_ID),
+                                    resultSet.getString(KeyRotationConstants.TOKEN_SCOPE),
+                                    resultSet.getString(KeyRotationConstants.TENANT_ID),
+                                    resultSet.getInt(KeyRotationConstants.AVAILABILITY),
+                                    resultSet.getInt(KeyRotationConstants.SYNC_ID),
+                                    resultSet.getInt(KeyRotationConstants.SYNCED)));
                 }
             } catch (SQLException e) {
                 connection.rollback();
@@ -1086,9 +1117,12 @@ public class OAuthDAO {
                 connection.commit();
                 while (resultSet.next()) {
                     tempOAuthScopeList
-                            .add(new TempOAuthScope(resultSet.getString(TOKEN_ID), resultSet.getString(TOKEN_SCOPE),
-                                    resultSet.getString(TENANT_ID), resultSet.getInt(AVAILABILITY),
-                                    resultSet.getInt(SYNC_ID), resultSet.getInt(SYNCED)));
+                            .add(new TempOAuthScope(resultSet.getString(KeyRotationConstants.TOKEN_ID),
+                                    resultSet.getString(KeyRotationConstants.TOKEN_SCOPE),
+                                    resultSet.getString(KeyRotationConstants.TENANT_ID),
+                                    resultSet.getInt(KeyRotationConstants.AVAILABILITY),
+                                    resultSet.getInt(KeyRotationConstants.SYNC_ID),
+                                    resultSet.getInt(KeyRotationConstants.SYNCED)));
                 }
             } catch (SQLException e) {
                 connection.rollback();

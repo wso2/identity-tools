@@ -1,29 +1,19 @@
 package org.wso2.carbon.identity.keyrotation.config;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Level;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Properties;
 
+/**
+ * A file-based provider implementation for the {@link KeyRotationConfig} model.
+ * It is an implementation of the base class, {@link KeyRotationConfigProvider}.
+ */
 public class FileBasedKeyRotationConfigProvider implements KeyRotationConfigProvider {
 
-    private static final Logger logger = LogManager.getLogger(FileBasedKeyRotationConfigProvider.class);
-
-//    private final KeyRotationConfig keyRotationConfig = new KeyRotationConfig();
     private KeyRotationConfig keyRotationConfig = new KeyRotationConfig();
 
     public FileBasedKeyRotationConfigProvider(InputStream fileInputStream) throws KeyRotationException {
@@ -77,12 +67,14 @@ public class FileBasedKeyRotationConfigProvider implements KeyRotationConfigProv
         keyRotationConfig.setNewRegDBUrl(newRegDBUrl);
         keyRotationConfig.setNewRegUsername(newRegUsername);
         keyRotationConfig.setNewRegPassword(newRegPassword);
-        keyRotationConfig.setEnableDBMigrator(enableDBMigrator);
-        keyRotationConfig.setEnableConfigMigrator(enableConfigMigrator);
-        keyRotationConfig.setEnableSyncMigrator(enableSyncMigrator);
-
+        keyRotationConfig.setEnableDBMigrator(Boolean.parseBoolean(enableDBMigrator));
+        keyRotationConfig.setEnableConfigMigrator(Boolean.parseBoolean(enableConfigMigrator));
+        keyRotationConfig.setEnableSyncMigrator(Boolean.parseBoolean(enableSyncMigrator));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public KeyRotationConfig getKeyRotationConfig() {
 

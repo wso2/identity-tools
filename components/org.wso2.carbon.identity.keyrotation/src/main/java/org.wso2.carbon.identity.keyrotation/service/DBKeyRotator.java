@@ -33,6 +33,7 @@ import org.wso2.carbon.identity.keyrotation.model.OAuthSecret;
 import org.wso2.carbon.identity.keyrotation.model.OAuthToken;
 import org.wso2.carbon.identity.keyrotation.model.RegistryProperty;
 import org.wso2.carbon.identity.keyrotation.model.TOTPSecret;
+import org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 import org.wso2.carbon.identity.workflow.mgt.bean.RequestParameter;
 import org.wso2.carbon.identity.workflow.mgt.dto.WorkflowRequest;
@@ -50,9 +51,6 @@ public class DBKeyRotator {
 
     private static final Logger log = Logger.getLogger(DBKeyRotator.class);
     private static final DBKeyRotator instance = new DBKeyRotator();
-    private static final String password = "password";
-    private static final String privatekeyPass = "privatekeyPass";
-    private static final String subscriberPassword = "subscriberPassword";
 
     public static DBKeyRotator getInstance() {
 
@@ -313,7 +311,8 @@ public class DBKeyRotator {
         RegistryDAO.failedUpdateCount = 0;
         int startIndex = 0;
         List<RegistryProperty> chunkList =
-                RegistryDAO.getInstance().getRegPropertyDataChunks(startIndex, keyRotationConfig, password);
+                RegistryDAO.getInstance().getRegPropertyDataChunks(startIndex, keyRotationConfig,
+                        KeyRotationConstants.REGISTRY_PASSWORD);
         while (CollectionUtils.isNotEmpty(chunkList)) {
             List<RegistryProperty> midChunkList = new ArrayList<>();
             for (RegistryProperty regProperty : chunkList) {
@@ -325,9 +324,11 @@ public class DBKeyRotator {
                     midChunkList.add(regProperty);
                 }
             }
-            RegistryDAO.getInstance().updateRegPropertyDataChunks(midChunkList, keyRotationConfig, password);
+            RegistryDAO.getInstance().updateRegPropertyDataChunks(midChunkList, keyRotationConfig,
+                    KeyRotationConstants.REGISTRY_PASSWORD);
             startIndex = startIndex + DBConstants.CHUNK_SIZE;
-            chunkList = RegistryDAO.getInstance().getRegPropertyDataChunks(startIndex, keyRotationConfig, password);
+            chunkList = RegistryDAO.getInstance()
+                    .getRegPropertyDataChunks(startIndex, keyRotationConfig, KeyRotationConstants.REGISTRY_PASSWORD);
         }
         log.debug("Finished re-encryption of the keystore password property data...");
     }
@@ -345,7 +346,8 @@ public class DBKeyRotator {
         RegistryDAO.failedUpdateCount = 0;
         int startIndex = 0;
         List<RegistryProperty> chunkList =
-                RegistryDAO.getInstance().getRegPropertyDataChunks(startIndex, keyRotationConfig, privatekeyPass);
+                RegistryDAO.getInstance().getRegPropertyDataChunks(startIndex, keyRotationConfig,
+                        KeyRotationConstants.PRIVATE_KEY_PASS);
         while (CollectionUtils.isNotEmpty(chunkList)) {
             List<RegistryProperty> midChunkList = new ArrayList<>();
             for (RegistryProperty regProperty : chunkList) {
@@ -357,10 +359,12 @@ public class DBKeyRotator {
                     midChunkList.add(regProperty);
                 }
             }
-            RegistryDAO.getInstance().updateRegPropertyDataChunks(midChunkList, keyRotationConfig, privatekeyPass);
+            RegistryDAO.getInstance().updateRegPropertyDataChunks(midChunkList, keyRotationConfig,
+                    KeyRotationConstants.PRIVATE_KEY_PASS);
             startIndex = startIndex + DBConstants.CHUNK_SIZE;
             chunkList =
-                    RegistryDAO.getInstance().getRegPropertyDataChunks(startIndex, keyRotationConfig, privatekeyPass);
+                    RegistryDAO.getInstance().getRegPropertyDataChunks(startIndex, keyRotationConfig,
+                            KeyRotationConstants.PRIVATE_KEY_PASS);
         }
         log.debug("Finished re-encryption of the keystore privatekeyPass property data...");
     }
@@ -378,7 +382,8 @@ public class DBKeyRotator {
         RegistryDAO.failedUpdateCount = 0;
         int startIndex = 0;
         List<RegistryProperty> chunkList =
-                RegistryDAO.getInstance().getRegPropertyDataChunks(startIndex, keyRotationConfig, subscriberPassword);
+                RegistryDAO.getInstance().getRegPropertyDataChunks(startIndex, keyRotationConfig,
+                        KeyRotationConstants.SUBSCRIBER_PASSWORD);
         while (CollectionUtils.isNotEmpty(chunkList)) {
             List<RegistryProperty> midChunkList = new ArrayList<>();
             for (RegistryProperty regProperty : chunkList) {
@@ -390,11 +395,13 @@ public class DBKeyRotator {
                     midChunkList.add(regProperty);
                 }
             }
-            RegistryDAO.getInstance().updateRegPropertyDataChunks(midChunkList, keyRotationConfig, subscriberPassword);
+            RegistryDAO.getInstance().updateRegPropertyDataChunks(midChunkList, keyRotationConfig,
+                    KeyRotationConstants.SUBSCRIBER_PASSWORD);
             startIndex = startIndex + DBConstants.CHUNK_SIZE;
             chunkList =
                     RegistryDAO.getInstance()
-                            .getRegPropertyDataChunks(startIndex, keyRotationConfig, subscriberPassword);
+                            .getRegPropertyDataChunks(startIndex, keyRotationConfig,
+                                    KeyRotationConstants.SUBSCRIBER_PASSWORD);
         }
         log.debug("Finished re-encryption of the subscriber password property data...");
     }

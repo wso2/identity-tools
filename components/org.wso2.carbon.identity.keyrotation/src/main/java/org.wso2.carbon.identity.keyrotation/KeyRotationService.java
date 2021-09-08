@@ -24,11 +24,13 @@ import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.service.ConfigFileKeyRotator;
 import org.wso2.carbon.identity.keyrotation.service.DBKeyRotator;
 import org.wso2.carbon.identity.keyrotation.service.SyncedDataKeyRotator;
+import org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
@@ -38,33 +40,35 @@ public class KeyRotationService {
 
     public static void main(String[] args) throws KeyRotationException {
 
-        String propertiesFilePath;
-        if (new File("properties.yaml").isFile()) {
-            propertiesFilePath = "properties.yaml";
-        } else {
-            propertiesFilePath = Paths.get("components", "org.wso2.carbon.identity.keyrotation", "src",
-                    "main", "resources", "properties.yaml").toString();
-        }
-        KeyRotationConfigProvider configProvider = null;
+        KeyRotationConfigProvider configProvider;
+
+        Path propertiesFilePath = resolvePropertiesFilePath();
         try {
-            configProvider =
-                    new FileBasedKeyRotationConfigProvider(Files.newInputStream(Paths.get(propertiesFilePath)));
+            configProvider = new FileBasedKeyRotationConfigProvider(Files.newInputStream(propertiesFilePath));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new KeyRotationException("Error while initializing configurations.", e);
         }
         initService(configProvider.getKeyRotationConfig());
     }
 
     private static void initService(KeyRotationConfig config) throws KeyRotationException {
 
-        if (Boolean.parseBoolean(config.getEnableDBMigrator())) {
+        if (config.getEnableDBMigrator()) {
             DBKeyRotator.getInstance().dbReEncryptor(config);
         }
-        if (Boolean.parseBoolean(config.getEnableConfigMigrator())) {
+        if (config.getEnableConfigMigrator()) {
             ConfigFileKeyRotator.getInstance().configFileReEncryptor(config);
         }
-        if (Boolean.parseBoolean(config.getEnableSyncMigrator())) {
+        if (config.getEnableSyncMigrator()) {
             SyncedDataKeyRotator.getInstance().syncedDataReEncryptor(config);
         }
+    }
+
+    private static Path resolvePropertiesFilePath() {
+
+        if (new File(KeyRotationConstants.PROPERTY_FILE_NAME).isFile()) {
+            return Paths.get(KeyRotationConstants.PROPERTY_FILE_NAME);
+        }
+        return Paths.get(KeyRotationConstants.DEFAULT_PROPERTY_FILE_PATH);
     }
 }

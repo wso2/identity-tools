@@ -19,10 +19,10 @@
 package org.wso2.carbon.identity.keyrotation.dao;
 
 import org.apache.log4j.Logger;
-
 import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.model.TOTPSecret;
 import org.wso2.carbon.identity.keyrotation.model.TempTOTPSecret;
+import org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 
 import java.sql.Connection;
@@ -40,13 +40,6 @@ public class IdentityDAO {
 
     private static final Logger log = Logger.getLogger(IdentityDAO.class);
     private static final IdentityDAO instance = new IdentityDAO();
-    private static final String TENANT_ID = "TENANT_ID";
-    private static final String USER_NAME = "USER_NAME";
-    private static final String DATA_KEY = "DATA_KEY";
-    private static final String DATA_VALUE = "DATA_VALUE";
-    private static final String AVAILABILITY = "AVAILABILITY";
-    private static final String SYNC_ID = "SYNC_ID";
-    private static final String SYNCED = "SYNCED";
     public static int updateCount = 0;
     public static int failedUpdateCount = 0;
     public static int insertCount = 0;
@@ -97,10 +90,10 @@ public class IdentityDAO {
                 connection.commit();
                 while (resultSet.next()) {
                     totpSecretList
-                            .add(new TOTPSecret(resultSet.getString(TENANT_ID),
-                                    resultSet.getString(USER_NAME),
-                                    resultSet.getString(DATA_KEY),
-                                    resultSet.getString(DATA_VALUE)));
+                            .add(new TOTPSecret(resultSet.getString(KeyRotationConstants.TENANT_ID),
+                                    resultSet.getString(KeyRotationConstants.USER_NAME),
+                                    resultSet.getString(KeyRotationConstants.DATA_KEY),
+                                    resultSet.getString(KeyRotationConstants.DATA_VALUE)));
                 }
             } catch (SQLException e) {
                 connection.rollback();
@@ -205,10 +198,13 @@ public class IdentityDAO {
                 connection.commit();
                 while (resultSet.next()) {
                     totpSecretList
-                            .add(new TempTOTPSecret(resultSet.getString(TENANT_ID),
-                                    resultSet.getString(USER_NAME), resultSet.getString(DATA_KEY),
-                                    resultSet.getString(DATA_VALUE), resultSet.getInt(AVAILABILITY),
-                                    resultSet.getInt(SYNC_ID), resultSet.getInt(SYNCED)));
+                            .add(new TempTOTPSecret(resultSet.getString(KeyRotationConstants.TENANT_ID),
+                                    resultSet.getString(KeyRotationConstants.USER_NAME),
+                                    resultSet.getString(KeyRotationConstants.DATA_KEY),
+                                    resultSet.getString(KeyRotationConstants.DATA_VALUE),
+                                    resultSet.getInt(KeyRotationConstants.AVAILABILITY),
+                                    resultSet.getInt(KeyRotationConstants.SYNC_ID),
+                                    resultSet.getInt(KeyRotationConstants.SYNCED)));
                 }
             } catch (SQLException e) {
                 connection.rollback();
@@ -245,10 +241,13 @@ public class IdentityDAO {
                 connection.commit();
                 while (resultSet.next()) {
                     totpSecretList
-                            .add(new TempTOTPSecret(resultSet.getString(TENANT_ID),
-                                    resultSet.getString(USER_NAME), resultSet.getString(DATA_KEY),
-                                    resultSet.getString(DATA_VALUE), resultSet.getInt(AVAILABILITY),
-                                    resultSet.getInt(SYNC_ID), resultSet.getInt(SYNCED)));
+                            .add(new TempTOTPSecret(resultSet.getString(KeyRotationConstants.TENANT_ID),
+                                    resultSet.getString(KeyRotationConstants.USER_NAME),
+                                    resultSet.getString(KeyRotationConstants.DATA_KEY),
+                                    resultSet.getString(KeyRotationConstants.DATA_VALUE),
+                                    resultSet.getInt(KeyRotationConstants.AVAILABILITY),
+                                    resultSet.getInt(KeyRotationConstants.SYNC_ID),
+                                    resultSet.getInt(KeyRotationConstants.SYNCED)));
                 }
             } catch (SQLException e) {
                 connection.rollback();
@@ -286,10 +285,13 @@ public class IdentityDAO {
                 connection.commit();
                 while (resultSet.next()) {
                     totpSecretList
-                            .add(new TempTOTPSecret(resultSet.getString(TENANT_ID),
-                                    resultSet.getString(USER_NAME), resultSet.getString(DATA_KEY),
-                                    resultSet.getString(DATA_VALUE), resultSet.getInt(AVAILABILITY),
-                                    resultSet.getInt(SYNC_ID), resultSet.getInt(SYNCED)));
+                            .add(new TempTOTPSecret(resultSet.getString(KeyRotationConstants.TENANT_ID),
+                                    resultSet.getString(KeyRotationConstants.USER_NAME),
+                                    resultSet.getString(KeyRotationConstants.DATA_KEY),
+                                    resultSet.getString(KeyRotationConstants.DATA_VALUE),
+                                    resultSet.getInt(KeyRotationConstants.AVAILABILITY),
+                                    resultSet.getInt(KeyRotationConstants.SYNC_ID),
+                                    resultSet.getInt(KeyRotationConstants.SYNCED)));
                 }
             } catch (SQLException e) {
                 connection.rollback();

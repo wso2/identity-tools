@@ -21,6 +21,7 @@ package org.wso2.carbon.identity.keyrotation.dao;
 import org.apache.log4j.Logger;
 import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.model.RegistryProperty;
+import org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 
 import java.sql.Connection;
@@ -38,10 +39,6 @@ public class RegistryDAO {
 
     private static final Logger log = Logger.getLogger(RegistryDAO.class);
     private static final RegistryDAO instance = new RegistryDAO();
-    private static final String REG_ID = "REG_ID";
-    private static final String REG_NAME = "REG_NAME";
-    private static final String REG_VALUE = "REG_VALUE";
-    private static final String REG_TENANT_ID = "REG_TENANT_ID";
     public static int updateCount = 0;
     public static int failedUpdateCount = 0;
 
@@ -90,10 +87,10 @@ public class RegistryDAO {
                 connection.commit();
                 while (resultSet.next()) {
                     regPropertyList
-                            .add(new RegistryProperty(resultSet.getString(REG_ID),
-                                    resultSet.getString(REG_NAME),
-                                    resultSet.getString(REG_VALUE),
-                                    resultSet.getString(REG_TENANT_ID)));
+                            .add(new RegistryProperty(resultSet.getString(KeyRotationConstants.REG_ID),
+                                    resultSet.getString(KeyRotationConstants.REG_NAME),
+                                    resultSet.getString(KeyRotationConstants.REG_VALUE),
+                                    resultSet.getString(KeyRotationConstants.REG_TENANT_ID)));
                 }
             } catch (SQLException e) {
                 connection.rollback();

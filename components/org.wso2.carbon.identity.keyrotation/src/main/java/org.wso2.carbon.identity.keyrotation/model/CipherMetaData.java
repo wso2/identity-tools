@@ -19,7 +19,6 @@
 package org.wso2.carbon.identity.keyrotation.model;
 
 import org.apache.axiom.om.util.Base64;
-
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants;
 
 /**
@@ -27,9 +26,9 @@ import org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants;
  */
 public class CipherMetaData {
 
-    private String c;
-    private String t = KeyRotationConstants.TRANSFORMATION;
-    private String iv;
+    private String cypherText;
+    private String transformation = KeyRotationConstants.TRANSFORMATION;
+    private String initializationVector;
 
     /**
      * Get for the transformation.
@@ -38,7 +37,7 @@ public class CipherMetaData {
      */
     public String getTransformation() {
 
-        return t;
+        return transformation;
     }
 
     /**
@@ -48,7 +47,7 @@ public class CipherMetaData {
      */
     public void setTransformation(String transformation) {
 
-        this.t = transformation;
+        this.transformation = transformation;
     }
 
     /**
@@ -58,7 +57,7 @@ public class CipherMetaData {
      */
     public String getCipherText() {
 
-        return c;
+        return cypherText;
     }
 
     /**
@@ -68,7 +67,7 @@ public class CipherMetaData {
      */
     public void setCipherText(String cipher) {
 
-        this.c = cipher;
+        this.cypherText = cipher;
     }
 
     /**
@@ -78,36 +77,36 @@ public class CipherMetaData {
      */
     public byte[] getCipherBase64Decoded() {
 
-        return Base64.decode(c);
+        return Base64.decode(cypherText);
     }
 
     /**
-     * Get for the IV.
+     * Get for the initialization vector.
      *
      * @return Initialization vector.
      */
-    public String getIv() {
+    public String getInitializationVector() {
 
-        return iv;
+        return initializationVector;
     }
 
     /**
-     * Set for the IV.
+     * Set for the initialization vector.
      *
-     * @param iv Initialization vector.
+     * @param initializationVector Initialization vector.
      */
-    public void setIv(String iv) {
+    public void setInitializationVector(String initializationVector) {
 
-        this.iv = iv;
+        this.initializationVector = initializationVector;
     }
 
     /**
-     * Get for the base64 decoded IV.
+     * Get for the base64 decoded initialization vector.
      *
      * @return Base64 decoded initialization vector.
      */
     public byte[] getIvBase64Decoded() {
 
-        return Base64.decode(iv);
+        return Base64.decode(initializationVector);
     }
 }

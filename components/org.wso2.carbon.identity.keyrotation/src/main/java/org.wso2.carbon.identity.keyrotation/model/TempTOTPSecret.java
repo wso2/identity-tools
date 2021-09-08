@@ -39,8 +39,8 @@ public class TempTOTPSecret {
      * @param dataKey      Data key field in IDN_IDENTITY_USER_DATA_TEMP table.
      * @param dataValue    Data value field in IDN_IDENTITY_USER_DATA_TEMP table.
      * @param availability Availability field in IDN_IDENTITY_USER_DATA_TEMP table.
-     * @param syncId Sync id field in IDN_IDENTITY_USER_DATA_TEMP table.
-     * @param synced Synced field in IDN_IDENTITY_USER_DATA_TEMP table.
+     * @param syncId       Sync id field in IDN_IDENTITY_USER_DATA_TEMP table.
+     * @param synced       Synced field in IDN_IDENTITY_USER_DATA_TEMP table.
      */
     public TempTOTPSecret(String tenantId, String username, String dataKey, String dataValue, int availability,
                           int syncId, int synced) {
