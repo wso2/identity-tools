@@ -81,14 +81,14 @@ public class OAuthDAO {
         List<OAuthCode> oAuthCodeList = new ArrayList<>();
         String query = DBConstants.GET_OAUTH_AUTHORIZATION_CODE;
         int firstIndex = startIndex;
-        int secIndex = DBConstants.CHUNK_SIZE;
+        int secIndex = keyRotationConfig.getChunkSize();
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
                         keyRotationConfig.getNewIdnPassword())) {
             connection.setAutoCommit(false);
             if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_OAUTH_AUTHORIZATION_CODE_POSTGRE;
-                firstIndex = DBConstants.CHUNK_SIZE;
+                firstIndex = keyRotationConfig.getChunkSize();
                 secIndex = startIndex;
             } else if (connection.getMetaData().getDriverName().contains(DBConstants.MSSQL) ||
                     connection.getMetaData().getDriverName().contains(DBConstants.ORACLE)) {
@@ -197,14 +197,14 @@ public class OAuthDAO {
         List<OAuthToken> oAuthTokenList = new ArrayList<>();
         String query = DBConstants.GET_OAUTH_ACCESS_TOKEN;
         int firstIndex = startIndex;
-        int secIndex = DBConstants.CHUNK_SIZE;
+        int secIndex = keyRotationConfig.getChunkSize();
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
                         keyRotationConfig.getNewIdnPassword())) {
             connection.setAutoCommit(false);
             if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_OAUTH_ACCESS_TOKEN_POSTGRE;
-                firstIndex = DBConstants.CHUNK_SIZE;
+                firstIndex = keyRotationConfig.getChunkSize();
                 secIndex = startIndex;
             } else if (connection.getMetaData().getDriverName().contains(DBConstants.MSSQL) ||
                     connection.getMetaData().getDriverName().contains(DBConstants.ORACLE)) {
@@ -316,14 +316,14 @@ public class OAuthDAO {
         List<OAuthSecret> oAuthSecretList = new ArrayList<>();
         String query = DBConstants.GET_OAUTH_SECRET;
         int firstIndex = startIndex;
-        int secIndex = DBConstants.CHUNK_SIZE;
+        int secIndex = keyRotationConfig.getChunkSize();
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
                         keyRotationConfig.getNewIdnPassword())) {
             connection.setAutoCommit(false);
             if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_OAUTH_SECRET_POSTGRE;
-                firstIndex = DBConstants.CHUNK_SIZE;
+                firstIndex = keyRotationConfig.getChunkSize();
                 secIndex = startIndex;
             } else if (connection.getMetaData().getDriverName().contains(DBConstants.MSSQL) ||
                     connection.getMetaData().getDriverName().contains(DBConstants.ORACLE)) {

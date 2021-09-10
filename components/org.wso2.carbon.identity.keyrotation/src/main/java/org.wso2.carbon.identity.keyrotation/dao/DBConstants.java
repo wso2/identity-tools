@@ -23,7 +23,7 @@ package org.wso2.carbon.identity.keyrotation.dao;
  */
 public class DBConstants {
 
-    public static final int CHUNK_SIZE = 2;
+    public static final int DEFAULT_CHUNK_SIZE = 2;
     public static final String CREDENTIAL = "Credential";
     public static final String REQUEST = "REQUEST";
     public static final String POSTGRESQL = "PostgreSQL";

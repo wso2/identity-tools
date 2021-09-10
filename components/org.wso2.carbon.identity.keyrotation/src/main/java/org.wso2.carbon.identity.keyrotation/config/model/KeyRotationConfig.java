@@ -38,6 +38,7 @@ public class KeyRotationConfig {
     private String newRegDBUrl;
     private String newRegUsername;
     private String newRegPassword;
+    private int chunkSize;
     private boolean enableDBMigrator;
     private boolean enableConfigMigrator;
     private boolean enableSyncMigrator;
@@ -285,6 +286,26 @@ public class KeyRotationConfig {
     public void setNewRegPassword(String newRegPassword) {
 
         this.newRegPassword = newRegPassword;
+    }
+
+    /**
+     * Return the chunk size for the records retrieved from the database.
+     *
+     * @return chunk size.
+     */
+    public int getChunkSize() {
+
+        return chunkSize;
+    }
+
+    /**
+     * Set the chunk size for the records retrieved from the database.
+     *
+     * @param chunkSize Chunk size.
+     */
+    public void setChunkSize(int chunkSize) {
+
+        this.chunkSize = chunkSize;
     }
 
     /**

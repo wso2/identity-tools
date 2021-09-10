@@ -66,14 +66,14 @@ public class RegistryDAO {
         List<RegistryProperty> regPropertyList = new ArrayList<>();
         String query = DBConstants.GET_REG_PROPERTY_DATA;
         int firstIndex = startIndex;
-        int secIndex = DBConstants.CHUNK_SIZE;
+        int secIndex = keyRotationConfig.getChunkSize();
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewRegDBUrl(), keyRotationConfig.getNewRegUsername(),
                         keyRotationConfig.getNewRegPassword())) {
             connection.setAutoCommit(false);
             if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_REG_PROPERTY_DATA_POSTGRE;
-                firstIndex = DBConstants.CHUNK_SIZE;
+                firstIndex = keyRotationConfig.getChunkSize();
                 secIndex = startIndex;
             } else if (connection.getMetaData().getDriverName().contains(DBConstants.MSSQL) ||
                     connection.getMetaData().getDriverName().contains(DBConstants.ORACLE)) {

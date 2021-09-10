@@ -12,6 +12,7 @@ newIdnPassword: cm9vdA==
 newRegDBUrl: jdbc:mysql://localhost:3306/regdb1?useSSL=false
 newRegUsername: root
 newRegPassword: cm9vdA==
+chunkSize: asdas
 enableDBMigrator: true
 enableConfigMigrator: true
 enableSyncMigrator: true

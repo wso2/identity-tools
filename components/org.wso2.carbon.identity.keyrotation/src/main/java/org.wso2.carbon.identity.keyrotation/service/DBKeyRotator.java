@@ -130,7 +130,7 @@ public class DBKeyRotator {
                 }
             }
             IdentityDAO.getInstance().updateTOTPSecretsChunks(midChunkList, keyRotationConfig);
-            startIndex = startIndex + DBConstants.CHUNK_SIZE;
+            startIndex = startIndex + keyRotationConfig.getChunkSize();
             chunkList = IdentityDAO.getInstance().getTOTPSecretsChunks(startIndex, keyRotationConfig);
         }
         log.debug("Finished re-encryption of the TOTP data...");
@@ -161,7 +161,7 @@ public class DBKeyRotator {
                 }
             }
             OAuthDAO.getInstance().updateOAuthCodeChunks(midChunkList, keyRotationConfig);
-            startIndex = startIndex + DBConstants.CHUNK_SIZE;
+            startIndex = startIndex + keyRotationConfig.getChunkSize();
             chunkList = OAuthDAO.getInstance().getOAuthCodeChunks(startIndex, keyRotationConfig);
         }
         log.debug("Finished re-encryption of the OAuth2 authorization code data...");
@@ -197,7 +197,7 @@ public class DBKeyRotator {
                 }
             }
             OAuthDAO.getInstance().updateOAuthTokenChunks(midChunkList, keyRotationConfig);
-            startIndex = startIndex + DBConstants.CHUNK_SIZE;
+            startIndex = startIndex + keyRotationConfig.getChunkSize();
             chunkList = OAuthDAO.getInstance().getOAuthTokenChunks(startIndex, keyRotationConfig);
         }
         log.debug("Finished re-encryption of the OAuth2 access and refresh token data...");
@@ -228,7 +228,7 @@ public class DBKeyRotator {
                 }
             }
             OAuthDAO.getInstance().updateOAuthSecretChunks(midChunkList, keyRotationConfig);
-            startIndex = startIndex + DBConstants.CHUNK_SIZE;
+            startIndex = startIndex + keyRotationConfig.getChunkSize();
             chunkList = OAuthDAO.getInstance().getOAuthSecretChunks(startIndex, keyRotationConfig);
         }
         log.debug("Finished re-encryption of the OAuth consumer secret data...");
@@ -258,7 +258,7 @@ public class DBKeyRotator {
                 }
             }
             BPSProfileDAO.getInstance().updateBpsPasswordChunks(midChunkList, keyRotationConfig);
-            startIndex = startIndex + DBConstants.CHUNK_SIZE;
+            startIndex = startIndex + keyRotationConfig.getChunkSize();
             chunkList = BPSProfileDAO.getInstance().getBpsPasswordChunks(startIndex, keyRotationConfig);
         }
         log.debug("Finished re-encryption of the BPS profile data...");
@@ -292,7 +292,7 @@ public class DBKeyRotator {
                 }
             }
             WorkFlowDAO.getInstance().updateWFRequestChunks(midChunkList, keyRotationConfig);
-            startIndex = startIndex + DBConstants.CHUNK_SIZE;
+            startIndex = startIndex + keyRotationConfig.getChunkSize();
             chunkList = WorkFlowDAO.getInstance().getWFRequestChunks(startIndex, keyRotationConfig);
         }
         log.debug("Finished re-encryption of the WF request data...");
@@ -326,7 +326,7 @@ public class DBKeyRotator {
             }
             RegistryDAO.getInstance().updateRegPropertyDataChunks(midChunkList, keyRotationConfig,
                     KeyRotationConstants.REGISTRY_PASSWORD);
-            startIndex = startIndex + DBConstants.CHUNK_SIZE;
+            startIndex = startIndex + keyRotationConfig.getChunkSize();
             chunkList = RegistryDAO.getInstance()
                     .getRegPropertyDataChunks(startIndex, keyRotationConfig, KeyRotationConstants.REGISTRY_PASSWORD);
         }
@@ -361,7 +361,7 @@ public class DBKeyRotator {
             }
             RegistryDAO.getInstance().updateRegPropertyDataChunks(midChunkList, keyRotationConfig,
                     KeyRotationConstants.PRIVATE_KEY_PASS);
-            startIndex = startIndex + DBConstants.CHUNK_SIZE;
+            startIndex = startIndex + keyRotationConfig.getChunkSize();
             chunkList =
                     RegistryDAO.getInstance().getRegPropertyDataChunks(startIndex, keyRotationConfig,
                             KeyRotationConstants.PRIVATE_KEY_PASS);
@@ -397,7 +397,7 @@ public class DBKeyRotator {
             }
             RegistryDAO.getInstance().updateRegPropertyDataChunks(midChunkList, keyRotationConfig,
                     KeyRotationConstants.SUBSCRIBER_PASSWORD);
-            startIndex = startIndex + DBConstants.CHUNK_SIZE;
+            startIndex = startIndex + keyRotationConfig.getChunkSize();
             chunkList =
                     RegistryDAO.getInstance()
                             .getRegPropertyDataChunks(startIndex, keyRotationConfig,

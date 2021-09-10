@@ -68,14 +68,14 @@ public class IdentityDAO {
         List<TOTPSecret> totpSecretList = new ArrayList<>();
         String query = DBConstants.GET_TOTP_SECRET;
         int firstIndex = startIndex;
-        int secIndex = DBConstants.CHUNK_SIZE;
+        int secIndex = keyRotationConfig.getChunkSize();
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
                         keyRotationConfig.getNewIdnPassword())) {
             connection.setAutoCommit(false);
             if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_TOTP_SECRET_POSTGRE;
-                firstIndex = DBConstants.CHUNK_SIZE;
+                firstIndex = keyRotationConfig.getChunkSize();
                 secIndex = startIndex;
             } else if (connection.getMetaData().getDriverName().contains(DBConstants.MSSQL) ||
                     connection.getMetaData().getDriverName().contains(DBConstants.ORACLE)) {
@@ -208,7 +208,7 @@ public class IdentityDAO {
                 }
             } catch (SQLException e) {
                 connection.rollback();
-                log.error("Error while retrieving TOTP secret from IDN_IDENTITY_USER_DATA_TEMP.", e);
+                throw new KeyRotationException("Error while retrieving TOTP secrets from IDN_IDENTITY_USER_DATA.", e);
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to old identity DB.", e);

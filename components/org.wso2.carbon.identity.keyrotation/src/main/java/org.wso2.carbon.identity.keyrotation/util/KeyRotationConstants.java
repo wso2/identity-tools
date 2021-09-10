@@ -39,6 +39,7 @@ public class KeyRotationConstants {
     public static final String NEW_REG_DB_URL = "newRegDBUrl";
     public static final String NEW_REG_USERNAME = "newRegUsername";
     public static final String NEW_REG_PASSWORD = "newRegPassword";
+    public static final String CHUNK_SIZE = "chunkSize";
     public static final String ENABLE_DB_MIGRATOR = "enableDBMigrator";
     public static final String ENABLE_CONFIG_MIGRATOR = "enableConfigMigrator";
     public static final String ENABLE_SYNC_MIGRATOR = "enableSyncMigrator";
