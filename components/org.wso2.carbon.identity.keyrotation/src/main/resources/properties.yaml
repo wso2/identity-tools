@@ -1,19 +1,18 @@
 # Configurations needed for the key-rotation task.
 
-oldSecretKey: AFA27B44D43B02A9FEA41D13CEDC2E40
-newSecretKey: 92a715b1e9df4e949c1a622d67bbcf68
-newISHome: /home/chamath/IS/wso2is-5.12.0
-oldIdnDBUrl: jdbc:mysql://localhost:3306/regdb?useSSL=false
+oldSecretKey: 03BAFEB27A8E871CAD83C5CD4E771DAB
+newSecretKey: b988c775c435f05c3da1fbecfe76c1e7
+newISHome: /home/IS/wso2is-5.12.0-alpha
+oldIdnDBUrl: jdbc:mysql://localhost:3306/olddb?useSSL=false
 oldIdnUsername: root
 oldIdnPassword: cm9vdA==
-newIdnDBUrl: jdbc:mysql://localhost:3306/regdb1?useSSL=false
+newIdnDBUrl: jdbc:mysql://localhost:3306/newdb?useSSL=false
 newIdnUsername: root
 newIdnPassword: cm9vdA==
-newRegDBUrl: jdbc:mysql://localhost:3306/regdb1?useSSL=false
+newRegDBUrl: jdbc:mysql://localhost:3306/newdb?useSSL=false
 newRegUsername: root
 newRegPassword: cm9vdA==
-chunkSize: asdas
+chunkSize: 2
 enableDBMigrator: true
 enableConfigMigrator: true
 enableSyncMigrator: true
-

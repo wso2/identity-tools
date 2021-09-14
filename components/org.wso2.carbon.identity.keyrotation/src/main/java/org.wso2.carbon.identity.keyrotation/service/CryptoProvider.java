@@ -182,7 +182,7 @@ public class CryptoProvider {
         CipherMetaData cipherMetaData = new CipherMetaData();
         cipherMetaData.setCipherText(KeyRotationServiceUtils.getSelfContainedCiphertextWithIv(cipherText, iv));
         cipherMetaData.setTransformation(KeyRotationConstants.TRANSFORMATION);
-        cipherMetaData.setInitializationVector(Base64.encode(iv));
+        cipherMetaData.setIv(Base64.encode(iv));
         String cipherWithMetadataStr = gson.toJson(cipherMetaData);
         return cipherWithMetadataStr.getBytes(Charset.defaultCharset());
     }

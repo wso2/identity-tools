@@ -1039,7 +1039,6 @@ public class OAuthDAO {
                             resultSet.getInt(KeyRotationConstants.SYNCED)));
                 }
             } catch (SQLException e) {
-                connection.rollback();
                 log.error("Error while retrieving OAuth scope from IDN_OAUTH2_ACCESS_TOKEN_SCOPE_TEMP.", e);
             }
         } catch (SQLException e) {

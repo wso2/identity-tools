@@ -40,7 +40,7 @@ public class KeyRotationConfigValidator {
     /**
      * Validate URI syntax.
      *
-     * @param name Parameter name.
+     * @param name  Parameter name.
      * @param value URI value.
      */
     public void validateURI(String name, String value) throws KeyRotationException {
@@ -56,7 +56,7 @@ public class KeyRotationConfigValidator {
     /**
      * Validate boolean.
      *
-     * @param name Parameter name.
+     * @param name  Parameter name.
      * @param value Boolean value.
      */
     public void validateBoolean(String name, String value) throws KeyRotationException {
@@ -71,7 +71,7 @@ public class KeyRotationConfigValidator {
     /**
      * Validate if the input path is a file or a directory..
      *
-     * @param pathName Parameter name.
+     * @param pathName  Parameter name.
      * @param pathValue Boolean value.
      */
     public void validateFilePath(String pathName, String pathValue) throws KeyRotationException {

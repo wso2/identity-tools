@@ -70,7 +70,7 @@ public class KeyRotationServiceUtils {
         CipherInitializationVector cipherInitializationVector =
                 gson.fromJson(cipherStr, CipherInitializationVector.class);
         CipherMetaData cipherMetaData = new CipherMetaData();
-        cipherMetaData.setInitializationVector(cipherInitializationVector.getInitializationVector());
+        cipherMetaData.setIv(cipherInitializationVector.getInitializationVector());
         cipherMetaData.setCipherText(cipherInitializationVector.getCipher());
         return cipherMetaData;
     }
