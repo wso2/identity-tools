@@ -27,7 +27,9 @@ public class TempTOTPSecret {
     private String username;
     private String dataKey;
     private String dataValue;
-    private String availability;
+    private int availability;
+    private int syncId;
+    private int synced;
 
     /**
      * TempTOTPSecret class constructor.
@@ -37,14 +39,19 @@ public class TempTOTPSecret {
      * @param dataKey      Data key field in IDN_IDENTITY_USER_DATA_TEMP table.
      * @param dataValue    Data value field in IDN_IDENTITY_USER_DATA_TEMP table.
      * @param availability Availability field in IDN_IDENTITY_USER_DATA_TEMP table.
+     * @param syncId       Sync id field in IDN_IDENTITY_USER_DATA_TEMP table.
+     * @param synced       Synced field in IDN_IDENTITY_USER_DATA_TEMP table.
      */
-    public TempTOTPSecret(String tenantId, String username, String dataKey, String dataValue, String availability) {
+    public TempTOTPSecret(String tenantId, String username, String dataKey, String dataValue, int availability,
+                          int syncId, int synced) {
 
         this.tenantId = tenantId;
         this.username = username;
         this.dataKey = dataKey;
         this.dataValue = dataValue;
         this.availability = availability;
+        this.syncId = syncId;
+        this.synced = synced;
     }
 
     /**
@@ -132,7 +139,7 @@ public class TempTOTPSecret {
      *
      * @return Availability.
      */
-    public String getAvailability() {
+    public int getAvailability() {
 
         return availability;
     }
@@ -142,8 +149,48 @@ public class TempTOTPSecret {
      *
      * @param availability Availability.
      */
-    public void setAvailability(String availability) {
+    public void setAvailability(int availability) {
 
         this.availability = availability;
+    }
+
+    /**
+     * Get for the sync id.
+     *
+     * @return Sync id.
+     */
+    public int getSyncId() {
+
+        return syncId;
+    }
+
+    /**
+     * Set for the sync id.
+     *
+     * @param syncId Sync id.
+     */
+    public void setSyncId(int syncId) {
+
+        this.syncId = syncId;
+    }
+
+    /**
+     * Get for the synced.
+     *
+     * @return Synced.
+     */
+    public int getSynced() {
+
+        return synced;
+    }
+
+    /**
+     * Set for the synced.
+     *
+     * @param synced Synced.
+     */
+    public void setSynced(int synced) {
+
+        this.synced = synced;
     }
 }

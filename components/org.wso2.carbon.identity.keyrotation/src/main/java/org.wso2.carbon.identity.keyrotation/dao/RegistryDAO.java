@@ -19,8 +19,9 @@
 package org.wso2.carbon.identity.keyrotation.dao;
 
 import org.apache.log4j.Logger;
-import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
+import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.model.RegistryProperty;
+import org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 
 import java.sql.Connection;
@@ -38,10 +39,6 @@ public class RegistryDAO {
 
     private static final Logger log = Logger.getLogger(RegistryDAO.class);
     private static final RegistryDAO instance = new RegistryDAO();
-    private static final String REG_ID = "REG_ID";
-    private static final String REG_NAME = "REG_NAME";
-    private static final String REG_VALUE = "REG_VALUE";
-    private static final String REG_TENANT_ID = "REG_TENANT_ID";
     public static int updateCount = 0;
     public static int failedUpdateCount = 0;
 
@@ -69,14 +66,14 @@ public class RegistryDAO {
         List<RegistryProperty> regPropertyList = new ArrayList<>();
         String query = DBConstants.GET_REG_PROPERTY_DATA;
         int firstIndex = startIndex;
-        int secIndex = DBConstants.CHUNK_SIZE;
+        int secIndex = keyRotationConfig.getChunkSize();
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewRegDBUrl(), keyRotationConfig.getNewRegUsername(),
                         keyRotationConfig.getNewRegPassword())) {
             connection.setAutoCommit(false);
             if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_REG_PROPERTY_DATA_POSTGRE;
-                firstIndex = DBConstants.CHUNK_SIZE;
+                firstIndex = keyRotationConfig.getChunkSize();
                 secIndex = startIndex;
             } else if (connection.getMetaData().getDriverName().contains(DBConstants.MSSQL) ||
                     connection.getMetaData().getDriverName().contains(DBConstants.ORACLE)) {
@@ -90,15 +87,14 @@ public class RegistryDAO {
                 connection.commit();
                 while (resultSet.next()) {
                     regPropertyList
-                            .add(new RegistryProperty(resultSet.getString(REG_ID),
-                                    resultSet.getString(REG_NAME),
-                                    resultSet.getString(REG_VALUE),
-                                    resultSet.getString(REG_TENANT_ID)));
+                            .add(new RegistryProperty(resultSet.getString(KeyRotationConstants.REG_ID),
+                                    resultSet.getString(KeyRotationConstants.REG_NAME),
+                                    resultSet.getString(KeyRotationConstants.REG_VALUE),
+                                    resultSet.getString(KeyRotationConstants.REG_TENANT_ID)));
                 }
             } catch (SQLException e) {
                 connection.rollback();
-                throw new KeyRotationException("Error while retrieving registry property: " + property + " from " +
-                        "REG_PROPERTY.", e);
+                log.error("Error while retrieving registry property: " + property + " from REG_PROPERTY.", e);
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to new registry DB.", e);

@@ -19,7 +19,6 @@
 package org.wso2.carbon.identity.keyrotation.model;
 
 import org.apache.axiom.om.util.Base64;
-
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants;
 
 /**

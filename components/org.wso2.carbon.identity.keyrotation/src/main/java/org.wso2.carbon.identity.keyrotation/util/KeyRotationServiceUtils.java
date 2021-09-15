@@ -21,7 +21,7 @@ package org.wso2.carbon.identity.keyrotation.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.axiom.om.util.Base64;
-import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
+import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.model.CipherInitializationVector;
 import org.wso2.carbon.identity.keyrotation.model.CipherMetaData;
 import org.yaml.snakeyaml.Yaml;

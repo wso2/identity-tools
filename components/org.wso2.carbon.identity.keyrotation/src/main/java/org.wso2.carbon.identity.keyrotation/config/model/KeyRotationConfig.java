@@ -16,22 +16,16 @@
  * under the License.
  */
 
-package org.wso2.carbon.identity.keyrotation.config;
+package org.wso2.carbon.identity.keyrotation.config.model;
 
 import org.apache.axiom.om.util.Base64;
-import org.apache.log4j.Logger;
-import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
-import org.wso2.carbon.identity.keyrotation.util.KeyRotationServiceUtils;
-
-import java.io.File;
-import java.lang.reflect.Field;
-import java.nio.file.Paths;
 
 /**
  * This class holds implementations needed to load the configurations in the properties.yaml file.
  */
 public class KeyRotationConfig {
 
+    private static final KeyRotationConfig instance = new KeyRotationConfig();
     private String oldSecretKey;
     private String newSecretKey;
     private String newISHome;
@@ -44,70 +38,14 @@ public class KeyRotationConfig {
     private String newRegDBUrl;
     private String newRegUsername;
     private String newRegPassword;
-    private String enableDBMigrator;
-    private String enableConfigMigrator;
-    private String enableSyncMigrator;
-    private static final Logger log = Logger.getLogger(KeyRotationConfig.class);
-    private static final KeyRotationConfig instance = new KeyRotationConfig();
+    private int chunkSize;
+    private boolean enableDBMigrator;
+    private boolean enableConfigMigrator;
+    private boolean enableSyncMigrator;
 
     public static KeyRotationConfig getInstance() {
 
         return instance;
-    }
-
-    /**
-     * Load the configurations placed in the properties.yaml file.
-     *
-     * @return KeyRotation config object.
-     * @throws KeyRotationException Exception thrown while loading the configs from properties.yaml file.
-     */
-    public KeyRotationConfig loadConfigs(String[] args) throws KeyRotationException {
-
-        String propertiesFilePath = Paths.get("components", "org.wso2.carbon.identity.keyrotation", "src",
-                "main", "resources", "properties.yaml").toString();
-        if (args.length > 0) {
-            propertiesFilePath = args[0];
-        }
-        File file = new File(propertiesFilePath);
-        if (!file.exists()) {
-            throw new KeyRotationException(
-                    "Error occurred, properties.yaml file not found in provided path, " + propertiesFilePath);
-        }
-        log.info("Loading Key Rotation Configs from path: " + propertiesFilePath);
-        KeyRotationConfig keyRotationConfig =
-                KeyRotationServiceUtils.loadKeyRotationConfig(propertiesFilePath);
-        checkKeyRotationConfigs(keyRotationConfig);
-        log.info("Successfully loaded the config file.");
-        return keyRotationConfig;
-    }
-
-    /**
-     * To check whether the loaded configurations are valid and not null.
-     *
-     * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown while checking for null values in the loaded properties.yaml file.
-     */
-    public void checkKeyRotationConfigs(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
-
-        Field[] props = KeyRotationConfig.getInstance().getClass().getDeclaredFields();
-        try {
-            for (int i = 0; i < props.length - 2; i++) {
-                if (props[i].get(keyRotationConfig) == null) {
-                    throw new KeyRotationException(
-                            "Error occurred, null value found in property, " + props[i].getName());
-                }
-                if ("oldISHome".equals(props[i].getName()) || "newISHome".equals(props[i].getName())) {
-                    File file = new File(props[i].get(keyRotationConfig).toString());
-                    if (!file.exists()) {
-                        throw new KeyRotationException(
-                                "Error occurred while finding " + props[i].getName() + " path.");
-                    }
-                }
-            }
-        } catch (IllegalArgumentException | IllegalAccessException e) {
-            throw new KeyRotationException("Error occurred while checking for null values in the loaded properties " +
-                    "file, ", e);
-        }
     }
 
     /**
@@ -351,11 +289,31 @@ public class KeyRotationConfig {
     }
 
     /**
+     * Return the chunk size for the records retrieved from the database.
+     *
+     * @return chunk size.
+     */
+    public int getChunkSize() {
+
+        return chunkSize;
+    }
+
+    /**
+     * Set the chunk size for the records retrieved from the database.
+     *
+     * @param chunkSize Chunk size.
+     */
+    public void setChunkSize(int chunkSize) {
+
+        this.chunkSize = chunkSize;
+    }
+
+    /**
      * Get for the enable database migrator property value.
      *
      * @return Enable database migrator property value.
      */
-    public String getEnableDBMigrator() {
+    public boolean getEnableDBMigrator() {
 
         return enableDBMigrator;
     }
@@ -365,7 +323,7 @@ public class KeyRotationConfig {
      *
      * @param enableDBMigrator Enable database migrator property value.
      */
-    public void setEnableDBMigrator(String enableDBMigrator) {
+    public void setEnableDBMigrator(boolean enableDBMigrator) {
 
         this.enableDBMigrator = enableDBMigrator;
     }
@@ -375,7 +333,7 @@ public class KeyRotationConfig {
      *
      * @return Enable configuration file migrator property value.
      */
-    public String getEnableConfigMigrator() {
+    public boolean getEnableConfigMigrator() {
 
         return enableConfigMigrator;
     }
@@ -385,7 +343,7 @@ public class KeyRotationConfig {
      *
      * @param enableConfigMigrator Enable configuration file migrator property value.
      */
-    public void setEnableConfigMigrator(String enableConfigMigrator) {
+    public void setEnableConfigMigrator(boolean enableConfigMigrator) {
 
         this.enableConfigMigrator = enableConfigMigrator;
     }
@@ -395,7 +353,7 @@ public class KeyRotationConfig {
      *
      * @return Enable syncing migrator property value.
      */
-    public String getEnableSyncMigrator() {
+    public boolean getEnableSyncMigrator() {
 
         return enableSyncMigrator;
     }
@@ -405,7 +363,7 @@ public class KeyRotationConfig {
      *
      * @param enableSyncMigrator Enable syncing migrator property value.
      */
-    public void setEnableSyncMigrator(String enableSyncMigrator) {
+    public void setEnableSyncMigrator(boolean enableSyncMigrator) {
 
         this.enableSyncMigrator = enableSyncMigrator;
     }

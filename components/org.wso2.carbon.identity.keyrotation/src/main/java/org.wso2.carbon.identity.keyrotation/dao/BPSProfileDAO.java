@@ -19,8 +19,9 @@
 package org.wso2.carbon.identity.keyrotation.dao;
 
 import org.apache.log4j.Logger;
-import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
+import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.model.BPSPassword;
+import org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 
 import java.sql.Connection;
@@ -38,10 +39,6 @@ public class BPSProfileDAO {
 
     private static final Logger log = Logger.getLogger(BPSProfileDAO.class);
     private static final BPSProfileDAO instance = new BPSProfileDAO();
-    private static final String PROFILE_NAME = "PROFILE_NAME";
-    private static final String USERNAME = "USERNAME";
-    private static final String TENANT_ID = "TENANT_ID";
-    private static final String PASSWORD = "PASSWORD";
     public static int updateCount = 0;
     public static int failedUpdateCount = 0;
 
@@ -68,14 +65,14 @@ public class BPSProfileDAO {
         List<BPSPassword> bpsPasswordList = new ArrayList<>();
         String query = DBConstants.GET_BPS_PASSWORD;
         int firstIndex = startIndex;
-        int secIndex = DBConstants.CHUNK_SIZE;
+        int secIndex = keyRotationConfig.getChunkSize();
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
                         keyRotationConfig.getNewIdnPassword())) {
             connection.setAutoCommit(false);
             if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_BPS_PASSWORD_POSTGRE;
-                firstIndex = DBConstants.CHUNK_SIZE;
+                firstIndex = keyRotationConfig.getChunkSize();
                 secIndex = startIndex;
             } else if (connection.getMetaData().getDriverName().contains(DBConstants.MSSQL) ||
                     connection.getMetaData().getDriverName().contains(DBConstants.ORACLE)) {
@@ -87,10 +84,10 @@ public class BPSProfileDAO {
                 ResultSet resultSet = preparedStatement.executeQuery();
                 connection.commit();
                 while (resultSet.next()) {
-                    bpsPasswordList.add(new BPSPassword(resultSet.getString(PROFILE_NAME),
-                            resultSet.getString(USERNAME),
-                            resultSet.getString(TENANT_ID),
-                            resultSet.getString(PASSWORD)));
+                    bpsPasswordList.add(new BPSPassword(resultSet.getString(KeyRotationConstants.PROFILE_NAME),
+                            resultSet.getString(KeyRotationConstants.USERNAME),
+                            resultSet.getString(KeyRotationConstants.TENANT_ID),
+                            resultSet.getString(KeyRotationConstants.PASSWORD)));
                 }
             } catch (SQLException e) {
                 connection.rollback();

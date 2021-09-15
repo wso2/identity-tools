@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.keyrotation.service;
 
 import org.apache.log4j.Logger;
-import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
+import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.util.ConfigFileUtil;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
@@ -38,8 +38,6 @@ public class ConfigFileKeyRotator {
 
     private static final Logger log = Logger.getLogger(ConfigFileKeyRotator.class);
     private static final ConfigFileKeyRotator instance = new ConfigFileKeyRotator();
-    private static final String userstoreProperty = "Property";
-    private static final String publisherProperty = "property";
 
     public static ConfigFileKeyRotator getInstance() {
 
@@ -86,17 +84,17 @@ public class ConfigFileKeyRotator {
             case KeyRotationConstants.SUPER_TENANT:
                 paths = new String[]{KeyRotationConstants.REPOSITORY, KeyRotationConstants.DEPLOYMENT,
                         KeyRotationConstants.SERVER, KeyRotationConstants.USERSTORES};
-                property = userstoreProperty;
+                property = KeyRotationConstants.USERSTORE_PROPERTY;
                 break;
             case KeyRotationConstants.TENANT:
                 paths = new String[]{KeyRotationConstants.REPOSITORY, KeyRotationConstants.TENANTS, tenant,
                         KeyRotationConstants.USERSTORES};
-                property = userstoreProperty;
+                property = KeyRotationConstants.USERSTORE_PROPERTY;
                 break;
             case KeyRotationConstants.EVENT_PUBLISHER:
                 paths = new String[]{KeyRotationConstants.REPOSITORY, KeyRotationConstants.DEPLOYMENT,
                         KeyRotationConstants.SERVER, KeyRotationConstants.EVENT_PUBLISHERS};
-                property = publisherProperty;
+                property = KeyRotationConstants.PUBLISHER_PROPERTY;
                 break;
         }
         File[] configFiles = getFilePaths(newIsHomePath, paths);

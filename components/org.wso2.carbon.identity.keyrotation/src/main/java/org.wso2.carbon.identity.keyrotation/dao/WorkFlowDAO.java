@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.keyrotation.dao;
 
 import org.apache.log4j.Logger;
-import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfig;
+import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 import org.wso2.carbon.identity.workflow.mgt.dto.WorkflowRequest;
 
@@ -69,14 +69,14 @@ public class WorkFlowDAO {
         List<WorkflowRequest> wfRequestList = new ArrayList<>();
         String query = DBConstants.GET_WF_REQUEST;
         int firstIndex = startIndex;
-        int secIndex = DBConstants.CHUNK_SIZE;
+        int secIndex = keyRotationConfig.getChunkSize();
         try (Connection connection = DriverManager
                 .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
                         keyRotationConfig.getNewIdnPassword())) {
             connection.setAutoCommit(false);
             if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_WF_REQUEST_POSTGRE;
-                firstIndex = DBConstants.CHUNK_SIZE;
+                firstIndex = keyRotationConfig.getChunkSize();
                 secIndex = startIndex;
             } else if (connection.getMetaData().getDriverName().contains(DBConstants.MSSQL) ||
                     connection.getMetaData().getDriverName().contains(DBConstants.ORACLE)) {
@@ -94,7 +94,7 @@ public class WorkFlowDAO {
                 }
             } catch (SQLException | IOException | ClassNotFoundException e) {
                 connection.rollback();
-                throw new KeyRotationException("Error while retrieving requests from WF_REQUEST.", e);
+                log.error("Error while retrieving requests from WF_REQUEST.", e);
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to new identity DB.", e);
@@ -127,8 +127,7 @@ public class WorkFlowDAO {
                 updateCount += updateWfRequestList.size();
             } catch (SQLException | IOException e) {
                 connection.rollback();
-                log.error(
-                        "Error while updating requests in WF_REQUEST, trying the chunk row by row again. ", e);
+                log.error("Error while updating requests in WF_REQUEST, trying the chunk row by row again. ", e);
                 retryOnRequestUpdate(updateWfRequestList, connection);
             }
         } catch (SQLException e) {
