@@ -122,7 +122,7 @@
         <commons.lang.orbit.version>2.6.0.wso2v1</commons.lang.orbit.version>
         <commons.lang3.version>3.9</commons.lang3.version>
         <commons.codec.version>1.12</commons.codec.version>
-        <apache.loging.log4j.version>2.13.2</apache.loging.log4j.version>
+        <apache.loging.log4j.version>2.17.1</apache.loging.log4j.version>
         <xmlunit.version>2.2.1</xmlunit.version>
         <toml4j.version>0.7.2</toml4j.version>
     </properties>
