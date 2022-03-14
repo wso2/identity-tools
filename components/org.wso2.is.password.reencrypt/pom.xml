@@ -25,7 +25,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.carbon.identity.tools</groupId>
     <artifactId>org.wso2.is.password.reencrypt</artifactId>
-    <version>1.0.6-SNAPSHOT</version>
+    <version>1.0.6</version>
     <packaging>bundle</packaging>
 
     <dependencies>
@@ -183,4 +183,8 @@
         <commons-lang.wso2.osgi.version.range>[2.6.0,3.0.0)</commons-lang.wso2.osgi.version.range>
         <maven-scr-plugin.version>1.22.0</maven-scr-plugin.version>
     </properties>
+
+  <scm>
+    <tag>v1.0.6</tag>
+  </scm>
 </project>
