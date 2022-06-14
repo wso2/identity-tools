@@ -26,7 +26,7 @@
 
     <groupId>org.wso2.carbon.identity.tools</groupId>
     <artifactId>identity-tools</artifactId>
-    <version>1.0.9-SNAPSHOT</version>
+    <version>1.0.10-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>WSO2 Identity Tools</name>
     <description>Unified Identity tools of WSO2 IS</description>
