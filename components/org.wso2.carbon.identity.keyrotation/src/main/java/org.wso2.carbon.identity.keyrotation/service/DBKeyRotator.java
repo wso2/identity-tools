@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) (2021-2024), WSO2 LLC. (http://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
+ * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
@@ -84,12 +84,14 @@ public class DBKeyRotator {
                 OAuthDAO.updateSecretCount);
         log.info("Failed OAuth consumer secret data records in IDN_OAUTH_CONSUMER_APPS: " +
                 OAuthDAO.failedUpdateSecretCount);
-        reEncryptBPSData(keyRotationConfig);
-        log.info("Successfully updated BPS profile data records in WF_BPS_PROFILE: " + BPSProfileDAO.updateCount);
-        log.info("Failed BPS profile data records in WF_BPS_PROFILE: " + BPSProfileDAO.failedUpdateCount);
-        reEncryptWFRequestData(keyRotationConfig);
-        log.info("Successfully updated WF request data records in WF_REQUEST: " + WorkFlowDAO.updateCount);
-        log.info("Failed WF request data records in WF_REQUEST: " + WorkFlowDAO.failedUpdateCount);
+        if (keyRotationConfig.getEnableWorkflowMigrator()) {
+            reEncryptBPSData(keyRotationConfig);
+            log.info("Successfully updated BPS profile data records in WF_BPS_PROFILE: " + BPSProfileDAO.updateCount);
+            log.info("Failed BPS profile data records in WF_BPS_PROFILE: " + BPSProfileDAO.failedUpdateCount);
+            reEncryptWFRequestData(keyRotationConfig);
+            log.info("Successfully updated WF request data records in WF_REQUEST: " + WorkFlowDAO.updateCount);
+            log.info("Failed WF request data records in WF_REQUEST: " + WorkFlowDAO.failedUpdateCount);
+        }
         reEncryptKeystorePasswordData(keyRotationConfig);
         log.info("Successfully updated keystore password property data records in REG_PROPERTY: " +
                 RegistryDAO.updateCount);

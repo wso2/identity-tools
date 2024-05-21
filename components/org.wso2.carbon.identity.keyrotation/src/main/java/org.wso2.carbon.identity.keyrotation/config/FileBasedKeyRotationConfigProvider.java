@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2021, WSO2 Inc. (http://www.wso2.com).
+ * Copyright (c) (2021-2024), WSO2 LLC. (http://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
+ * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
@@ -79,6 +79,9 @@ public class FileBasedKeyRotationConfigProvider implements KeyRotationConfigProv
             logger.log(Level.WARN, "Not a valid number. Falling back to default chunk size.", e);
             keyRotationConfig.setChunkSize(DBConstants.DEFAULT_CHUNK_SIZE);
         }
+        String enableWorkflowMigrator =
+                StringUtils.isNotBlank(properties.getProperty(KeyRotationConstants.ENABLE_WORKFLOW_MIGRATOR)) ?
+                properties.getProperty(KeyRotationConstants.ENABLE_WORKFLOW_MIGRATOR) : "true";
 
         configValidator.validateFilePath(KeyRotationConstants.NEW_IS_HOME, newISHome);
         configValidator.validateURI(KeyRotationConstants.OLD_IDN_DB_URL, oldIdnDBUrl);
@@ -87,6 +90,7 @@ public class FileBasedKeyRotationConfigProvider implements KeyRotationConfigProv
         configValidator.validateBoolean(KeyRotationConstants.ENABLE_DB_MIGRATOR, enableDBMigrator);
         configValidator.validateBoolean(KeyRotationConstants.ENABLE_CONFIG_MIGRATOR, enableConfigMigrator);
         configValidator.validateBoolean(KeyRotationConstants.ENABLE_SYNC_MIGRATOR, enableSyncMigrator);
+        configValidator.validateBoolean(KeyRotationConstants.ENABLE_WORKFLOW_MIGRATOR, enableWorkflowMigrator);
 
         keyRotationConfig.setOldSecretKey(oldSecretKey);
         keyRotationConfig.setNewSecretKey(newSecretKey);
@@ -103,6 +107,7 @@ public class FileBasedKeyRotationConfigProvider implements KeyRotationConfigProv
         keyRotationConfig.setEnableDBMigrator(Boolean.parseBoolean(enableDBMigrator));
         keyRotationConfig.setEnableConfigMigrator(Boolean.parseBoolean(enableConfigMigrator));
         keyRotationConfig.setEnableSyncMigrator(Boolean.parseBoolean(enableSyncMigrator));
+        keyRotationConfig.setEnableWorkflowMigrator(Boolean.parseBoolean(enableWorkflowMigrator));
     }
 
     /**
