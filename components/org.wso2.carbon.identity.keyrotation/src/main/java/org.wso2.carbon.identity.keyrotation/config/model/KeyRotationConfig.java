@@ -372,7 +372,7 @@ public class KeyRotationConfig {
     /**
      * Get for the enable workflow migrator property value.
      *
-     * @return Enable syncing migrator property value.
+     * @return Enable workflow migrator property value.
      */
     public boolean getEnableWorkflowMigrator() {
 
