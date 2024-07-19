@@ -71,8 +71,8 @@ public class WorkFlowDAO {
         int firstIndex = startIndex;
         int secIndex = keyRotationConfig.getChunkSize();
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
-                        keyRotationConfig.getNewIdnPassword())) {
+                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
+                        keyRotationConfig.getIdnPassword())) {
             connection.setAutoCommit(false);
             if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_WF_REQUEST_POSTGRE;
@@ -113,8 +113,8 @@ public class WorkFlowDAO {
             throws KeyRotationException {
 
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
-                        keyRotationConfig.getNewIdnPassword())) {
+                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
+                        keyRotationConfig.getIdnPassword())) {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_WF_REQUEST)) {
                 for (WorkflowRequest wfRequest : updateWfRequestList) {

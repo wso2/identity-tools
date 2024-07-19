@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2021, WSO2 Inc. (http://www.wso2.com).
+ * Copyright (c) (2021-2024), WSO2 LLC. (http://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
+ * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
@@ -57,9 +57,6 @@ public class FileBasedKeyRotationConfigProvider implements KeyRotationConfigProv
         String oldSecretKey = properties.getProperty(KeyRotationConstants.OLD_SECRET_KEY);
         String newSecretKey = properties.getProperty(KeyRotationConstants.NEW_SECRET_KEY);
         String newISHome = properties.getProperty(KeyRotationConstants.NEW_IS_HOME);
-        String oldIdnDBUrl = properties.getProperty(KeyRotationConstants.OLD_IDN_DB_URL);
-        String oldIdnUsername = properties.getProperty(KeyRotationConstants.OLD_IDN_USERNAME);
-        String oldIdnPassword = properties.getProperty(KeyRotationConstants.OLD_IDN_PASSWORD);
         String newIdnDBUrl = properties.getProperty(KeyRotationConstants.NEW_IDN_DB_URL);
         String newIdnUsername = properties.getProperty(KeyRotationConstants.NEW_IDN_USERNAME);
         String newIdnPassword = properties.getProperty(KeyRotationConstants.NEW_IDN_PASSWORD);
@@ -68,7 +65,6 @@ public class FileBasedKeyRotationConfigProvider implements KeyRotationConfigProv
         String newRegPassword = properties.getProperty(KeyRotationConstants.NEW_REG_PASSWORD);
         String enableDBMigrator = properties.getProperty(KeyRotationConstants.ENABLE_DB_MIGRATOR);
         String enableConfigMigrator = properties.getProperty(KeyRotationConstants.ENABLE_CONFIG_MIGRATOR);
-        String enableSyncMigrator = properties.getProperty(KeyRotationConstants.ENABLE_SYNC_MIGRATOR);
         try {
             int chunkSize = StringUtils.isNotBlank(properties.getProperty(KeyRotationConstants.CHUNK_SIZE)) ?
                     Integer.parseInt(properties.getProperty(KeyRotationConstants.CHUNK_SIZE)) :
@@ -81,28 +77,22 @@ public class FileBasedKeyRotationConfigProvider implements KeyRotationConfigProv
         }
 
         configValidator.validateFilePath(KeyRotationConstants.NEW_IS_HOME, newISHome);
-        configValidator.validateURI(KeyRotationConstants.OLD_IDN_DB_URL, oldIdnDBUrl);
         configValidator.validateURI(KeyRotationConstants.NEW_IDN_DB_URL, newIdnDBUrl);
         configValidator.validateURI(KeyRotationConstants.NEW_REG_DB_URL, newRegDBUrl);
         configValidator.validateBoolean(KeyRotationConstants.ENABLE_DB_MIGRATOR, enableDBMigrator);
         configValidator.validateBoolean(KeyRotationConstants.ENABLE_CONFIG_MIGRATOR, enableConfigMigrator);
-        configValidator.validateBoolean(KeyRotationConstants.ENABLE_SYNC_MIGRATOR, enableSyncMigrator);
 
         keyRotationConfig.setOldSecretKey(oldSecretKey);
         keyRotationConfig.setNewSecretKey(newSecretKey);
         keyRotationConfig.setNewISHome(newISHome);
-        keyRotationConfig.setOldIdnDBUrl(oldIdnDBUrl);
-        keyRotationConfig.setOldIdnUsername(oldIdnUsername);
-        keyRotationConfig.setOldIdnPassword(oldIdnPassword);
-        keyRotationConfig.setNewIdnDBUrl(newIdnDBUrl);
-        keyRotationConfig.setNewIdnUsername(newIdnUsername);
-        keyRotationConfig.setNewIdnPassword(newIdnPassword);
-        keyRotationConfig.setNewRegDBUrl(newRegDBUrl);
-        keyRotationConfig.setNewRegUsername(newRegUsername);
-        keyRotationConfig.setNewRegPassword(newRegPassword);
+        keyRotationConfig.setIdnDBUrl(newIdnDBUrl);
+        keyRotationConfig.setIdnUsername(newIdnUsername);
+        keyRotationConfig.setIdnPassword(newIdnPassword);
+        keyRotationConfig.setRegDBUrl(newRegDBUrl);
+        keyRotationConfig.setRegUsername(newRegUsername);
+        keyRotationConfig.setRegPassword(newRegPassword);
         keyRotationConfig.setEnableDBMigrator(Boolean.parseBoolean(enableDBMigrator));
         keyRotationConfig.setEnableConfigMigrator(Boolean.parseBoolean(enableConfigMigrator));
-        keyRotationConfig.setEnableSyncMigrator(Boolean.parseBoolean(enableSyncMigrator));
     }
 
     /**

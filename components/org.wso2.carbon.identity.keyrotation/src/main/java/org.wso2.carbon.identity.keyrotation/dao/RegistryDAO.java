@@ -68,8 +68,8 @@ public class RegistryDAO {
         int firstIndex = startIndex;
         int secIndex = keyRotationConfig.getChunkSize();
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getNewRegDBUrl(), keyRotationConfig.getNewRegUsername(),
-                        keyRotationConfig.getNewRegPassword())) {
+                .getConnection(keyRotationConfig.getRegDBUrl(), keyRotationConfig.getRegUsername(),
+                        keyRotationConfig.getRegPassword())) {
             connection.setAutoCommit(false);
             if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_REG_PROPERTY_DATA_POSTGRE;
@@ -115,8 +115,8 @@ public class RegistryDAO {
             throws KeyRotationException {
 
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getNewRegDBUrl(), keyRotationConfig.getNewRegUsername(),
-                        keyRotationConfig.getNewRegPassword())) {
+                .getConnection(keyRotationConfig.getRegDBUrl(), keyRotationConfig.getRegUsername(),
+                        keyRotationConfig.getRegPassword())) {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection
                     .prepareStatement(DBConstants.UPDATE_REG_PROPERTY_DATA)) {

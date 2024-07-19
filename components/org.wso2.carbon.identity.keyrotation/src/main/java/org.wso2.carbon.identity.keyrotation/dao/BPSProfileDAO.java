@@ -67,8 +67,8 @@ public class BPSProfileDAO {
         int firstIndex = startIndex;
         int secIndex = keyRotationConfig.getChunkSize();
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
-                        keyRotationConfig.getNewIdnPassword())) {
+                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
+                        keyRotationConfig.getIdnPassword())) {
             connection.setAutoCommit(false);
             if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_BPS_PASSWORD_POSTGRE;
@@ -110,8 +110,8 @@ public class BPSProfileDAO {
             throws KeyRotationException {
 
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
-                        keyRotationConfig.getNewIdnPassword())) {
+                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
+                        keyRotationConfig.getIdnPassword())) {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_BPS_PASSWORD)) {
                 for (BPSPassword bpsPassword : updateBPSPasswordsList) {

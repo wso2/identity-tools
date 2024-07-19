@@ -3,9 +3,6 @@
 oldSecretKey: 03BAFEB27A8E871CAD83C5CD4E771DAB
 newSecretKey: b988c775c435f05c3da1fbecfe76c1e7
 newISHome: /home/IS/wso2is-5.12.0-alpha
-oldIdnDBUrl: jdbc:mysql://localhost:3306/olddb?useSSL=false
-oldIdnUsername: root
-oldIdnPassword: cm9vdA==
 newIdnDBUrl: jdbc:mysql://localhost:3306/newdb?useSSL=false
 newIdnUsername: root
 newIdnPassword: cm9vdA==
@@ -15,4 +12,3 @@ newRegPassword: cm9vdA==
 chunkSize: 2
 enableDBMigrator: true
 enableConfigMigrator: true
-enableSyncMigrator: true

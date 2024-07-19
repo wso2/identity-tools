@@ -21,7 +21,6 @@ package org.wso2.carbon.identity.keyrotation.dao;
 import org.apache.log4j.Logger;
 import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.model.TOTPSecret;
-import org.wso2.carbon.identity.keyrotation.model.TempTOTPSecret;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 
@@ -70,8 +69,8 @@ public class IdentityDAO {
         int firstIndex = startIndex;
         int secIndex = keyRotationConfig.getChunkSize();
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
-                        keyRotationConfig.getNewIdnPassword())) {
+                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
+                        keyRotationConfig.getIdnPassword())) {
             connection.setAutoCommit(false);
             if (connection.getMetaData().getDriverName().contains(DBConstants.POSTGRESQL)) {
                 query = DBConstants.GET_TOTP_SECRET_POSTGRE;
@@ -116,8 +115,8 @@ public class IdentityDAO {
                                         KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
         try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
-                        keyRotationConfig.getNewIdnPassword())) {
+                .getConnection(keyRotationConfig.getIdnDBUrl(), keyRotationConfig.getIdnUsername(),
+                        keyRotationConfig.getIdnPassword())) {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_TOTP_SECRET)) {
                 for (TOTPSecret totpSecret : updateTOTPSecretList) {
@@ -173,264 +172,6 @@ public class IdentityDAO {
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while accessing new identity DB.", e);
-        }
-    }
-
-    /**
-     * To retrieve the list of data in IDN_IDENTITY_USER_DATA_TEMP.
-     *
-     * @param syncId            The syncId of the data.
-     * @param keyRotationConfig Configuration data needed to perform the task.
-     * @return List comprising of the records in the table.
-     * @throws KeyRotationException Exception thrown while retrieving data from IDN_IDENTITY_USER_DATA_TEMP.
-     */
-    public List<TempTOTPSecret> getTempTOTPSecrets(int syncId, KeyRotationConfig keyRotationConfig)
-            throws KeyRotationException {
-
-        List<TempTOTPSecret> totpSecretList = new ArrayList<>();
-        try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getOldIdnDBUrl(), keyRotationConfig.getOldIdnUsername(),
-                        keyRotationConfig.getOldIdnPassword())) {
-            connection.setAutoCommit(false);
-            try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.GET_TEMP_TOTP_SECRET)) {
-                preparedStatement.setInt(1, syncId);
-                ResultSet resultSet = preparedStatement.executeQuery();
-                connection.commit();
-                while (resultSet.next()) {
-                    totpSecretList
-                            .add(new TempTOTPSecret(resultSet.getString(KeyRotationConstants.TENANT_ID),
-                                    resultSet.getString(KeyRotationConstants.USER_NAME),
-                                    resultSet.getString(KeyRotationConstants.DATA_KEY),
-                                    resultSet.getString(KeyRotationConstants.DATA_VALUE),
-                                    resultSet.getInt(KeyRotationConstants.AVAILABILITY),
-                                    resultSet.getInt(KeyRotationConstants.SYNC_ID),
-                                    resultSet.getInt(KeyRotationConstants.SYNCED)));
-                }
-            } catch (SQLException e) {
-                connection.rollback();
-                throw new KeyRotationException("Error while retrieving TOTP secrets from IDN_IDENTITY_USER_DATA.", e);
-            }
-        } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to old identity DB.", e);
-        }
-        return totpSecretList;
-    }
-
-    /**
-     * To retrieve the max sync id from similar primary key records in IDN_IDENTITY_USER_DATA_TEMP.
-     *
-     * @param record            A data record in IDN_IDENTITY_USER_DATA_TEMP table.
-     * @param keyRotationConfig Configuration data needed to perform the task.
-     * @return List comprising of the records in the table.
-     * @throws KeyRotationException Exception thrown while retrieving latest data from IDN_IDENTITY_USER_DATA_TEMP.
-     */
-    public List<TempTOTPSecret> getTempTOTPLatest(TempTOTPSecret record, KeyRotationConfig keyRotationConfig)
-            throws KeyRotationException {
-
-        List<TempTOTPSecret> totpSecretList = new ArrayList<>();
-        try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getOldIdnDBUrl(), keyRotationConfig.getOldIdnUsername(),
-                        keyRotationConfig.getOldIdnPassword())) {
-            connection.setAutoCommit(false);
-            try (PreparedStatement preparedStatement =
-                         connection.prepareStatement(DBConstants.GET_TEMP_TOTP_SECRET_LATEST)) {
-                preparedStatement.setInt(1, Integer.parseInt(record.getTenantId()));
-                preparedStatement.setString(2, record.getUsername());
-                preparedStatement.setString(3, record.getDataKey());
-                ResultSet resultSet = preparedStatement.executeQuery();
-                connection.commit();
-                while (resultSet.next()) {
-                    totpSecretList
-                            .add(new TempTOTPSecret(resultSet.getString(KeyRotationConstants.TENANT_ID),
-                                    resultSet.getString(KeyRotationConstants.USER_NAME),
-                                    resultSet.getString(KeyRotationConstants.DATA_KEY),
-                                    resultSet.getString(KeyRotationConstants.DATA_VALUE),
-                                    resultSet.getInt(KeyRotationConstants.AVAILABILITY),
-                                    resultSet.getInt(KeyRotationConstants.SYNC_ID),
-                                    resultSet.getInt(KeyRotationConstants.SYNCED)));
-                }
-            } catch (SQLException e) {
-                connection.rollback();
-                log.error("Error while retrieving the latest TOTP secret from IDN_IDENTITY_USER_DATA_TEMP.", e);
-            }
-        } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to old identity DB.", e);
-        }
-        return totpSecretList;
-    }
-
-    /**
-     * To retrieve previous similar primary key records in IDN_IDENTITY_USER_DATA_TEMP.
-     *
-     * @param record            A data record in IDN_IDENTITY_USER_DATA_TEMP table.
-     * @param keyRotationConfig Configuration data needed to perform the task.
-     * @return List comprising of the records in the table.
-     * @throws KeyRotationException Exception thrown while retrieving previous data from IDN_IDENTITY_USER_DATA_TEMP.
-     */
-    public List<TempTOTPSecret> getTempTOTPPrevious(TempTOTPSecret record, KeyRotationConfig keyRotationConfig)
-            throws KeyRotationException {
-
-        List<TempTOTPSecret> totpSecretList = new ArrayList<>();
-        try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getOldIdnDBUrl(), keyRotationConfig.getOldIdnUsername(),
-                        keyRotationConfig.getOldIdnPassword())) {
-            connection.setAutoCommit(false);
-            try (PreparedStatement preparedStatement =
-                         connection.prepareStatement(DBConstants.GET_TEMP_TOTP_SECRET_PREVIOUS)) {
-                preparedStatement.setInt(1, Integer.parseInt(record.getTenantId()));
-                preparedStatement.setString(2, record.getUsername());
-                preparedStatement.setString(3, record.getDataKey());
-                preparedStatement.setInt(4, record.getSyncId());
-                ResultSet resultSet = preparedStatement.executeQuery();
-                connection.commit();
-                while (resultSet.next()) {
-                    totpSecretList
-                            .add(new TempTOTPSecret(resultSet.getString(KeyRotationConstants.TENANT_ID),
-                                    resultSet.getString(KeyRotationConstants.USER_NAME),
-                                    resultSet.getString(KeyRotationConstants.DATA_KEY),
-                                    resultSet.getString(KeyRotationConstants.DATA_VALUE),
-                                    resultSet.getInt(KeyRotationConstants.AVAILABILITY),
-                                    resultSet.getInt(KeyRotationConstants.SYNC_ID),
-                                    resultSet.getInt(KeyRotationConstants.SYNCED)));
-                }
-            } catch (SQLException e) {
-                connection.rollback();
-                log.error("Error while retrieving the previous TOTP secrets from IDN_IDENTITY_USER_DATA_TEMP.",
-                        e);
-            }
-        } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to old identity DB.", e);
-        }
-        return totpSecretList;
-    }
-
-    /**
-     * To update previous similar primary key records in IDN_IDENTITY_USER_DATA_TEMP.
-     *
-     * @param updateTOTPSecretList The list containing records that should be updated.
-     * @param keyRotationConfig    Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown while updating data in IDN_IDENTITY_USER_DATA_TEMP.
-     */
-    public void updateTOTPPreviousSimilarRecords(List<TempTOTPSecret> updateTOTPSecretList,
-                                                 KeyRotationConfig keyRotationConfig) throws KeyRotationException {
-
-        try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getOldIdnDBUrl(), keyRotationConfig.getOldIdnUsername(),
-                        keyRotationConfig.getOldIdnPassword())) {
-            connection.setAutoCommit(false);
-            try (PreparedStatement preparedStatement = connection
-                    .prepareStatement(DBConstants.UPDATE_TEMP_TOTP_SECRET)) {
-                for (TempTOTPSecret totpSecret : updateTOTPSecretList) {
-                    preparedStatement.setInt(1, totpSecret.getSynced());
-                    preparedStatement.setInt(2, totpSecret.getSyncId());
-                    preparedStatement.addBatch();
-                }
-                preparedStatement.executeBatch();
-                connection.commit();
-            } catch (SQLException e) {
-                connection.rollback();
-                log.error("Error while updating synced in IDN_IDENTITY_USER_DATA_TEMP", e);
-            }
-        } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to old identity DB.", e);
-        }
-    }
-
-    /**
-     * To update the synced TOTP secret data into IDN_IDENTITY_USER_DATA.
-     *
-     * @param updateTOTPSecret  The record that should be updated.
-     * @param keyRotationConfig Configuration data needed to perform the task.
-     * @return Number of updated records.
-     * @throws KeyRotationException Exception thrown while updating the data in IDN_IDENTITY_USER_DATA.
-     */
-    public int updateTOTPSecret(TempTOTPSecret updateTOTPSecret,
-                                KeyRotationConfig keyRotationConfig) throws KeyRotationException {
-
-        int records = 0;
-        try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
-                        keyRotationConfig.getNewIdnPassword())) {
-            connection.setAutoCommit(false);
-            try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_TOTP_SECRET)) {
-                preparedStatement.setString(1, updateTOTPSecret.getDataValue());
-                preparedStatement.setInt(2, Integer.parseInt(updateTOTPSecret.getTenantId()));
-                preparedStatement.setString(3, updateTOTPSecret.getUsername());
-                preparedStatement.setString(4, updateTOTPSecret.getDataKey());
-                records = preparedStatement.executeUpdate();
-                connection.commit();
-                if (records > 0) {
-                    insertCount++;
-                }
-            } catch (SQLException e) {
-                connection.rollback();
-                failedInsertCount++;
-                log.error("Error while updating TOTP secret in IDN_IDENTITY_USER_DATA. ", e);
-            }
-        } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to new identity DB.", e);
-        }
-        return records;
-    }
-
-    /**
-     * To insert the synced TOTP secret data into IDN_IDENTITY_USER_DATA.
-     *
-     * @param insertTOTPSecret  The record that should be inserted.
-     * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown while inserting the data into IDN_IDENTITY_USER_DATA.
-     */
-    public void insertTOTPSecret(TempTOTPSecret insertTOTPSecret,
-                                 KeyRotationConfig keyRotationConfig) throws KeyRotationException {
-
-        try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
-                        keyRotationConfig.getNewIdnPassword())) {
-            connection.setAutoCommit(false);
-            try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.INSERT_TOTP_SECRET)) {
-                preparedStatement.setInt(1, Integer.parseInt(insertTOTPSecret.getTenantId()));
-                preparedStatement.setString(2, insertTOTPSecret.getUsername());
-                preparedStatement.setString(3, insertTOTPSecret.getDataKey());
-                preparedStatement.setString(4, insertTOTPSecret.getDataValue());
-                preparedStatement.executeUpdate();
-                connection.commit();
-                insertCount++;
-            } catch (SQLException e) {
-                connection.rollback();
-                failedInsertCount++;
-                log.error("Error while inserting TOTP secret into IDN_IDENTITY_USER_DATA. ", e);
-            }
-        } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to new identity DB.", e);
-        }
-    }
-
-    /**
-     * To delete the TOTP secret data in IDN_IDENTITY_USER_DATA.
-     *
-     * @param deleteTOTPSecret  The record that should be deleted.
-     * @param keyRotationConfig Configuration data needed to perform the task.
-     * @throws KeyRotationException Exception thrown while deleting data in IDN_IDENTITY_USER_DATA.
-     */
-    public void deleteTOTPSecret(TempTOTPSecret deleteTOTPSecret, KeyRotationConfig keyRotationConfig)
-            throws KeyRotationException {
-
-        try (Connection connection = DriverManager
-                .getConnection(keyRotationConfig.getNewIdnDBUrl(), keyRotationConfig.getNewIdnUsername(),
-                        keyRotationConfig.getNewIdnPassword())) {
-            connection.setAutoCommit(false);
-            try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.DELETE_TOTP_SECRET)) {
-                preparedStatement.setInt(1, Integer.parseInt(deleteTOTPSecret.getTenantId()));
-                preparedStatement.setString(2, deleteTOTPSecret.getUsername());
-                preparedStatement.setString(3, deleteTOTPSecret.getDataKey());
-                preparedStatement.executeUpdate();
-                connection.commit();
-            } catch (SQLException e) {
-                connection.rollback();
-                log.error("Error while deleting TOTP secret in IDN_IDENTITY_USER_DATA. ", e);
-            }
-        } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to new identity DB.", e);
         }
     }
 }

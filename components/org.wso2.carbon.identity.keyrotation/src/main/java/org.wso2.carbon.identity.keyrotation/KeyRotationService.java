@@ -23,7 +23,6 @@ import org.wso2.carbon.identity.keyrotation.config.KeyRotationConfigProvider;
 import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.service.ConfigFileKeyRotator;
 import org.wso2.carbon.identity.keyrotation.service.DBKeyRotator;
-import org.wso2.carbon.identity.keyrotation.service.SyncedDataKeyRotator;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationConstants;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
 
@@ -58,9 +57,6 @@ public class KeyRotationService {
         }
         if (config.getEnableConfigMigrator()) {
             ConfigFileKeyRotator.getInstance().configFileReEncryptor(config);
-        }
-        if (config.getEnableSyncMigrator()) {
-            SyncedDataKeyRotator.getInstance().syncedDataReEncryptor(config);
         }
     }
 

@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) (2021-2024), WSO2 LLC. (http://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
+ * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
@@ -29,19 +29,15 @@ public class KeyRotationConfig {
     private String oldSecretKey;
     private String newSecretKey;
     private String newISHome;
-    private String oldIdnDBUrl;
-    private String oldIdnUsername;
-    private String oldIdnPassword;
-    private String newIdnDBUrl;
-    private String newIdnUsername;
-    private String newIdnPassword;
-    private String newRegDBUrl;
-    private String newRegUsername;
-    private String newRegPassword;
+    private String idnDBUrl;
+    private String idnUsername;
+    private String idnPassword;
+    private String regDBUrl;
+    private String regUsername;
+    private String regPassword;
     private int chunkSize;
     private boolean enableDBMigrator;
     private boolean enableConfigMigrator;
-    private boolean enableSyncMigrator;
 
     public static KeyRotationConfig getInstance() {
 
@@ -109,83 +105,23 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Get for the old IS identity database URL.
-     *
-     * @return Old IS identity database URL.
-     */
-    public String getOldIdnDBUrl() {
-
-        return oldIdnDBUrl;
-    }
-
-    /**
-     * Set for the old IS identity database URL.
-     *
-     * @param oldIdnDBUrl Old IS identity database URL.
-     */
-    public void setOldIdnDBUrl(String oldIdnDBUrl) {
-
-        this.oldIdnDBUrl = oldIdnDBUrl;
-    }
-
-    /**
-     * Get for the old IS identity database username.
-     *
-     * @return Old IS identity database username.
-     */
-    public String getOldIdnUsername() {
-
-        return oldIdnUsername;
-    }
-
-    /**
-     * Set for the old IS identity database username.
-     *
-     * @param oldIdnUsername Old IS identity database username.
-     */
-    public void setOldIdnUsername(String oldIdnUsername) {
-
-        this.oldIdnUsername = oldIdnUsername;
-    }
-
-    /**
-     * Get for the old IS identity database password.
-     *
-     * @return Base64 decoded old IS identity database password.
-     */
-    public String getOldIdnPassword() {
-
-        return new String(Base64.decode(oldIdnPassword));
-    }
-
-    /**
-     * Set for the old IS identity database password.
-     *
-     * @param oldIdnPassword Old IS identity database password.
-     */
-    public void setOldIdnPassword(String oldIdnPassword) {
-
-        this.oldIdnPassword = oldIdnPassword;
-    }
-
-    /**
      * Get for the new IS identity database URL.
      *
      * @return New IS identity database URL.
      */
-    public String getNewIdnDBUrl() {
+    public String getIdnDBUrl() {
 
-        return newIdnDBUrl;
+        return idnDBUrl;
     }
 
     /**
      * Set for the new IS identity database URL.
      *
-     * @param newIdnDBUrl New IS identity database URL.
+     * @param idnDBUrl New IS identity database URL.
      */
-    public void setNewIdnDBUrl(String newIdnDBUrl) {
+    public void setIdnDBUrl(String idnDBUrl) {
 
-        this.newIdnDBUrl = newIdnDBUrl;
+        this.idnDBUrl = idnDBUrl;
     }
 
     /**
@@ -193,19 +129,19 @@ public class KeyRotationConfig {
      *
      * @return New IS identity database username.
      */
-    public String getNewIdnUsername() {
+    public String getIdnUsername() {
 
-        return newIdnUsername;
+        return idnUsername;
     }
 
     /**
      * Set for the new IS identity database username.
      *
-     * @param newIdnUsername New IS identity database username.
+     * @param idnUsername New IS identity database username.
      */
-    public void setNewIdnUsername(String newIdnUsername) {
+    public void setIdnUsername(String idnUsername) {
 
-        this.newIdnUsername = newIdnUsername;
+        this.idnUsername = idnUsername;
     }
 
     /**
@@ -213,9 +149,9 @@ public class KeyRotationConfig {
      *
      * @return Base64 decoded new IS identity database password.
      */
-    public String getNewIdnPassword() {
+    public String getIdnPassword() {
 
-        return new String(Base64.decode(newIdnPassword));
+        return new String(Base64.decode(idnPassword));
     }
 
     /**
@@ -223,9 +159,9 @@ public class KeyRotationConfig {
      *
      * @param password New IS identity database password.
      */
-    public void setNewIdnPassword(String password) {
+    public void setIdnPassword(String password) {
 
-        this.newIdnPassword = password;
+        this.idnPassword = password;
     }
 
     /**
@@ -233,19 +169,19 @@ public class KeyRotationConfig {
      *
      * @return Registry database URL.
      */
-    public String getNewRegDBUrl() {
+    public String getRegDBUrl() {
 
-        return newRegDBUrl;
+        return regDBUrl;
     }
 
     /**
      * Set for the registry database URL.
      *
-     * @param newRegDBUrl Registry database URL.
+     * @param regDBUrl Registry database URL.
      */
-    public void setNewRegDBUrl(String newRegDBUrl) {
+    public void setRegDBUrl(String regDBUrl) {
 
-        this.newRegDBUrl = newRegDBUrl;
+        this.regDBUrl = regDBUrl;
     }
 
     /**
@@ -253,19 +189,19 @@ public class KeyRotationConfig {
      *
      * @return Registry database username.
      */
-    public String getNewRegUsername() {
+    public String getRegUsername() {
 
-        return newRegUsername;
+        return regUsername;
     }
 
     /**
      * Set for the registry database username.
      *
-     * @param newRegUsername Registry database username.
+     * @param regUsername Registry database username.
      */
-    public void setNewRegUsername(String newRegUsername) {
+    public void setRegUsername(String regUsername) {
 
-        this.newRegUsername = newRegUsername;
+        this.regUsername = regUsername;
     }
 
     /**
@@ -273,19 +209,19 @@ public class KeyRotationConfig {
      *
      * @return Registry database password.
      */
-    public String getNewRegPassword() {
+    public String getRegPassword() {
 
-        return new String(Base64.decode(newRegPassword));
+        return new String(Base64.decode(regPassword));
     }
 
     /**
      * Set for the registry database password.
      *
-     * @param newRegPassword Registry database password.
+     * @param regPassword Registry database password.
      */
-    public void setNewRegPassword(String newRegPassword) {
+    public void setRegPassword(String regPassword) {
 
-        this.newRegPassword = newRegPassword;
+        this.regPassword = regPassword;
     }
 
     /**
@@ -346,25 +282,5 @@ public class KeyRotationConfig {
     public void setEnableConfigMigrator(boolean enableConfigMigrator) {
 
         this.enableConfigMigrator = enableConfigMigrator;
-    }
-
-    /**
-     * Get for the enable syncing migrator property value.
-     *
-     * @return Enable syncing migrator property value.
-     */
-    public boolean getEnableSyncMigrator() {
-
-        return enableSyncMigrator;
-    }
-
-    /**
-     * Set for the enable syncing migrator property value.
-     *
-     * @param enableSyncMigrator Enable syncing migrator property value.
-     */
-    public void setEnableSyncMigrator(boolean enableSyncMigrator) {
-
-        this.enableSyncMigrator = enableSyncMigrator;
     }
 }
