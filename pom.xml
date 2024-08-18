@@ -117,5 +117,7 @@
 
     <properties>
         <maven.findbugsplugin.version>3.0.5</maven.findbugsplugin.version>
+    
+        <jacoco.version>0.8.12</jacoco.version>
     </properties>
 </project>
