@@ -22,6 +22,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import org.apache.axiom.om.util.Base64;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -149,10 +151,20 @@ public class CryptoProvider {
      * @param secretKey The data encryption key.
      * @return Secret key.
      */
-    private SecretKeySpec getSecretKey(String secretKey) {
+    private SecretKeySpec getSecretKey(String secretKey) throws KeyRotationException {
 
-        return new SecretKeySpec(secretKey.getBytes(), 0, secretKey.getBytes().length,
-                KeyRotationConstants.ALGORITHM);
+        byte[] decodedSecret;
+        if (secretKey.length() == 64 || secretKey.length() == 48) {
+            try {
+                decodedSecret = Hex.decodeHex(secretKey.toCharArray());
+            } catch (DecoderException e) {
+                throw new KeyRotationException(
+                        "The provided string may contain invalid characters or be improperly formatted.");
+            }
+        } else {
+            decodedSecret = secretKey.getBytes();
+        }
+        return new SecretKeySpec(decodedSecret, 0, decodedSecret.length, KeyRotationConstants.ALGORITHM);
     }
 
     /**
