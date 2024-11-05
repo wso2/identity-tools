@@ -356,8 +356,9 @@ public class OAuthDAO {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_OAUTH_SECRET)) {
                 for (OAuthSecret oAuthSecret : updateOAuthSecretList) {
-                    preparedStatement.setString(1, oAuthSecret.getConsumerSecret());
+                    preparedStatement.setString(1, oAuthSecret.getNewConsumerSecret());
                     preparedStatement.setInt(2, Integer.parseInt(oAuthSecret.getId()));
+                    preparedStatement.setString(3, oAuthSecret.getConsumerSecret());
                     preparedStatement.addBatch();
                 }
                 preparedStatement.executeBatch();
@@ -390,8 +391,9 @@ public class OAuthDAO {
             for (OAuthSecret oAuthSecret : updateOAuthSecretList) {
                 try {
                     faulty = oAuthSecret;
-                    preparedStatement.setString(1, oAuthSecret.getConsumerSecret());
+                    preparedStatement.setString(1, oAuthSecret.getNewConsumerSecret());
                     preparedStatement.setInt(2, Integer.parseInt(oAuthSecret.getId()));
+                    preparedStatement.setString(3, oAuthSecret.getConsumerSecret());
                     preparedStatement.executeUpdate();
                     connection.commit();
                     updateSecretCount++;

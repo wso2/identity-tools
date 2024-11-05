@@ -19,6 +19,7 @@
 package org.wso2.carbon.identity.keyrotation.service;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.dao.BPSProfileDAO;
@@ -66,43 +67,53 @@ public class DBKeyRotator {
     public void dbReEncryptor(KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
         log.info("Started re-encrypting identity and registry DB data...");
-        reEncryptIdentityTOTPData(keyRotationConfig);
-        log.info("Successfully updated totp data records in IDN_IDENTITY_USER_DATA: " + IdentityDAO.updateCount);
-        log.info("Failed totp data records in IDN_IDENTITY_USER_DATA: " + IdentityDAO.failedUpdateCount);
-        reEncryptOauthAuthData(keyRotationConfig);
-        log.info("Successfully updated OAuth2 authorization code data records in IDN_OAUTH2_AUTHORIZATION_CODE: " +
-                OAuthDAO.updateCodeCount);
-        log.info("Failed OAuth2 authorization code data records in IDN_OAUTH2_AUTHORIZATION_CODE: " +
-                OAuthDAO.failedUpdateCodeCount);
-        reEncryptOauthTokenData(keyRotationConfig);
-        log.info("Successfully updated OAuth2 access and refresh tokens data records in IDN_OAUTH2_ACCESS_TOKEN: " +
-                OAuthDAO.updateTokenCount);
-        log.info("Failed OAuth2 access and refresh tokens data records in IDN_OAUTH2_ACCESS_TOKEN: " +
-                OAuthDAO.failedUpdateTokenCount);
+
+//        reEncryptIdentityTOTPData(keyRotationConfig);
+//        log.info("Successfully updated totp data records in IDN_IDENTITY_USER_DATA: " + IdentityDAO.updateCount);
+//        log.info("Failed totp data records in IDN_IDENTITY_USER_DATA: " + IdentityDAO.failedUpdateCount);
+//
+//        reEncryptOauthAuthData(keyRotationConfig);
+//        log.info("Successfully updated OAuth2 authorization code data records in IDN_OAUTH2_AUTHORIZATION_CODE: " +
+//                OAuthDAO.updateCodeCount);
+//        log.info("Failed OAuth2 authorization code data records in IDN_OAUTH2_AUTHORIZATION_CODE: " +
+//                OAuthDAO.failedUpdateCodeCount);
+//
+//        reEncryptOauthTokenData(keyRotationConfig);
+//        log.info("Successfully updated OAuth2 access and refresh tokens data records in IDN_OAUTH2_ACCESS_TOKEN: " +
+//                OAuthDAO.updateTokenCount);
+//        log.info("Failed OAuth2 access and refresh tokens data records in IDN_OAUTH2_ACCESS_TOKEN: " +
+//                OAuthDAO.failedUpdateTokenCount);
+
         reEncryptOauthConsumerData(keyRotationConfig);
         log.info("Successfully updated OAuth consumer secret data records in IDN_OAUTH_CONSUMER_APPS: " +
                 OAuthDAO.updateSecretCount);
         log.info("Failed OAuth consumer secret data records in IDN_OAUTH_CONSUMER_APPS: " +
                 OAuthDAO.failedUpdateSecretCount);
-        reEncryptBPSData(keyRotationConfig);
-        log.info("Successfully updated BPS profile data records in WF_BPS_PROFILE: " + BPSProfileDAO.updateCount);
-        log.info("Failed BPS profile data records in WF_BPS_PROFILE: " + BPSProfileDAO.failedUpdateCount);
-        reEncryptWFRequestData(keyRotationConfig);
-        log.info("Successfully updated WF request data records in WF_REQUEST: " + WorkFlowDAO.updateCount);
-        log.info("Failed WF request data records in WF_REQUEST: " + WorkFlowDAO.failedUpdateCount);
-        reEncryptKeystorePasswordData(keyRotationConfig);
-        log.info("Successfully updated keystore password property data records in REG_PROPERTY: " +
-                RegistryDAO.updateCount);
-        log.info("Failed keystore password property data records in REG_PROPERTY: " + RegistryDAO.failedUpdateCount);
-        reEncryptKeystorePrivatekeyPassData(keyRotationConfig);
-        log.info("Successfully updated keystore privatekeyPass property data records in REG_PROPERTY: " +
-                RegistryDAO.updateCount);
-        log.info("Failed keystore privatekeyPass property data records in REG_PROPERTY: " +
-                RegistryDAO.failedUpdateCount);
-        reEncryptSubscriberPasswordData(keyRotationConfig);
-        log.info("Successfully updated subscriber password property data records in REG_PROPERTY: " +
-                RegistryDAO.updateCount);
-        log.info("Failed subscriber password property data records in REG_PROPERTY: " + RegistryDAO.failedUpdateCount);
+
+//        reEncryptBPSData(keyRotationConfig);
+//        log.info("Successfully updated BPS profile data records in WF_BPS_PROFILE: " + BPSProfileDAO.updateCount);
+//        log.info("Failed BPS profile data records in WF_BPS_PROFILE: " + BPSProfileDAO.failedUpdateCount);
+//
+//        reEncryptWFRequestData(keyRotationConfig);
+//        log.info("Successfully updated WF request data records in WF_REQUEST: " + WorkFlowDAO.updateCount);
+//        log.info("Failed WF request data records in WF_REQUEST: " + WorkFlowDAO.failedUpdateCount);
+//
+//        reEncryptKeystorePasswordData(keyRotationConfig);
+//        log.info("Successfully updated keystore password property data records in REG_PROPERTY: " +
+//                RegistryDAO.updateCount);
+//        log.info("Failed keystore password property data records in REG_PROPERTY: " + RegistryDAO.failedUpdateCount);
+//
+//        reEncryptKeystorePrivatekeyPassData(keyRotationConfig);
+//        log.info("Successfully updated keystore privatekeyPass property data records in REG_PROPERTY: " +
+//                RegistryDAO.updateCount);
+//        log.info("Failed keystore privatekeyPass property data records in REG_PROPERTY: " +
+//                RegistryDAO.failedUpdateCount);
+//
+//        reEncryptSubscriberPasswordData(keyRotationConfig);
+//        log.info("Successfully updated subscriber password property data records in REG_PROPERTY: " +
+//                RegistryDAO.updateCount);
+//       log.info("Failed subscriber password property data records in REG_PROPERTY: " + RegistryDAO.failedUpdateCount);
+
         log.info("Finished re-encrypting identity and registry DB data completed...\n");
     }
 
@@ -222,7 +233,11 @@ public class DBKeyRotator {
                     log.debug("Encrypted value " + oAuthSecret.getConsumerSecret());
                     String reEncryptedValue = symmetricReEncryption(oAuthSecret.getConsumerSecret(),
                             keyRotationConfig);
-                    oAuthSecret.setConsumerSecret(reEncryptedValue);
+                    if (StringUtils.isEmpty(reEncryptedValue)) {
+                        log.debug("Skipping since the value is already encrypted with new secret");
+                        continue;
+                    }
+                    oAuthSecret.setNewConsumerSecret(reEncryptedValue);
                     log.debug("Re-encrypted value " + oAuthSecret.getConsumerSecret());
                     midChunkList.add(oAuthSecret);
                 }

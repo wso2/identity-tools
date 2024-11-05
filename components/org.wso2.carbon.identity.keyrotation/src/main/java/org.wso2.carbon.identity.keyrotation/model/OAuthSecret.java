@@ -23,9 +23,10 @@ package org.wso2.carbon.identity.keyrotation.model;
  */
 public class OAuthSecret {
 
-    private String id;
-    private String consumerSecret;
-    private String appName;
+    private final String id;
+    private final String consumerSecret;
+    private final String appName;
+    private String newConsumerSecret;
 
     /**
      * OAuthSecret class constructor.
@@ -52,13 +53,23 @@ public class OAuthSecret {
     }
 
     /**
-     * Set for the id.
+     * Get for the new consumer secret.
      *
-     * @param id Id.
+     * @return New consumer secret.
      */
-    public void setId(String id) {
+    public String getNewConsumerSecret() {
 
-        this.id = id;
+        return newConsumerSecret;
+    }
+
+    /**
+     * Set for the new consumer secret.
+     *
+     * @param newConsumerSecret New consumer secret.
+     */
+    public void setNewConsumerSecret(String newConsumerSecret) {
+
+        this.newConsumerSecret = newConsumerSecret;
     }
 
     /**
@@ -72,16 +83,6 @@ public class OAuthSecret {
     }
 
     /**
-     * Set for the consumer secret.
-     *
-     * @param consumerSecret Consumer secret.
-     */
-    public void setConsumerSecret(String consumerSecret) {
-
-        this.consumerSecret = consumerSecret;
-    }
-
-    /**
      * Get for the app name.
      *
      * @return App name.
@@ -91,13 +92,4 @@ public class OAuthSecret {
         return appName;
     }
 
-    /**
-     * Set for the app name.
-     *
-     * @param appName App name.
-     */
-    public void setAppName(String appName) {
-
-        this.appName = appName;
-    }
 }

@@ -124,6 +124,9 @@ public class CryptoProvider {
                 log.debug("Bytes of length 0 found for cipher within the cipherMetaData.");
                 return StringUtils.EMPTY.getBytes();
             }
+            // TODO: modify the logic to handle the case where the cipher is already encrypted by the new key.
+            // If the cipher is already encrypted by the new key, return null.
+            // Use the key_id to determine if the cipher is encrypted by the new key.
             cipher = Cipher.getInstance(KeyRotationConstants.TRANSFORMATION,
                     KeyRotationConstants.JAVA_SECURITY_API_PROVIDER);
             cipher.init(Cipher.DECRYPT_MODE,

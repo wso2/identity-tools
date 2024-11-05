@@ -49,6 +49,10 @@ public class EncryptionUtil {
         CryptoProvider cryptoProvider = new CryptoProvider();
         byte[] refactoredCipher = cryptoProvider.reFactorCipherText(Base64.decode(cipher));
         byte[] plainText = cryptoProvider.decrypt(refactoredCipher, keyRotationConfig);
+        // If the plain text is null, it means the cipher text is already encrypted by the new key.
+        if (plainText == null) {
+            return null;
+        }
         byte[] cipherText = cryptoProvider.encrypt(plainText, keyRotationConfig);
         return Base64.encode(cipherText);
     }
