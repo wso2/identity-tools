@@ -22,17 +22,26 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import org.apache.axiom.om.util.Base64;
+import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.model.CipherMetaData;
 import org.wso2.carbon.identity.keyrotation.service.CryptoProvider;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.List;
 
 /**
  * This class holds the re-encryption mechanism.
  */
 public class EncryptionUtil {
 
+    private static final Logger logger = LoggerFactory.getLogger(EncryptionUtil.class);
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
     /**
@@ -77,5 +86,48 @@ public class EncryptionUtil {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Generating backup file for the given list of strings of SQL queries.
+     *
+     * @param regProperty   The database table name.
+     * @param backupStrings The list of selected data consist of encrypted secrets.
+     */
+    public static void writeBackup(String regProperty, List<String> backupStrings) {
+
+        if (CollectionUtils.isEmpty(backupStrings)) {
+            logger.error("No data found to backup for: " + regProperty);
+            return;
+        }
+
+        String homeDirectory = System.getProperty("user.dir");
+        // Create a File object for the backup directory
+        File backupDir = new File(homeDirectory, "backup");
+
+        // Check if the directory exists, and create it if it does not
+        if (!backupDir.exists()) {
+            if (backupDir.mkdir()) {
+                logger.info("Backup directory created at: " + backupDir.getAbsolutePath());
+            } else {
+                logger.error("Failed to create backup directory.");
+                return;
+            }
+        }
+
+        // Define the file path (in the home directory)
+        File file = new File(backupDir, "backup_" + regProperty + ".sql");
+
+        // Write the list of strings to the file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+            for (String str : backupStrings) {
+                writer.write(str);
+                writer.newLine();
+            }
+            logger.info("Backup added for: " + regProperty + " at " + file.getAbsolutePath());
+        } catch (IOException e) {
+            logger.error("Error while adding backup for: " + regProperty);
+        }
+
     }
 }

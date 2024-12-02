@@ -23,10 +23,11 @@ package org.wso2.carbon.identity.keyrotation.model;
  */
 public class BPSPassword {
 
-    private String profileName;
-    private String tenantId;
-    private String password;
-    private String username;
+    private final String profileName;
+    private final String tenantId;
+    private final String password;
+    private final String username;
+    private String newPassword;
 
     /**
      * BPSPassword class constructor.
@@ -55,16 +56,6 @@ public class BPSPassword {
     }
 
     /**
-     * Set for the profile name.
-     *
-     * @param profileName Profile name.
-     */
-    public void setProfileName(String profileName) {
-
-        this.profileName = profileName;
-    }
-
-    /**
      * Get for the tenant id.
      *
      * @return Tenant id.
@@ -72,16 +63,6 @@ public class BPSPassword {
     public String getTenantId() {
 
         return tenantId;
-    }
-
-    /**
-     * Set for the tenant id.
-     *
-     * @param tenantId Tenant id.
-     */
-    public void setTenantId(String tenantId) {
-
-        this.tenantId = tenantId;
     }
 
     /**
@@ -95,16 +76,6 @@ public class BPSPassword {
     }
 
     /**
-     * Set for the password.
-     *
-     * @param password Password.
-     */
-    public void setPassword(String password) {
-
-        this.password = password;
-    }
-
-    /**
      * Get for the username.
      *
      * @return Username.
@@ -114,13 +85,13 @@ public class BPSPassword {
         return username;
     }
 
-    /**
-     * Set for the username.
-     *
-     * @param username Username.
-     */
-    public void setUsername(String username) {
+    public String getNewPassword() {
 
-        this.username = username;
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+
+        this.newPassword = newPassword;
     }
 }

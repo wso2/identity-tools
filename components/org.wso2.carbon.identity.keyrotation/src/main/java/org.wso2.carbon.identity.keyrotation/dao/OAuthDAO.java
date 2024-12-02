@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.identity.keyrotation.dao;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.model.OAuthCode;
@@ -62,7 +63,7 @@ public class OAuthDAO {
      *
      * @param startIndex        The start index of the data chunk.
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @return List comprising of the records in the table.
+     * @return List of the retrieved records from the table.
      * @throws KeyRotationException Exception thrown while retrieving data from IDN_OAUTH2_AUTHORIZATION_CODE.
      */
     public List<OAuthCode> getOAuthCodeChunks(int startIndex, KeyRotationConfig keyRotationConfig) throws
@@ -99,7 +100,7 @@ public class OAuthDAO {
                 log.error("Error while retrieving OAuth codes from IDN_OAUTH2_AUTHORIZATION_CODE.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to new identity DB.", e);
+            throw new KeyRotationException("Error while connecting to the identity DB.", e);
         }
         return oAuthCodeList;
     }
@@ -121,8 +122,9 @@ public class OAuthDAO {
             try (PreparedStatement preparedStatement =
                          connection.prepareStatement(DBConstants.UPDATE_OAUTH_AUTHORIZATION_CODE)) {
                 for (OAuthCode oAuthCode : updateAuthCodeList) {
-                    preparedStatement.setString(1, oAuthCode.getAuthorizationCode());
+                    preparedStatement.setString(1, oAuthCode.getNewAuthorizationCode());
                     preparedStatement.setString(2, oAuthCode.getCodeId());
+                    preparedStatement.setString(3, oAuthCode.getAuthorizationCode());
                     preparedStatement.addBatch();
                 }
                 preparedStatement.executeBatch();
@@ -136,7 +138,7 @@ public class OAuthDAO {
                 retryOnCodeUpdate(updateAuthCodeList, connection);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to new identity DB.", e);
+            throw new KeyRotationException("Error while connecting to the identity DB.", e);
         }
     }
 
@@ -156,8 +158,9 @@ public class OAuthDAO {
             for (OAuthCode oAuthCode : updateAuthCodeList) {
                 try {
                     faulty = oAuthCode;
-                    preparedStatement.setString(1, oAuthCode.getAuthorizationCode());
+                    preparedStatement.setString(1, oAuthCode.getNewAuthorizationCode());
                     preparedStatement.setString(2, oAuthCode.getCodeId());
+                    preparedStatement.setString(3, oAuthCode.getAuthorizationCode());
                     preparedStatement.executeUpdate();
                     connection.commit();
                     updateCodeCount++;
@@ -178,7 +181,7 @@ public class OAuthDAO {
      *
      * @param startIndex        The start index of the data chunk.
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @return List comprising of the records in the table.
+     * @return List of the retrieved records from the table.
      * @throws KeyRotationException Exception thrown while retrieving data from IDN_OAUTH2_ACCESS_TOKEN.
      */
     public List<OAuthToken> getOAuthTokenChunks(int startIndex, KeyRotationConfig keyRotationConfig) throws
@@ -216,7 +219,7 @@ public class OAuthDAO {
                 log.error("Error while retrieving OAuth tokens from IDN_OAUTH2_ACCESS_TOKEN.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to new identity DB.", e);
+            throw new KeyRotationException("Error while connecting to the identity DB.", e);
         }
         return oAuthTokenList;
     }
@@ -238,9 +241,11 @@ public class OAuthDAO {
             try (PreparedStatement preparedStatement =
                          connection.prepareStatement(DBConstants.UPDATE_OAUTH_ACCESS_TOKEN)) {
                 for (OAuthToken oAuthToken : updateAuthTokensList) {
-                    preparedStatement.setString(1, oAuthToken.getAccessToken());
-                    preparedStatement.setString(2, oAuthToken.getRefreshToken());
+                    preparedStatement.setString(1, oAuthToken.getNewAccessToken());
+                    preparedStatement.setString(2, oAuthToken.getNewRefreshToken());
                     preparedStatement.setString(3, oAuthToken.getTokenId());
+                    preparedStatement.setString(4, oAuthToken.getAccessToken());
+                    preparedStatement.setString(5, oAuthToken.getRefreshToken());
                     preparedStatement.addBatch();
                 }
                 preparedStatement.executeBatch();
@@ -254,7 +259,7 @@ public class OAuthDAO {
                 retryOnTokenUpdate(updateAuthTokensList, connection);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to new identity DB.", e);
+            throw new KeyRotationException("Error while connecting to the identity DB.", e);
         }
     }
 
@@ -274,9 +279,11 @@ public class OAuthDAO {
             for (OAuthToken oAuthToken : updateAuthTokensList) {
                 try {
                     faulty = oAuthToken;
-                    preparedStatement.setString(1, oAuthToken.getAccessToken());
-                    preparedStatement.setString(2, oAuthToken.getRefreshToken());
+                    preparedStatement.setString(1, oAuthToken.getNewAccessToken());
+                    preparedStatement.setString(2, oAuthToken.getNewRefreshToken());
                     preparedStatement.setString(3, oAuthToken.getTokenId());
+                    preparedStatement.setString(4, oAuthToken.getAccessToken());
+                    preparedStatement.setString(5, oAuthToken.getRefreshToken());
                     preparedStatement.executeUpdate();
                     connection.commit();
                     updateTokenCount++;
@@ -297,7 +304,7 @@ public class OAuthDAO {
      *
      * @param startIndex        The start index of the data chunk.
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @return List comprising of the records in the table.
+     * @return List of the retrieved records from the table.
      * @throws KeyRotationException Exception thrown while retrieving data from IDN_OAUTH_CONSUMER_APPS.
      */
     public List<OAuthSecret> getOAuthSecretChunks(int startIndex, KeyRotationConfig keyRotationConfig) throws
@@ -334,7 +341,7 @@ public class OAuthDAO {
                 log.error("Error while retrieving secrets from IDN_OAUTH_CONSUMER_APPS.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to new identity DB.", e);
+            throw new KeyRotationException("Error while connecting to the identity DB.", e);
         }
         return oAuthSecretList;
     }
@@ -372,7 +379,7 @@ public class OAuthDAO {
                 retryOnSecretUpdate(updateOAuthSecretList, connection);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to new identity DB.", e);
+            throw new KeyRotationException("Error while connecting to the identity DB.", e);
         }
     }
 
@@ -407,5 +414,64 @@ public class OAuthDAO {
         } catch (SQLException e) {
             throw new KeyRotationException("Error while accessing new identity DB.", e);
         }
+    }
+
+    public List<String> generateOAuthCodeBackup(List<OAuthCode> oAuthCodes) {
+
+        if (CollectionUtils.isEmpty(oAuthCodes)) {
+            return null;
+        }
+        List<String> backupStrings = new ArrayList<>();
+        StringBuilder stringBuilder;
+
+        for (OAuthCode oAuthCode : oAuthCodes) {
+
+            stringBuilder = new StringBuilder("UPDATE IDN_OAUTH2_AUTHORIZATION_CODE SET");
+            stringBuilder.append(" AUTHORIZATION_CODE='").append(oAuthCode.getAuthorizationCode())
+                    .append("' WHERE")
+                    .append(" CODE_ID='").append(oAuthCode.getCodeId())
+                    .append("';").append(System.lineSeparator());
+            backupStrings.add(stringBuilder.toString());
+        }
+        return backupStrings;
+    }
+
+    public List<String> generateOAuthTokenBackup(List<OAuthToken> oAuthTokens) {
+
+        if (CollectionUtils.isEmpty(oAuthTokens)) {
+            return null;
+        }
+        List<String> backupStrings = new ArrayList<>();
+        StringBuilder stringBuilder;
+
+        for (OAuthToken oAuthToken : oAuthTokens) {
+            stringBuilder = new StringBuilder("UPDATE IDN_OAUTH2_ACCESS_TOKEN SET");
+            stringBuilder.append(" ACCESS_TOKEN='").append(oAuthToken.getAccessToken())
+                    .append("' ,REFRESH_TOKEN='").append(oAuthToken.getRefreshToken())
+                    .append("' WHERE")
+                    .append(" TOKEN_ID='").append(oAuthToken.getTokenId())
+                    .append("';").append(System.lineSeparator());
+            backupStrings.add(stringBuilder.toString());
+        }
+        return backupStrings;
+    }
+
+    public List<String> generateOAuthConsumerBackup(List<OAuthSecret> oAuthSecrets) {
+
+        if (CollectionUtils.isEmpty(oAuthSecrets)) {
+            return null;
+        }
+        List<String> backupStrings = new ArrayList<>();
+        StringBuilder stringBuilder;
+
+        for (OAuthSecret oAuthSecret : oAuthSecrets) {
+            stringBuilder = new StringBuilder("UPDATE IDN_OAUTH_CONSUMER_APPS SET");
+            stringBuilder.append(" CONSUMER_SECRET='").append(oAuthSecret.getConsumerSecret())
+                    .append("' WHERE")
+                    .append(" ID='").append(oAuthSecret.getId())
+                    .append("';").append(System.lineSeparator());
+            backupStrings.add(stringBuilder.toString());
+        }
+        return backupStrings;
     }
 }

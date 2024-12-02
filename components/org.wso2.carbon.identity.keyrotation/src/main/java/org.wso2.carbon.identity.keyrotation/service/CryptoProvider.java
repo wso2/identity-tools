@@ -59,17 +59,17 @@ public class CryptoProvider {
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
     /**
-     * Computes and returns the ciphertext of the given cleartext.
+     * Computes and returns the ciphertext of the given clear text.
      *
-     * @param cleartext         The cleartext to be encrypted.
+     * @param clearText         The clear text to be encrypted.
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @return The encrypted cleartext.
-     * @throws KeyRotationException Exception thrown while encrypting the cleartext.
+     * @return The encrypted clear text.
+     * @throws KeyRotationException Exception thrown while encrypting the clear text.
      */
-    public byte[] encrypt(byte[] cleartext, KeyRotationConfig keyRotationConfig) throws KeyRotationException {
+    public byte[] encrypt(byte[] clearText, KeyRotationConfig keyRotationConfig) throws KeyRotationException {
 
-        if (cleartext == null) {
-            throw new KeyRotationException("Cleartext bytes cannot be null.");
+        if (clearText == null) {
+            throw new KeyRotationException("Clear text bytes cannot be null.");
         }
         Cipher cipher;
         byte[] cipherText;
@@ -82,8 +82,16 @@ public class CryptoProvider {
                     KeyRotationConstants.JAVA_SECURITY_API_PROVIDER);
             cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(keyRotationConfig.getNewSecretKey()),
                     new IvParameterSpec(iv));
-            cipherText = cipher.doFinal(cleartext);
-            cipherText = createSelfContainedCiphertext(cipherText, iv);
+
+            // Generating the new key id.
+            String kid = KeyRotationServiceUtils.generateKeyId(keyRotationConfig.getNewSecretKey());
+
+            cipherText = cipher.doFinal(clearText);
+            if (StringUtils.isNotBlank(kid)) {
+                cipherText = createSelfContainedCiphertext(cipherText, iv, kid);
+            } else {
+                cipherText = createSelfContainedCiphertext(cipherText, iv);
+            }
 
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | NoSuchProviderException e) {
             String errorMessage = String.format("Error occurred while instantiating cipher object" +
@@ -102,7 +110,7 @@ public class CryptoProvider {
     }
 
     /**
-     * Computes and returns the cleartext of the given ciphertext.
+     * Computes and returns the clear text of the given ciphertext.
      *
      * @param cipherText        The ciphertext to be decrypted.
      * @param keyRotationConfig Configuration data needed to perform the task.
@@ -124,9 +132,19 @@ public class CryptoProvider {
                 log.debug("Bytes of length 0 found for cipher within the cipherMetaData.");
                 return StringUtils.EMPTY.getBytes();
             }
-            // TODO: modify the logic to handle the case where the cipher is already encrypted by the new key.
-            // If the cipher is already encrypted by the new key, return null.
-            // Use the key_id to determine if the cipher is encrypted by the new key.
+
+            // Generating the new key id.
+            String kid = KeyRotationServiceUtils.generateKeyId(keyRotationConfig.getNewSecretKey());
+
+            /*
+            Checking whether cipher is already encrypted with the new secret, if yes, returning null
+            as there is nothing to do here after. This can occur at background migration.
+             */
+            if (StringUtils.isNotBlank(cipherMetaData.getKeyId()) && StringUtils.isNotBlank(kid) &&
+                    kid.equals(cipherMetaData.getKeyId())) {
+                return null;
+            }
+
             cipher = Cipher.getInstance(KeyRotationConstants.TRANSFORMATION,
                     KeyRotationConstants.JAVA_SECURITY_API_PROVIDER);
             cipher.init(Cipher.DECRYPT_MODE,
@@ -186,16 +204,17 @@ public class CryptoProvider {
     }
 
     /**
-     * Creates and returns a self contained ciphertext with IV.
+     * Creates and returns a self-contained ciphertext with IV.
      *
      * @param cipherText The ciphertext.
      * @param iv         The Initialization Vector.
-     * @return Self contained meta data comprising of the cipher, transformation and IV.
+     * @param kid The key_id of the secret.
+     * @return Self-contained metadata of the cipher, transformation and IV.
      */
-    private byte[] createSelfContainedCiphertext(byte[] cipherText, byte[] iv) {
+    private byte[] createSelfContainedCiphertext(byte[] cipherText, byte[] iv, String kid) {
 
         CipherMetaData cipherMetaData = new CipherMetaData();
-        cipherMetaData.setCipherText(KeyRotationServiceUtils.getSelfContainedCiphertextWithIv(cipherText, iv));
+        cipherMetaData.setCipherText(KeyRotationServiceUtils.getSelfContainedCiphertextWithIv(cipherText, iv, kid));
         cipherMetaData.setTransformation(KeyRotationConstants.TRANSFORMATION);
         cipherMetaData.setIv(Base64.encode(iv));
         String cipherWithMetadataStr = gson.toJson(cipherMetaData);
@@ -203,10 +222,22 @@ public class CryptoProvider {
     }
 
     /**
-     * Returns the self contained cipherText with IV.
+     * Creates and returns a self-contained ciphertext with IV.
      *
      * @param cipherText The ciphertext.
-     * @return Self contained meta data comprising of the cipher and IV.
+     * @param iv         The Initialization Vector.
+     * @return Self-contained metadata of the cipher, transformation and IV.
+     */
+    private byte[] createSelfContainedCiphertext(byte[] cipherText, byte[] iv) {
+
+        return createSelfContainedCiphertext(cipherText, iv, null);
+    }
+
+    /**
+     * Returns the self-contained cipherText with IV.
+     *
+     * @param cipherText The ciphertext.
+     * @return Self-contained metadata of the cipher and IV.
      */
     private CipherMetaData createCipherMetaData(byte[] cipherText) {
 

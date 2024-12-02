@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.identity.keyrotation.dao;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.model.BPSPassword;
@@ -56,7 +57,7 @@ public class BPSProfileDAO {
      *
      * @param startIndex        The start index of the data chunk.
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @return List comprising of the records in the table.
+     * @return List of the retrieved records from the table.
      * @throws KeyRotationException Exception thrown while retrieving data from WF_BPS_PROFILE.
      */
     public List<BPSPassword> getBpsPasswordChunks(int startIndex, KeyRotationConfig keyRotationConfig) throws
@@ -94,7 +95,7 @@ public class BPSProfileDAO {
                 throw new KeyRotationException("Error while retrieving passwords from WF_BPS_PROFILE.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to new identity DB.", e);
+            throw new KeyRotationException("Error while connecting to the identity DB.", e);
         }
         return bpsPasswordList;
     }
@@ -115,9 +116,10 @@ public class BPSProfileDAO {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_BPS_PASSWORD)) {
                 for (BPSPassword bpsPassword : updateBPSPasswordsList) {
-                    preparedStatement.setString(1, bpsPassword.getPassword());
+                    preparedStatement.setString(1, bpsPassword.getNewPassword());
                     preparedStatement.setString(2, bpsPassword.getProfileName());
                     preparedStatement.setInt(3, Integer.parseInt(bpsPassword.getTenantId()));
+                    preparedStatement.setString(4, bpsPassword.getPassword());
                     preparedStatement.addBatch();
                 }
                 preparedStatement.executeBatch();
@@ -130,7 +132,7 @@ public class BPSProfileDAO {
                 retryOnBpsUpdate(updateBPSPasswordsList, connection);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to new identity DB.", e);
+            throw new KeyRotationException("Error while connecting to the identity DB.", e);
         }
     }
 
@@ -152,6 +154,7 @@ public class BPSProfileDAO {
                     preparedStatement.setString(1, bpsPassword.getPassword());
                     preparedStatement.setString(2, bpsPassword.getProfileName());
                     preparedStatement.setInt(3, Integer.parseInt(bpsPassword.getTenantId()));
+                    preparedStatement.setString(4, bpsPassword.getPassword());
                     preparedStatement.executeUpdate();
                     connection.commit();
                     updateCount++;
@@ -165,5 +168,25 @@ public class BPSProfileDAO {
         } catch (SQLException e) {
             throw new KeyRotationException("Error while accessing new identity DB.", e);
         }
+    }
+
+    public List<String> generateWorkflowBPSProfileBackup(List<BPSPassword> bpsPasswords) {
+
+        if (CollectionUtils.isEmpty(bpsPasswords)) {
+            return null;
+        }
+        List<String> backupStrings = new ArrayList<>();
+        StringBuilder stringBuilder;
+
+        for (BPSPassword bpsPassword : bpsPasswords) {
+            stringBuilder = new StringBuilder("UPDATE WF_BPS_PROFILE SET");
+            stringBuilder.append(" PASSWORD='").append(bpsPassword.getPassword())
+                    .append("' WHERE")
+                    .append(" PROFILE_NAME='").append(bpsPassword.getProfileName())
+                    .append("' AND TENANT_ID='").append(bpsPassword.getTenantId())
+                    .append("';").append(System.lineSeparator());
+            backupStrings.add(stringBuilder.toString());
+        }
+        return backupStrings;
     }
 }

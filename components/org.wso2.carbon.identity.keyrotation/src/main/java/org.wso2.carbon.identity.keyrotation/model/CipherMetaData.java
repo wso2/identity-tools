@@ -29,6 +29,8 @@ public class CipherMetaData {
     private String c;
     private String t = KeyRotationConstants.TRANSFORMATION;
     private String iv;
+    // Key id which is used to determine which key was used to encrypt the secret.
+    private String kid;
 
     /**
      * Get for the transformation.
@@ -108,5 +110,15 @@ public class CipherMetaData {
     public byte[] getIvBase64Decoded() {
 
         return Base64.decode(iv);
+    }
+
+    public void setKeyId(String kid) {
+
+        this.kid = kid;
+    }
+
+    public String getKeyId() {
+
+        return this.kid;
     }
 }

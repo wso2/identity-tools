@@ -28,7 +28,7 @@ public class KeyRotationConfig {
     private static final KeyRotationConfig instance = new KeyRotationConfig();
     private String oldSecretKey;
     private String newSecretKey;
-    private String newISHome;
+    private String ishome;
     private String idnDBUrl;
     private String idnUsername;
     private String idnPassword;
@@ -38,6 +38,14 @@ public class KeyRotationConfig {
     private int chunkSize;
     private boolean enableDBMigrator;
     private boolean enableConfigMigrator;
+
+    /**
+     * Configuration to enable key rotation of the workflow related secrets.
+     * Since workflow is enabled as a connector, key rotation for workflow is not enabled by default.
+     * This is because the default IS package does not include the database tables related to workflow.
+     * Once this configuration is activated, the tool will also rotate the workflow-related secrets.
+     */
+    private boolean enableWorkflowMigrator;
 
     public static KeyRotationConfig getInstance() {
 
@@ -77,7 +85,7 @@ public class KeyRotationConfig {
     /**
      * Set for the new secret key.
      *
-     * @param newSecretKey New secret key.
+     * @param SecretKey New secret key.
      */
     public void setNewSecretKey(String newSecretKey) {
 
@@ -85,29 +93,29 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Get for the new IS home path.
+     * Get for the IS home path.
      *
-     * @return New IS home path.
+     * @return IS home path.
      */
-    public String getNewISHome() {
+    public String getISHome() {
 
-        return newISHome;
+        return ishome;
     }
 
     /**
-     * Set for the new IS home path.
+     * Set for the IS home path.
      *
-     * @param newISHome New IS home path.
+     * @param ishome IS home path.
      */
-    public void setNewISHome(String newISHome) {
+    public void setISHome(String ishome) {
 
-        this.newISHome = newISHome;
+        this.ishome = ishome;
     }
 
     /**
-     * Get for the new IS identity database URL.
+     * Get for the IS identity database URL.
      *
-     * @return New IS identity database URL.
+     * @return IS identity database URL.
      */
     public String getIdnDBUrl() {
 
@@ -115,9 +123,9 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Set for the new IS identity database URL.
+     * Set for the IS identity database URL.
      *
-     * @param idnDBUrl New IS identity database URL.
+     * @param idnDBUrl IS identity database URL.
      */
     public void setIdnDBUrl(String idnDBUrl) {
 
@@ -125,9 +133,9 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Get for the new IS identity database username.
+     * Get for the IS identity database username.
      *
-     * @return New IS identity database username.
+     * @return IS identity database username.
      */
     public String getIdnUsername() {
 
@@ -135,9 +143,9 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Set for the new IS identity database username.
+     * Set for the IS identity database username.
      *
-     * @param idnUsername New IS identity database username.
+     * @param idnUsername IS identity database username.
      */
     public void setIdnUsername(String idnUsername) {
 
@@ -145,9 +153,9 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Get for the new IS identity database password.
+     * Get for the IS identity database password.
      *
-     * @return Base64 decoded new IS identity database password.
+     * @return Base64 decoded IS identity database password.
      */
     public String getIdnPassword() {
 
@@ -155,9 +163,9 @@ public class KeyRotationConfig {
     }
 
     /**
-     * Set for the new IS identity database password.
+     * Set for the IS identity database password.
      *
-     * @param password New IS identity database password.
+     * @param password IS identity database password.
      */
     public void setIdnPassword(String password) {
 
@@ -282,5 +290,27 @@ public class KeyRotationConfig {
     public void setEnableConfigMigrator(boolean enableConfigMigrator) {
 
         this.enableConfigMigrator = enableConfigMigrator;
+    }
+
+    /**
+     * Returns the status of the workflow migrator.
+     * This method checks whether the workflow migrator is enabled or not.
+     *
+     * @return {@code true} if the workflow migrator is enabled, {@code false} otherwise.
+     */
+    public boolean isEnableWorkflowMigrator() {
+
+        return enableWorkflowMigrator;
+    }
+
+    /**
+     * Sets the status of the workflow migrator.
+     * This method enables or disables the workflow migrator based on the provided value.
+     *
+     * @param enableWorkflowMigrator {@code true} to enable the workflow migrator, {@code false} to disable it.
+     */
+    public void setEnableWorkflowMigrator(boolean enableWorkflowMigrator) {
+
+        this.enableWorkflowMigrator = enableWorkflowMigrator;
     }
 }

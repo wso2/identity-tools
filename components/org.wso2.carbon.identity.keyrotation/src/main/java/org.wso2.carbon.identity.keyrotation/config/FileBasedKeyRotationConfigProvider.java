@@ -56,15 +56,16 @@ public class FileBasedKeyRotationConfigProvider implements KeyRotationConfigProv
 
         String oldSecretKey = properties.getProperty(KeyRotationConstants.OLD_SECRET_KEY);
         String newSecretKey = properties.getProperty(KeyRotationConstants.NEW_SECRET_KEY);
-        String newISHome = properties.getProperty(KeyRotationConstants.NEW_IS_HOME);
-        String newIdnDBUrl = properties.getProperty(KeyRotationConstants.NEW_IDN_DB_URL);
-        String newIdnUsername = properties.getProperty(KeyRotationConstants.NEW_IDN_USERNAME);
-        String newIdnPassword = properties.getProperty(KeyRotationConstants.NEW_IDN_PASSWORD);
-        String newRegDBUrl = properties.getProperty(KeyRotationConstants.NEW_REG_DB_URL);
-        String newRegUsername = properties.getProperty(KeyRotationConstants.NEW_REG_USERNAME);
-        String newRegPassword = properties.getProperty(KeyRotationConstants.NEW_REG_PASSWORD);
+        String ishome = properties.getProperty(KeyRotationConstants.IS_HOME);
+        String idnDBUrl = properties.getProperty(KeyRotationConstants.IDN_DB_URL);
+        String idnUsername = properties.getProperty(KeyRotationConstants.IDN_USERNAME);
+        String idnPassword = properties.getProperty(KeyRotationConstants.IDN_PASSWORD);
+        String regDBUrl = properties.getProperty(KeyRotationConstants.REG_DB_URL);
+        String regUsername = properties.getProperty(KeyRotationConstants.REG_USERNAME);
+        String regPassword = properties.getProperty(KeyRotationConstants.REG_PASSWORD);
         String enableDBMigrator = properties.getProperty(KeyRotationConstants.ENABLE_DB_MIGRATOR);
         String enableConfigMigrator = properties.getProperty(KeyRotationConstants.ENABLE_CONFIG_MIGRATOR);
+        String enableWorkFlowMigrator = properties.getProperty(KeyRotationConstants.ENABLE_WORKFLOW_MIGRATOR);
         try {
             int chunkSize = StringUtils.isNotBlank(properties.getProperty(KeyRotationConstants.CHUNK_SIZE)) ?
                     Integer.parseInt(properties.getProperty(KeyRotationConstants.CHUNK_SIZE)) :
@@ -76,23 +77,25 @@ public class FileBasedKeyRotationConfigProvider implements KeyRotationConfigProv
             keyRotationConfig.setChunkSize(DBConstants.DEFAULT_CHUNK_SIZE);
         }
 
-        configValidator.validateFilePath(KeyRotationConstants.NEW_IS_HOME, newISHome);
-        configValidator.validateURI(KeyRotationConstants.NEW_IDN_DB_URL, newIdnDBUrl);
-        configValidator.validateURI(KeyRotationConstants.NEW_REG_DB_URL, newRegDBUrl);
+        configValidator.validateFilePath(KeyRotationConstants.IS_HOME, ishome);
+        configValidator.validateURI(KeyRotationConstants.IDN_DB_URL, idnDBUrl);
+        configValidator.validateURI(KeyRotationConstants.REG_DB_URL, regDBUrl);
         configValidator.validateBoolean(KeyRotationConstants.ENABLE_DB_MIGRATOR, enableDBMigrator);
         configValidator.validateBoolean(KeyRotationConstants.ENABLE_CONFIG_MIGRATOR, enableConfigMigrator);
+        configValidator.validateBoolean(KeyRotationConstants.ENABLE_WORKFLOW_MIGRATOR, enableWorkFlowMigrator);
 
         keyRotationConfig.setOldSecretKey(oldSecretKey);
         keyRotationConfig.setNewSecretKey(newSecretKey);
-        keyRotationConfig.setNewISHome(newISHome);
-        keyRotationConfig.setIdnDBUrl(newIdnDBUrl);
-        keyRotationConfig.setIdnUsername(newIdnUsername);
-        keyRotationConfig.setIdnPassword(newIdnPassword);
-        keyRotationConfig.setRegDBUrl(newRegDBUrl);
-        keyRotationConfig.setRegUsername(newRegUsername);
-        keyRotationConfig.setRegPassword(newRegPassword);
+        keyRotationConfig.setISHome(ishome);
+        keyRotationConfig.setIdnDBUrl(idnDBUrl);
+        keyRotationConfig.setIdnUsername(idnUsername);
+        keyRotationConfig.setIdnPassword(idnPassword);
+        keyRotationConfig.setRegDBUrl(regDBUrl);
+        keyRotationConfig.setRegUsername(regUsername);
+        keyRotationConfig.setRegPassword(regPassword);
         keyRotationConfig.setEnableDBMigrator(Boolean.parseBoolean(enableDBMigrator));
         keyRotationConfig.setEnableConfigMigrator(Boolean.parseBoolean(enableConfigMigrator));
+        keyRotationConfig.setEnableWorkflowMigrator(Boolean.parseBoolean(enableWorkFlowMigrator));
     }
 
     /**

@@ -49,16 +49,13 @@ Follow the steps below.
 ## Inputs To The Tool
 1. **oldSecretKey** : The plain symmetric encryption key used in the existing(old) IS pack.
 2. **newSecretKey** : The plain new symmetric encryption key.
-3. **newISHome** : The absolute path of the copied(new) IS pack.
-4. **oldIdnDBUrl** : Old IS pack identity database URL.
-5. **oldIdnUsername** : Old IS pack identity database username.
-6. **oldIdnPassword** : Base64 encoded old IS pack identity database password.
-7. **newIdnDBUrl** : New IS pack identity database URL.
-8. **newIdnUsername** : New IS pack identity database username.
-9. **newIdnPassword** : Base64 encoded new IS pack identity database password.
-10. **newRegDBUrl** : New IS pack registry database URL.
-11. **newRegUsername** : New IS pack registry database username.
-12. **newRegPassword** : Base64 encoded new IS pack registry database password.
-13. **enableDBMigrator** : Enable/disable re-encryption for the identity and registry databases.
-14. **enableConfigMigrator** : Enable/disable re-encryption for the configuration files.
-15. **enableSyncMigrator** : Enable/disable syncing mechanism.
+3. **ishome** : The absolute path of the copied(new) IS pack.
+4. **idnDBUrl** : New IS pack identity database URL.
+5. **idnUsername** : New IS pack identity database username.
+6. **idnPassword** : Base64 encoded new IS pack identity database password.
+7. **regDBUrl** : New IS pack registry database URL.
+8. **regUsername** : New IS pack registry database username.
+9. **regPassword** : Base64 encoded new IS pack registry database password.
+10. **enableDBMigrator** : Enable/disable re-encryption for the identity and registry databases.
+11. **enableConfigMigrator** : Enable/disable re-encryption for the configuration files.
+12. **enableWorkflowMigrator** : Enable/disable re-encryption for the workflows related secrets.

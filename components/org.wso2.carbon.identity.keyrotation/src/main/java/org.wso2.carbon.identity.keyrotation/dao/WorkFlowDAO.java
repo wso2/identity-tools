@@ -18,16 +18,12 @@
 
 package org.wso2.carbon.identity.keyrotation.dao;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
+import org.wso2.carbon.identity.keyrotation.model.WorkFlowRequestSecret;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
-import org.wso2.carbon.identity.workflow.mgt.dto.WorkflowRequest;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -35,6 +31,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * This class holds implementations needed to re-encrypt the WorkFlow data in DB.
@@ -60,13 +58,13 @@ public class WorkFlowDAO {
      *
      * @param startIndex        The start index of the data chunk.
      * @param keyRotationConfig Configuration data needed to perform the task.
-     * @return List comprising of the records in the table.
+     * @return List of the retrieved records from the table.
      * @throws KeyRotationException Exception thrown while retrieving data from WF_REQUEST.
      */
-    public List<WorkflowRequest> getWFRequestChunks(int startIndex, KeyRotationConfig keyRotationConfig) throws
+    public List<WorkFlowRequestSecret> getWFRequestChunks(int startIndex, KeyRotationConfig keyRotationConfig) throws
             KeyRotationException {
 
-        List<WorkflowRequest> wfRequestList = new ArrayList<>();
+        List<WorkFlowRequestSecret> workFlowRequestSecrets = new ArrayList<>();
         String query = DBConstants.GET_WF_REQUEST;
         int firstIndex = startIndex;
         int secIndex = keyRotationConfig.getChunkSize();
@@ -88,28 +86,30 @@ public class WorkFlowDAO {
                 ResultSet resultSet = preparedStatement.executeQuery();
                 connection.commit();
                 while (resultSet.next()) {
-                    byte[] requestBytes = resultSet.getBytes(DBConstants.REQUEST);
-                    WorkflowRequest wfRequest = deserializeWFRequest(requestBytes);
-                    wfRequestList.add(wfRequest);
+                    WorkFlowRequestSecret workFlowRequestSecret =
+                            new WorkFlowRequestSecret(resultSet.getBytes(DBConstants.REQUEST), resultSet.getString(
+                                    DBConstants.UPDATED_AT));
+                    workFlowRequestSecrets.add(workFlowRequestSecret);
                 }
-            } catch (SQLException | IOException | ClassNotFoundException e) {
+            } catch (SQLException e) {
                 connection.rollback();
                 log.error("Error while retrieving requests from WF_REQUEST.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to new identity DB.", e);
+            throw new KeyRotationException("Error while connecting to the identity DB.", e);
         }
-        return wfRequestList;
+        return workFlowRequestSecrets;
     }
 
     /**
      * To reEncrypt the requests in WF_REQUEST using the new key.
      *
-     * @param updateWfRequestList The list containing records that should be re-encrypted.
-     * @param keyRotationConfig   Configuration data needed to perform the task.
+     * @param updateWfRequestSecrets The list containing records that should be re-encrypted.
+     * @param keyRotationConfig      Configuration data needed to perform the task.
      * @throws KeyRotationException Exception thrown while updating data from WF_REQUEST.
      */
-    public void updateWFRequestChunks(List<WorkflowRequest> updateWfRequestList, KeyRotationConfig keyRotationConfig)
+    public void updateWFRequestChunks(List<WorkFlowRequestSecret> updateWfRequestSecrets,
+                                      KeyRotationConfig keyRotationConfig)
             throws KeyRotationException {
 
         try (Connection connection = DriverManager
@@ -117,48 +117,65 @@ public class WorkFlowDAO {
                         keyRotationConfig.getIdnPassword())) {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_WF_REQUEST)) {
-                for (WorkflowRequest wfRequest : updateWfRequestList) {
-                    preparedStatement.setBytes(1, serializeWFRequest(wfRequest));
-                    preparedStatement.setString(2, wfRequest.getUuid());
-                    preparedStatement.addBatch();
+                for (WorkFlowRequestSecret workFlowRequestSecret : updateWfRequestSecrets) {
+                    byte[] reEncryptedData = workFlowRequestSecret.serializedReEncryptedWorkFlow();
+                    if (reEncryptedData != null) {
+                        preparedStatement.setBytes(1, reEncryptedData);
+                        preparedStatement.setString(
+                                2, workFlowRequestSecret.getWorkflowRequest().getUuid());
+                        preparedStatement.setString(3, workFlowRequestSecret.getUpdatedTime());
+                        preparedStatement.addBatch();
+                    } else {
+                        log.error("Cannot update the request in WF_REQUEST of record with uuid: " +
+                                workFlowRequestSecret.getWorkflowRequest().getUuid());
+                    }
                 }
                 preparedStatement.executeBatch();
                 connection.commit();
-                updateCount += updateWfRequestList.size();
-            } catch (SQLException | IOException e) {
+                updateCount += updateWfRequestSecrets.size();
+            } catch (SQLException e) {
                 connection.rollback();
-                log.error("Error while updating requests in WF_REQUEST, trying the chunk row by row again. ", e);
-                retryOnRequestUpdate(updateWfRequestList, connection);
+                log.error("Error while updating requests in WF_REQUEST, trying the chunk row by row again. "
+                        , e);
+                retryOnRequestUpdate(updateWfRequestSecrets, connection);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to new identity DB.", e);
+            throw new KeyRotationException("Error while connecting to the identity DB.", e);
         }
     }
 
     /**
      * To retry upon a failure in updating request chunk in WF_REQUEST.
      *
-     * @param updateWfRequestList The list containing records that should be re-encrypted.
-     * @param connection          Connection with the new identity DB.
+     * @param updateWfRequestSecrets The list containing records that should be re-encrypted.
+     * @param connection             Connection with the new identity DB.
      * @throws KeyRotationException Exception thrown while accessing new identity DB data.
      */
-    private void retryOnRequestUpdate(List<WorkflowRequest> updateWfRequestList, Connection connection)
+    private void retryOnRequestUpdate(List<WorkFlowRequestSecret> updateWfRequestSecrets, Connection connection)
             throws KeyRotationException {
 
-        WorkflowRequest faulty = null;
+        WorkFlowRequestSecret faulty = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_WF_REQUEST)) {
-            for (WorkflowRequest wfRequest : updateWfRequestList) {
+            for (WorkFlowRequestSecret workFlowRequestSecret : updateWfRequestSecrets) {
                 try {
-                    faulty = wfRequest;
-                    preparedStatement.setBytes(1, serializeWFRequest(wfRequest));
-                    preparedStatement.setString(2, wfRequest.getUuid());
-                    preparedStatement.executeUpdate();
-                    connection.commit();
-                    updateCount++;
-                } catch (SQLException | IOException err) {
+                    byte[] reEncryptedData = workFlowRequestSecret.serializedReEncryptedWorkFlow();
+                    if (reEncryptedData != null) {
+                        faulty = workFlowRequestSecret;
+                        preparedStatement.setBytes(1, reEncryptedData);
+                        preparedStatement.setString(
+                                2, workFlowRequestSecret.getWorkflowRequest().getUuid());
+                        preparedStatement.setString(3, workFlowRequestSecret.getUpdatedTime());
+                        preparedStatement.executeUpdate();
+                        connection.commit();
+                        updateCount++;
+                    } else {
+                        log.error("Cannot update the request in WF_REQUEST of record with uuid: " +
+                                workFlowRequestSecret.getWorkflowRequest().getUuid());
+                    }
+                } catch (SQLException err) {
                     connection.rollback();
                     log.error("Error while updating requests in WF_REQUEST of record with uuid: " +
-                            faulty.getUuid() + " ," + err);
+                            faulty.getWorkflowRequest().getUuid() + " ," + err);
                     failedUpdateCount++;
                 }
             }
@@ -167,36 +184,29 @@ public class WorkFlowDAO {
         }
     }
 
-    /**
-     * To convert the stored byte stream to a WorkFlowRequest object.
-     *
-     * @param serializedData The byte stream.
-     * @return WorkFlowRequest object.
-     * @throws IOException            Exception thrown during I/O operations.
-     * @throws ClassNotFoundException Exception thrown while loading the class.
-     */
-    private WorkflowRequest deserializeWFRequest(byte[] serializedData) throws IOException,
-            ClassNotFoundException {
+    public List<String> generateWorkflowRequestBackup(List<WorkFlowRequestSecret> workFlowRequestSecrets) {
 
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(serializedData);
-        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-        Object objectRead = objectInputStream.readObject();
-        return (WorkflowRequest) objectRead;
-    }
+        if (CollectionUtils.isEmpty(workFlowRequestSecrets)) {
+            return null;
+        }
+        List<String> backupStrings = new ArrayList<>();
+        StringBuilder stringBuilder;
 
-    /**
-     * To convert the passed WorkFlowRequest object to a byte stream.
-     *
-     * @param wfRequest WorkFlowRequest object.
-     * @return The byte stream.
-     * @throws IOException Exception thrown during I/O operations.
-     */
-    private byte[] serializeWFRequest(WorkflowRequest wfRequest) throws IOException {
+        for (WorkFlowRequestSecret workFlowRequestSecret : workFlowRequestSecrets) {
 
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-        objectOutputStream.writeObject(wfRequest);
-        objectOutputStream.close();
-        return byteArrayOutputStream.toByteArray();
+            String hexString = IntStream.range(0, workFlowRequestSecret.getSerializedWorkFlowRequest().length)
+                    .mapToObj(i -> String.format("%02X", workFlowRequestSecret.getSerializedWorkFlowRequest()[i]))
+                    .collect(Collectors.joining(""));
+
+
+            stringBuilder = new StringBuilder("UPDATE WF_REQUEST SET");
+            stringBuilder.append(" REQUEST='").append(hexString)
+                    .append("' WHERE")
+                    .append(" UUID='").append(workFlowRequestSecret.getWorkflowRequest().getUuid())
+                    .append("' AND UPDATED_AT='").append(workFlowRequestSecret.getUpdatedTime())
+                    .append("';").append(System.lineSeparator());
+            backupStrings.add(stringBuilder.toString());
+        }
+        return backupStrings;
     }
 }

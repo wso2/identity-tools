@@ -96,6 +96,30 @@
             <artifactId>org.wso2.carbon.identity.workflow.mgt</artifactId>
             <version>${org.wso2.carbon.identity.workflow.mgt.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>${bcprov-jdk15on.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -190,5 +214,7 @@
         <log4j.version>1.2.17</log4j.version>
         <snakeyaml.version>1.21</snakeyaml.version>
         <org.wso2.carbon.identity.workflow.mgt.version>5.18.195</org.wso2.carbon.identity.workflow.mgt.version>
+        <testng.version>6.9.10</testng.version>
+        <mockito.version>5.11.0</mockito.version>
     </properties>
 </project>

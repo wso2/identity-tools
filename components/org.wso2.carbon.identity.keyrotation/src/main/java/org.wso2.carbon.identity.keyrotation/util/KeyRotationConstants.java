@@ -29,16 +29,17 @@ public class KeyRotationConstants {
 
     public static final String OLD_SECRET_KEY = "oldSecretKey";
     public static final String NEW_SECRET_KEY = "newSecretKey";
-    public static final String NEW_IS_HOME = "newISHome";
-    public static final String NEW_IDN_DB_URL = "newIdnDBUrl";
-    public static final String NEW_IDN_USERNAME = "newIdnUsername";
-    public static final String NEW_IDN_PASSWORD = "newIdnPassword";
-    public static final String NEW_REG_DB_URL = "newRegDBUrl";
-    public static final String NEW_REG_USERNAME = "newRegUsername";
-    public static final String NEW_REG_PASSWORD = "newRegPassword";
+    public static final String IS_HOME = "ishome";
+    public static final String IDN_DB_URL = "idnDBUrl";
+    public static final String IDN_USERNAME = "idnUsername";
+    public static final String IDN_PASSWORD = "idnPassword";
+    public static final String REG_DB_URL = "regDBUrl";
+    public static final String REG_USERNAME = "regUsername";
+    public static final String REG_PASSWORD = "regPassword";
     public static final String CHUNK_SIZE = "chunkSize";
     public static final String ENABLE_DB_MIGRATOR = "enableDBMigrator";
     public static final String ENABLE_CONFIG_MIGRATOR = "enableConfigMigrator";
+    public static final String ENABLE_WORKFLOW_MIGRATOR = "enableWorkFlowMigrator";
 
     public static final String ALGORITHM = "AES";
     public static final String TRANSFORMATION = "AES/GCM/NoPadding";
@@ -85,4 +86,9 @@ public class KeyRotationConstants {
     public static final String REGISTRY_PASSWORD = "password";
     public static final String PRIVATE_KEY_PASS = "privatekeyPass";
     public static final String SUBSCRIBER_PASSWORD = "subscriberPassword";
+
+    public static final String SECRET_VALUE = "SECRET_VALUE";
+    public static final String PROPERTY_ID = "PROPERTY_ID";
+    public static final String PROPERTY_VALUE = "PROPERTY_VALUE";
+    public static final String SUBSCRIBER_ID = "SUBSCRIBER_ID";
 }

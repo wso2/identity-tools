@@ -31,7 +31,7 @@ public class OAuthSecret {
     /**
      * OAuthSecret class constructor.
      *
-     * @param id             Id field in IDN_OAUTH_CONSUMER_APPS table.
+     * @param id             ID field in IDN_OAUTH_CONSUMER_APPS table.
      * @param consumerSecret Consumer secret field in IDN_OAUTH_CONSUMER_APPS table.
      * @param appName        App name field in IDN_OAUTH_CONSUMER_APPS table.
      */

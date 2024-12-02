@@ -115,7 +115,7 @@ public class ConfigFileKeyRotator {
         ConfigFileUtil.updateCount = 0;
         ConfigFileUtil.failedUpdateCount = 0;
         log.debug("Started re-encryption of the super tenant secondary user store configuration files...");
-        getConfigsAndUpdate(keyRotationConfig, keyRotationConfig.getNewISHome(), null,
+        getConfigsAndUpdate(keyRotationConfig, keyRotationConfig.getISHome(), null,
                 KeyRotationConstants.SUPER_TENANT);
         log.debug("Finished re-encryption of the super tenant secondary user store configuration files...");
     }
@@ -131,10 +131,10 @@ public class ConfigFileKeyRotator {
 
         ConfigFileUtil.updateCount = 0;
         ConfigFileUtil.failedUpdateCount = 0;
-        List<String> tenants = getFolderPaths(keyRotationConfig.getNewISHome());
+        List<String> tenants = getFolderPaths(keyRotationConfig.getISHome());
         log.debug("Started re-encryption of the tenant secondary user store configuration files...");
         for (String tenant : tenants) {
-            getConfigsAndUpdate(keyRotationConfig, keyRotationConfig.getNewISHome(), tenant,
+            getConfigsAndUpdate(keyRotationConfig, keyRotationConfig.getISHome(), tenant,
                     KeyRotationConstants.TENANT);
         }
         log.debug("Finished re-encryption of the tenant secondary user store configuration files...");
@@ -151,7 +151,7 @@ public class ConfigFileKeyRotator {
         ConfigFileUtil.updateCount = 0;
         ConfigFileUtil.failedUpdateCount = 0;
         log.debug("Started re-encryption of the event publisher configuration files...");
-        getConfigsAndUpdate(keyRotationConfig, keyRotationConfig.getNewISHome(), null,
+        getConfigsAndUpdate(keyRotationConfig, keyRotationConfig.getISHome(), null,
                 KeyRotationConstants.EVENT_PUBLISHER);
         log.debug("Finished re-encryption of the event publisher configuration files...");
     }

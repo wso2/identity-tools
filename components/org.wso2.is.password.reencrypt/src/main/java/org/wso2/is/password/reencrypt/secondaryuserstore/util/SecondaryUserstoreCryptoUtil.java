@@ -158,7 +158,7 @@ public class SecondaryUserstoreCryptoUtil {
      * @throws CryptoException On error during encryption
      */
     public byte[] encrypt(byte[] plainTextBytes) throws CryptoException {
-        // Encrypt with transformation configured in carbon.properties as self contained ciphertext.
+        // Encrypt with transformation configured in carbon.properties as self-contained ciphertext.
         return encrypt(plainTextBytes, System.getProperty(CIPHER_TRANSFORMATION_SYSTEM_PROPERTY), true);
     }
 

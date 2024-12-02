@@ -25,6 +25,7 @@ public class CipherInitializationVector {
 
     private String cipher;
     private String initializationVector;
+    private String keyId;
 
     /**
      * Get for the cipher.
@@ -64,5 +65,15 @@ public class CipherInitializationVector {
     public void setInitializationVector(String initializationVector) {
 
         this.initializationVector = initializationVector;
+    }
+
+    public String getKeyId() {
+
+        return keyId;
+    }
+
+    public void setKeyId(String keyId) {
+
+        this.keyId = keyId;
     }
 }

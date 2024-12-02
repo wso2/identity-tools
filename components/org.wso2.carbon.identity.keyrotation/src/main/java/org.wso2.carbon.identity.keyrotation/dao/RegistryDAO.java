@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.identity.keyrotation.dao;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.model.RegistryProperty;
@@ -57,7 +58,7 @@ public class RegistryDAO {
      * @param startIndex        The start index of the data chunk.
      * @param keyRotationConfig Configuration data needed to perform the task.
      * @param property          Registry property value.
-     * @return List comprising of the records in the table.
+     * @return List of the retrieved records from the table.
      * @throws KeyRotationException Exception thrown while retrieving data from REG_PROPERTY.
      */
     public List<RegistryProperty> getRegPropertyDataChunks(int startIndex, KeyRotationConfig keyRotationConfig,
@@ -97,7 +98,7 @@ public class RegistryDAO {
                 log.error("Error while retrieving registry property: " + property + " from REG_PROPERTY.", e);
             }
         } catch (SQLException e) {
-            throw new KeyRotationException("Error while connecting to new registry DB.", e);
+            throw new KeyRotationException("Error while connecting to the registry DB.", e);
         }
         return regPropertyList;
     }
@@ -121,9 +122,10 @@ public class RegistryDAO {
             try (PreparedStatement preparedStatement = connection
                     .prepareStatement(DBConstants.UPDATE_REG_PROPERTY_DATA)) {
                 for (RegistryProperty regProperty : updateRegPropertyList) {
-                    preparedStatement.setString(1, regProperty.getRegValue());
+                    preparedStatement.setString(1, regProperty.getNewRegValue());
                     preparedStatement.setInt(2, Integer.parseInt(regProperty.getRegId()));
                     preparedStatement.setInt(3, Integer.parseInt(regProperty.getRegTenantId()));
+                    preparedStatement.setString(4, regProperty.getRegValue());
                     preparedStatement.addBatch();
                 }
                 preparedStatement.executeBatch();
@@ -131,10 +133,9 @@ public class RegistryDAO {
                 updateCount += updateRegPropertyList.size();
             } catch (SQLException e) {
                 connection.rollback();
-                log.error(
-                        "Error while updating registry property: " + property + " in REG_PROPERTY, trying the " +
-                                "chunk row by row again. ", e);
-                retryOnRegPropertyUpdate(updateRegPropertyList, connection, property);
+                log.error("Error while updating registry property: " + property +
+                        " in REG_PROPERTY, trying the chunk row by row again. ", e);
+                retryOnRegPropertyUpdate(updateRegPropertyList, connection);
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while connecting to new registry DB.", e);
@@ -146,33 +147,61 @@ public class RegistryDAO {
      *
      * @param updateRegPropertyList The list containing records that should be re-encrypted.
      * @param connection            Connection with the new identity DB.
-     * @param property              Registry property value.
      * @throws KeyRotationException Exception thrown while accessing new identity DB data.
      */
-    private void retryOnRegPropertyUpdate(List<RegistryProperty> updateRegPropertyList, Connection connection,
-                                          String property) throws KeyRotationException {
+    private void retryOnRegPropertyUpdate(List<RegistryProperty> updateRegPropertyList, Connection connection)
+            throws KeyRotationException {
 
         RegistryProperty faulty = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.UPDATE_REG_PROPERTY_DATA)) {
             for (RegistryProperty regProperty : updateRegPropertyList) {
                 try {
                     faulty = regProperty;
-                    preparedStatement.setString(1, regProperty.getRegValue());
+                    preparedStatement.setString(1, regProperty.getNewRegValue());
                     preparedStatement.setInt(2, Integer.parseInt(regProperty.getRegId()));
                     preparedStatement.setInt(3, Integer.parseInt(regProperty.getRegTenantId()));
+                    preparedStatement.setInt(4, Integer.parseInt(regProperty.getRegValue()));
                     preparedStatement.executeUpdate();
                     connection.commit();
                     updateCount++;
                 } catch (SQLException err) {
                     connection.rollback();
-                    log.error("Error while updating registry property: " + property + " in REG_PROPERTY of " +
-                            "record with reg id: " + faulty.getRegId() + " reg tenant id: " +
-                            faulty.getRegTenantId() + " ," + err);
+                    log.error(
+                            "Error while updating registry property: " + faulty.getRegName() + " in REG_PROPERTY of " +
+                                    "record with reg id: " + faulty.getRegId() + " reg tenant id: " +
+                                    faulty.getRegTenantId() + " ," + err);
                     failedUpdateCount++;
                 }
             }
         } catch (SQLException e) {
             throw new KeyRotationException("Error while accessing new identity DB.", e);
         }
+    }
+
+    /**
+     * Generates update statements for the selected data in REG_PROPERTY to facilitate re-encryption.
+     *
+     * @param registryProperties the list of RegistryProperty objects selected for re-encryption.
+     * @return
+     */
+    public List<String> generateRegPropertyBackup(List<RegistryProperty> registryProperties) {
+
+        if (CollectionUtils.isEmpty(registryProperties)) {
+            return null;
+        }
+        List<String> backupStrings = new ArrayList<>();
+        StringBuilder stringBuilder;
+
+        for (RegistryProperty registryProperty : registryProperties) {
+
+            stringBuilder = new StringBuilder("UPDATE REG_PROPERTY SET");
+            stringBuilder.append(" REG_VALUE='").append(registryProperty.getRegValue())
+                    .append("' WHERE")
+                    .append(" REG_ID='").append(registryProperty.getRegId())
+                    .append("' AND REG_TENANT_ID='").append(registryProperty.getRegTenantId())
+                    .append("';").append(System.lineSeparator());
+            backupStrings.add(stringBuilder.toString());
+        }
+        return backupStrings;
     }
 }

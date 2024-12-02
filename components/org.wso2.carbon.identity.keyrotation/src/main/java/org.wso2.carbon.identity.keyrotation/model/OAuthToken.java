@@ -23,10 +23,12 @@ package org.wso2.carbon.identity.keyrotation.model;
  */
 public class OAuthToken {
 
-    private String tokenId;
-    private String accessToken;
-    private String refreshToken;
-    private String consumerKeyId;
+    private final String tokenId;
+    private final String accessToken;
+    private final String refreshToken;
+    private final String consumerKeyId;
+    private String newAccessToken;
+    private String newRefreshToken;
 
     /**
      * OAuthToken class constructor.
@@ -55,16 +57,6 @@ public class OAuthToken {
     }
 
     /**
-     * Set for the token id.
-     *
-     * @param tokenId Token id.
-     */
-    public void setTokenId(String tokenId) {
-
-        this.tokenId = tokenId;
-    }
-
-    /**
      * Get for the access token.
      *
      * @return Access token.
@@ -72,16 +64,6 @@ public class OAuthToken {
     public String getAccessToken() {
 
         return accessToken;
-    }
-
-    /**
-     * Set for the access token.
-     *
-     * @param accessToken Access token.
-     */
-    public void setAccessToken(String accessToken) {
-
-        this.accessToken = accessToken;
     }
 
     /**
@@ -95,16 +77,6 @@ public class OAuthToken {
     }
 
     /**
-     * Set for the refresh token.
-     *
-     * @param refreshToken Refresh token.
-     */
-    public void setRefreshToken(String refreshToken) {
-
-        this.refreshToken = refreshToken;
-    }
-
-    /**
      * Get for the consumer key id.
      *
      * @return Consumer key id.
@@ -114,13 +86,23 @@ public class OAuthToken {
         return consumerKeyId;
     }
 
-    /**
-     * Set for the consumer key id.
-     *
-     * @param consumerKeyId Consumer key id.
-     */
-    public void setConsumerKeyId(String consumerKeyId) {
+    public String getNewAccessToken() {
 
-        this.consumerKeyId = consumerKeyId;
+        return newAccessToken;
+    }
+
+    public void setNewAccessToken(String newAccessToken) {
+
+        this.newAccessToken = newAccessToken;
+    }
+
+    public String getNewRefreshToken() {
+
+        return newRefreshToken;
+    }
+
+    public void setNewRefreshToken(String newRefreshToken) {
+
+        this.newRefreshToken = newRefreshToken;
     }
 }

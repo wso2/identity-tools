@@ -23,9 +23,10 @@ package org.wso2.carbon.identity.keyrotation.model;
  */
 public class OAuthCode {
 
-    private String codeId;
-    private String authorizationCode;
-    private String consumerKeyId;
+    private final String codeId;
+    private final String authorizationCode;
+    private final String consumerKeyId;
+    private String newAuthorizationCode;
 
     /**
      * OAuthCode class constructor.
@@ -52,16 +53,6 @@ public class OAuthCode {
     }
 
     /**
-     * Set for the code id.
-     *
-     * @param codeId Code id.
-     */
-    public void setCodeId(String codeId) {
-
-        this.codeId = codeId;
-    }
-
-    /**
      * Get for the authorization code.
      *
      * @return Authorization code.
@@ -69,16 +60,6 @@ public class OAuthCode {
     public String getAuthorizationCode() {
 
         return authorizationCode;
-    }
-
-    /**
-     * Set for the authorization code.
-     *
-     * @param authorizationCode Authorization code.
-     */
-    public void setAuthorizationCode(String authorizationCode) {
-
-        this.authorizationCode = authorizationCode;
     }
 
     /**
@@ -91,13 +72,13 @@ public class OAuthCode {
         return consumerKeyId;
     }
 
-    /**
-     * Set for the consumer key id.
-     *
-     * @param consumerKeyId Consumer key id.
-     */
-    public void setConsumerKeyId(String consumerKeyId) {
+    public String getNewAuthorizationCode() {
 
-        this.consumerKeyId = consumerKeyId;
+        return newAuthorizationCode;
+    }
+
+    public void setNewAuthorizationCode(String newAuthorizationCode) {
+
+        this.newAuthorizationCode = newAuthorizationCode;
     }
 }

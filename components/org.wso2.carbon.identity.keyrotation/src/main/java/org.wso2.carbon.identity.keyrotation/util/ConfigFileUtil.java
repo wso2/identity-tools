@@ -58,9 +58,9 @@ public class ConfigFileUtil {
     /**
      * Get all the files inside the base path.
      *
-     * @param isHome The absolute path of newISHome.
+     * @param isHome The absolute path of ishome.
      * @param paths  A list of path segments.
-     * @return List of files in path.
+     * @return Array of files in path.
      */
     public static File[] getFilePaths(String isHome, String[] paths) {
 
@@ -75,7 +75,7 @@ public class ConfigFileUtil {
     /**
      * Get all the tenants inside the tenant base path.
      *
-     * @param isHome The absolute path of newISHome.
+     * @param isHome The absolute path of ishome.
      * @return List of tenants inside the tenant base path.
      */
     public static List<String> getFolderPaths(String isHome) {

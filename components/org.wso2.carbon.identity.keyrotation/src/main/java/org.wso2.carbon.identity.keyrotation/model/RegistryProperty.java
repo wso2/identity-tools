@@ -23,10 +23,11 @@ package org.wso2.carbon.identity.keyrotation.model;
  */
 public class RegistryProperty {
 
-    private String regId;
-    private String regName;
-    private String regValue;
-    private String regTenantId;
+    private final String regId;
+    private final String regName;
+    private final String regValue;
+    private final String regTenantId;
+    private String newRegValue;
 
     /**
      * RegistryProperty class constructor.
@@ -55,16 +56,6 @@ public class RegistryProperty {
     }
 
     /**
-     * Set for the registry id.
-     *
-     * @param regId Registry id.
-     */
-    public void setRegId(String regId) {
-
-        this.regId = regId;
-    }
-
-    /**
      * Get for the registry name.
      *
      * @return Registry name.
@@ -72,16 +63,6 @@ public class RegistryProperty {
     public String getRegName() {
 
         return regName;
-    }
-
-    /**
-     * Set for the registry name.
-     *
-     * @param regName Registry name.
-     */
-    public void setRegName(String regName) {
-
-        this.regName = regName;
     }
 
     /**
@@ -95,16 +76,6 @@ public class RegistryProperty {
     }
 
     /**
-     * Set for the registry value.
-     *
-     * @param regValue Registry value.
-     */
-    public void setRegValue(String regValue) {
-
-        this.regValue = regValue;
-    }
-
-    /**
      * Get for the registry tenant id.
      *
      * @return Registry tenant id.
@@ -114,13 +85,13 @@ public class RegistryProperty {
         return regTenantId;
     }
 
-    /**
-     * Set for the registry tenant id.
-     *
-     * @param regTenantId Registry tenant id.
-     */
-    public void setRegTenantId(String regTenantId) {
+    public String getNewRegValue() {
 
-        this.regTenantId = regTenantId;
+        return newRegValue;
+    }
+
+    public void setNewRegValue(String newRegValue) {
+
+        this.newRegValue = newRegValue;
     }
 }

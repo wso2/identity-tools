@@ -23,10 +23,11 @@ package org.wso2.carbon.identity.keyrotation.model;
  */
 public class TOTPSecret {
 
-    private String tenantId;
-    private String username;
-    private String dataKey;
-    private String dataValue;
+    private final String tenantId;
+    private final String username;
+    private final String dataKey;
+    private final String dataValue;
+    private String newDataValue;
 
     /**
      * TOTPSecret class constructor.
@@ -55,16 +56,6 @@ public class TOTPSecret {
     }
 
     /**
-     * Set for the tenant id.
-     *
-     * @param tenantId Tenant id.
-     */
-    public void setTenantId(String tenantId) {
-
-        this.tenantId = tenantId;
-    }
-
-    /**
      * Get for the username.
      *
      * @return Username.
@@ -72,16 +63,6 @@ public class TOTPSecret {
     public String getUsername() {
 
         return username;
-    }
-
-    /**
-     * Set for the username.
-     *
-     * @param username Username.
-     */
-    public void setUsername(String username) {
-
-        this.username = username;
     }
 
     /**
@@ -95,16 +76,6 @@ public class TOTPSecret {
     }
 
     /**
-     * Set for the data key.
-     *
-     * @param dataKey Data key.
-     */
-    public void setDataKey(String dataKey) {
-
-        this.dataKey = dataKey;
-    }
-
-    /**
      * Get for the data value.
      *
      * @return Data value.
@@ -114,13 +85,13 @@ public class TOTPSecret {
         return dataValue;
     }
 
-    /**
-     * Set for the data value.
-     *
-     * @param dataValue Data value.
-     */
-    public void setDataValue(String dataValue) {
+    public String getNewDataValue() {
 
-        this.dataValue = dataValue;
+        return newDataValue;
+    }
+
+    public void setNewDataValue(String newDataValue) {
+
+        this.newDataValue = newDataValue;
     }
 }
