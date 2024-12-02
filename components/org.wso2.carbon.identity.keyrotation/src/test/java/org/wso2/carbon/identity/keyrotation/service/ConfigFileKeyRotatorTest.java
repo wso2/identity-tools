@@ -1,17 +1,12 @@
 package org.wso2.carbon.identity.keyrotation.service;
 
-import junit.framework.Assert;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.Assert;
 import org.wso2.carbon.identity.keyrotation.config.model.KeyRotationConfig;
 import org.wso2.carbon.identity.keyrotation.util.KeyRotationException;
-
-import java.io.IOException;
-import java.io.InputStream;
-
-import static org.mockito.Mockito.when;
 
 public class ConfigFileKeyRotatorTest {
 

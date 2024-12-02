@@ -85,7 +85,7 @@ public class KeyRotationConfig {
     /**
      * Set for the new secret key.
      *
-     * @param SecretKey New secret key.
+     * @param newSecretKey
      */
     public void setNewSecretKey(String newSecretKey) {
 
