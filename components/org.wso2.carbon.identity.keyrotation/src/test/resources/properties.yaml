@@ -1,0 +1,15 @@
+# Configurations needed for the key-rotation task.
+
+oldSecretKey: 9501cb661d04b0dbe68d17bff2060737
+newSecretKey: b988c775c435f05c3da1fbecfe76c1e7
+ishome: /src/test/resources
+idnDBUrl: jdbc:mysql://localhost:3306/newdb?useSSL=false
+idnUsername: root
+idnPassword: cm9vdA==
+regDBUrl: jdbc:mysql://localhost:3306/newdb?useSSL=false
+regUsername: root
+regPassword: cm9vdA==
+chunkSize: 2
+enableDBMigrator: true
+enableConfigMigrator: true
+enableWorkFlowMigrator: true
