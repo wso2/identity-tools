@@ -116,6 +116,6 @@
     </repositories>
 
     <properties>
-        <maven.findbugsplugin.version>3.0.5</maven.findbugsplugin.version>
+        <maven.spotbugsplugin.version>4.8.4.0</maven.spotbugsplugin.version>
     </properties>
 </project>
